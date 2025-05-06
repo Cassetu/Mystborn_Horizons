@@ -1,0 +1,15 @@
+{
+  "name": "mystbornhorizons:myst_chamber_room",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 90,
+      "element": {
+        "location": "mystbornhorizons:myst_chamber_room",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mystbornhorizons:item/echoes_of_the_abyss_music_disc"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 5.0,
+  "group": "froststone",
+  "ingredient": {
+    "item": "mystbornhorizons:froststone_deepslate_ore"
+  },
+  "result": {
+    "id": "mystbornhorizons:froststone"
+  }
+}

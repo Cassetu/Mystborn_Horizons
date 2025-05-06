@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_froststone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:froststone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mystbornhorizons:froststone_sword"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_froststone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mystbornhorizons:froststone_sword"
+    ]
+  }
+}

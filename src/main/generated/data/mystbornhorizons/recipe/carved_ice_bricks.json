@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "mystbornhorizons:packed_ice_bricks"
+    },
+    "P": {
+      "item": "minecraft:packed_ice"
+    }
+  },
+  "pattern": [
+    "   ",
+    " BP",
+    " PB"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mystbornhorizons:carved_ice_bricks"
+  }
+}

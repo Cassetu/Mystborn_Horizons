@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "mystbornhorizons:mystborn_dust"
+    },
+    "R": {
+      "item": "mystbornhorizons:froststone"
+    },
+    "S": {
+      "item": "mystbornhorizons:stormite"
+    },
+    "T": {
+      "item": "mystbornhorizons:tectonite_geode"
+    }
+  },
+  "pattern": [
+    "RSR",
+    "MTM",
+    "RSR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:titan_sands_music_disc"
+  }
+}

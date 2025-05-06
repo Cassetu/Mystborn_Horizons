@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:carved_ice_bricks"
+    },
+    "title": "Frosty the Spider",
+    "description": "Kill an Ice Spider",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "ice spider": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "mystbornhorizons:icespider"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 20
+  },
+  "parent": "minecraft:adventure/kill_a_mob"
+}

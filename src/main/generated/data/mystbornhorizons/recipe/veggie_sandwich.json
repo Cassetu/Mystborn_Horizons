@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:bread"
+    },
+    "V": {
+      "tag": "minecraft:mystbornhorizons"
+    }
+  },
+  "pattern": [
+    "   ",
+    "  B",
+    " BV"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:veggie_sandwich"
+  }
+}

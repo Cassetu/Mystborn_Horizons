@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "mystbornhorizons:mystborn_dust"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "mystbornhorizons:froststone"
+    }
+  },
+  "pattern": [
+    " I ",
+    "RCR",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:power_core"
+  }
+}

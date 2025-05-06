@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "M": {
+      "item": "mystbornhorizons:mystborn_dust"
+    },
+    "S": {
+      "item": "mystbornhorizons:stormite"
+    },
+    "T": {
+      "item": "mystbornhorizons:tectonite_geode"
+    }
+  },
+  "pattern": [
+    "ESE",
+    "MTM",
+    "ESE"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:echoes_of_the_abyss_music_disc"
+  }
+}

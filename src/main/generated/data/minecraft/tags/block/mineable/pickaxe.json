@@ -1,0 +1,20 @@
+{
+  "values": [
+    "mystbornhorizons:froststone_block",
+    "mystbornhorizons:froststone_ore",
+    "mystbornhorizons:stormite_ore",
+    "mystbornhorizons:luminite_end_ore",
+    "mystbornhorizons:stormite_deepslate_ore",
+    "mystbornhorizons:froststone_deepslate_ore",
+    "mystbornhorizons:moonstone_deepslate_ore",
+    "mystbornhorizons:tectonite_deepslate_ore",
+    "mystbornhorizons:mystborn_dust_ore",
+    "mystbornhorizons:myst_bricks",
+    "mystbornhorizons:myst_crate",
+    "mystbornhorizons:packed_ice_bricks",
+    "mystbornhorizons:carved_ice_bricks",
+    "mystbornhorizons:molten_gold_blackstone",
+    "mystbornhorizons:molten_gold_basalt",
+    "mystbornhorizons:shard_block"
+  ]
+}

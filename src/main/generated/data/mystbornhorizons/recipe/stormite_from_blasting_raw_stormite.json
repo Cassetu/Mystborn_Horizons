@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 5.0,
+  "group": "stormite",
+  "ingredient": {
+    "item": "mystbornhorizons:raw_stormite"
+  },
+  "result": {
+    "id": "mystbornhorizons:stormite"
+  }
+}

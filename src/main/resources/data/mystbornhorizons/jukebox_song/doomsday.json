@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "item.mystbornhorizons.doomsday_music_disc.desc"
+  },
+  "length_in_seconds": 133.0,
+  "sound_event": "mystbornhorizons:doomsday"
+}

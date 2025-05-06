@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "item": "minecraft:egg"
+    },
+    "S": {
+      "item": "minecraft:sugar"
+    },
+    "W": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "pattern": [
+    "   ",
+    "  E",
+    " WS"
+  ],
+  "result": {
+    "count": 3,
+    "id": "mystbornhorizons:waffle"
+  }
+}

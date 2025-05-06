@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "mystbornhorizons",
+	"version": "${version}",
+	"name": "Mystborn Horizons",
+	"description": "More ores, mobs and more ;D",
+	"authors": [
+		"Cassetu"
+	],
+	"contact": {
+		"homepage": "https://www.youtube.com/@Cassetu",
+		"sources": "https://modrinth.com/mod/mystborn_horizons"
+	},
+	"license": "CC-BY-NC-ND-4.0",
+	"icon": "assets/mystbornhorizons/mystborn_horizon.jpg",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"cassetu.mystbornhorizons.MystbornHorizons"
+		],
+		"fabric-datagen": [
+			"cassetu.mystbornhorizons.MystbornHorizonsDataGenerator"
+		],
+		"client": [
+			"cassetu.mystbornhorizons.MystbornHorizonsClient"
+		]
+	},
+	"mixins": [
+      "mystbornhorizons.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

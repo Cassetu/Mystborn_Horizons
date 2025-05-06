@@ -1,0 +1,42 @@
+{
+  "doomsday": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:doomsday",
+        "stream": true
+      }
+    ]
+  },
+  "titan_sands": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:titan_sands",
+        "stream": true
+      }
+    ]
+  },
+  "ender_fury": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:ender_fury",
+        "stream": true
+      }
+    ]
+  },
+  "echoes_of_the_abyss": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:echoes_of_the_abyss",
+        "stream": true
+      }
+    ]
+  },
+  "water_horizons": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:water_horizons",
+        "stream": true
+      }
+    ]
+  }
+}

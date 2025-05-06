@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:peacekeeper_sword"
+    },
+    "title": "The Last Best Hope for Peace",
+    "description": "Obtain the PeaceKeeper",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "boss_of_villager_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mystbornhorizons:peacekeeper_sword"
+            ],
+            "count": {
+              "min": 1,
+              "max": 64
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 1000,
+    "loot": [
+      "advancement_overload:blocks/bov"
+    ]
+  },
+  "parent": "minecraft:adventure/hero_of_the_village"
+}
+

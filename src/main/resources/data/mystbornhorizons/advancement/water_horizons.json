@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:water_horizons_music_disc"
+    },
+    "title": "Listen, The Water Sings.",
+    "description": "Obtain the Water Horizons Music Disc",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "water_horizons_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "mystbornhorizons:water_horizons_music_disc"
+            ],
+            "count": {
+              "min": 1,
+              "max": 64
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 1000,
+    "loot": [
+      "minecraft:diamond"
+    ]
+  },
+  "parent": "minecraft:adventure/play_jukebox_in_meadows"
+}
+

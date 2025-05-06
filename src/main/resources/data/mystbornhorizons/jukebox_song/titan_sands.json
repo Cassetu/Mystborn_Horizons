@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "item.mystbornhorizons.titan_sands_music_disc.desc"
+  },
+  "length_in_seconds": 220.0,
+  "sound_event": "mystbornhorizons:titan_sands"
+}

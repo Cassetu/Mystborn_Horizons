@@ -1,0 +1,15 @@
+{
+  "name": "mystbornhorizons:ice_tower",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 120,
+      "element": {
+        "location": "mystbornhorizons:ice_tower",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}

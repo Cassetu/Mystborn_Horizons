@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:cauliflower"
+    },
+    "title": "mmmm cauliflower",
+    "description": "Eat a cauliflower",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "mmm_cauliflower_0": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "mystbornhorizons:cauliflower"
+          ]
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  },
+  "parent": "minecraft:husbandry/plant_seed"
+}

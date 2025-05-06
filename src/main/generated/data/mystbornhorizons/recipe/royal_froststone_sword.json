@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "mystbornhorizons:froststone_sword"
+    },
+    "R": {
+      "item": "mystbornhorizons:froststone"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "V": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    " R ",
+    "VMV",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:royal_froststone_sword"
+  }
+}

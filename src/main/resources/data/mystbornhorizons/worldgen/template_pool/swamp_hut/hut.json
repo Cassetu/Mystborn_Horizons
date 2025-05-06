@@ -1,0 +1,16 @@
+{
+  "name": "mystbornhorizons:swamp_hut/hut",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 80,
+      "element": {
+        "location": "mystbornhorizons:swamp_hut",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
+

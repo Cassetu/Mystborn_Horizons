@@ -1,0 +1,29 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:chicken_nuggets"
+    },
+    "title": "4pc Chicken Nugget",
+    "description": "Eat some chicken nuggets",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "4pc_chicken_nugget_0": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": [
+            "mystbornhorizons:chicken_nuggets"
+          ]
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  },
+  "parent": "minecraft:husbandry/plant_seed"
+}

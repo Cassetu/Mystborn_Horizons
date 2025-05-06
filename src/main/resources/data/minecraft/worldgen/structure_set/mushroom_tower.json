@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "minecraft:mushroom_tower",
+      "weight": 56
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 40,
+    "separation": 17,
+    "salt": 1679999989
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:gilded_blackstone"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "pattern": [
+    "   ",
+    " BG",
+    " GB"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mystbornhorizons:molten_gold_blackstone"
+  }
+}

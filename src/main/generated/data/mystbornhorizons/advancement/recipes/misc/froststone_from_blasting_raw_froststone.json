@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_froststone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:raw_froststone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:froststone_from_blasting_raw_froststone"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_froststone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:froststone_from_blasting_raw_froststone"
+    ]
+  }
+}

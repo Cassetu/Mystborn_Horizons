@@ -1,0 +1,9 @@
+{
+  "asset_name": "froststone",
+  "description": {
+    "color": "#79D9CE",
+    "translate": "trim_material.mystbornhorizons.froststone"
+  },
+  "ingredient": "mystbornhorizons:froststone",
+  "item_model_index": 0.8
+}

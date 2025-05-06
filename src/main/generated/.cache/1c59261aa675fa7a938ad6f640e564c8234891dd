@@ -1,0 +1,18 @@
+// 1.21.1	2025-05-05T18:56:22.9604654	Mystborn Horizons/Tags for minecraft:item
+1db995bafb9ca6ef0824e4cdcaa00c9735f6bc19 data\minecraft\tags\item\hoes.json
+fe3887d27538bd32c752931d9f98c6f669b17254 data\minecraft\tags\item\trimmable_armor.json
+0fb011f9d9af51e013f5534dfb2fb3d1acc1fb8f data\minecraft\tags\item\enchantable\leg_armor.json
+6225e58b81b4df245a5226c1cdd26b2dc6e8207a data\minecraft\tags\item\axes.json
+7458acd08650ca94e9233fe2ee4f95a2367dd499 data\minecraft\tags\item\enchantable\head_armor.json
+7990762cc1bb27198b7903f61e9f09a542cbf2c3 data\minecraft\tags\item\cow_food.json
+eca6b543c9d142a074bb4bc47807f88b3e2b0479 data\minecraft\tags\item\pickaxes.json
+53fd07ecdb43b0c46096d49a55f27a0f99779039 data\minecraft\tags\item\enchantable\armor.json
+97b775d9f49eb7ae23cfc4a96286bca33e45112d data\minecraft\tags\item\swords.json
+57e69e15593f252cc401b1e2f9ccb4790a191cd9 data\minecraft\tags\item\enchantable\foot_armor.json
+7647865bd8ebb0ed84cb3967c0d690977c92149e data\minecraft\tags\item\mystbornhorizons.json
+0d30d43ec52bf1a455cf595b2ed373290411f207 data\minecraft\tags\item\trim_materials.json
+f406dd7b565ec0136161e5be904c53cfb3db2209 data\minecraft\tags\item\shovels.json
+fe4b1d84e979d0055ec075117f769cbf7be9507b data\minecraft\tags\item\enchantable\equippable.json
+7882228422aa82ed997f309bbbefe6e6ac258a03 data\minecraft\tags\item\enchantable\durability.json
+c5744234fb8d2a8dd4043f457d23ef66c5c390f1 data\minecraft\tags\item\enchantable\chest_armor.json
+35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data\minecraft\tags\item\trim_templates.json

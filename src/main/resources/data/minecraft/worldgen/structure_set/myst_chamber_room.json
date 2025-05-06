@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "minecraft:myst_chamber_room",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 20,
+    "separation": 7,
+    "salt": 1679357486
+  }
+}
