@@ -19,7 +19,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structures": "mystbornhorizons:ice_tower"
+                "structures": "minecraft:ice_tower"
               }
             }
           }
