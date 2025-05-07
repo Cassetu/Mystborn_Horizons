@@ -11,7 +11,7 @@
 		"homepage": "https://www.youtube.com/@Cassetu",
 		"sources": "https://modrinth.com/mod/mystborn_horizons"
 	},
-	"license": "CC-BY-NC-ND-4.0",
+	"license": "LGPL-3.0-only",
 	"icon": "assets/mystbornhorizons/mystborn_horizon.jpg",
 	"environment": "*",
 	"entrypoints": {

@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:ice_spider_spawn_egg"
+    },
+    "title": "A Frozen Haven",
+    "description": "Find the Ice Tower",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "in_stronghold": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "mystbornhorizons:ice_tower"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    },
+    "rewards": {
+      "experience": 50
+    },
+    "parent": "minecraft:story/follow_ender_eye"
+  }
+}
