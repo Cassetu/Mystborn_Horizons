@@ -7,7 +7,7 @@
       "min_value": -64,
       "max_value": 64,
       "spline": {
-        "coordinate": "tectonic:overworld/erosion",
+        "coordinate": "mystbornhorizons:overworld/erosion",
         "points": [
           {
             "location": -0.5,
@@ -38,7 +38,7 @@
             "location": -0.075,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/continents",
+              "coordinate": "mystbornhorizons:overworld/continents",
               "points": [
                 {
                   "location": 0,
@@ -57,7 +57,7 @@
             "location": 0.075,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/continents",
+              "coordinate": "mystbornhorizons:overworld/continents",
               "points": [
                 {
                   "location": 0,

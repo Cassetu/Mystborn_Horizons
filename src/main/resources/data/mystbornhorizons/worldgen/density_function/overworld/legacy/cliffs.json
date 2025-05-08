@@ -13,7 +13,7 @@
                     "spline": {
                         "coordinate": {
                             "type": "minecraft:interpolated",
-                            "argument": "tectonic:overworld/continents"
+                            "argument": "mystbornhorizons:overworld/continents"
                         },
                         "points": [
                             {
@@ -41,7 +41,7 @@
                     "spline": {
                         "coordinate": {
                             "type": "minecraft:interpolated",
-                            "argument": "tectonic:overworld/legacy/erosion_folded"
+                            "argument": "mystbornhorizons:overworld/legacy/erosion_folded"
                         },
                         "points": [
                             {
@@ -74,13 +74,13 @@
                                     "type": "minecraft:add",
                                     "argument1": {
                                         "type": "minecraft:noise",
-                                        "noise": "tectonic:offset/1",
+                                        "noise": "mystbornhorizons:offset/1",
                                         "xz_scale": 0.5,
                                         "y_scale": 0
                                     },
                                     "argument2": {
                                         "type": "minecraft:noise",
-                                        "noise": "tectonic:offset/2",
+                                        "noise": "mystbornhorizons:offset/2",
                                         "xz_scale": 0.5,
                                         "y_scale": 0
                                     }

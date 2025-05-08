@@ -10,7 +10,7 @@
           "type": "minecraft:add",
           "argument1": {
             "type": "minecraft:noise",
-            "noise": "tectonic:offset/1",
+            "noise": "mystbornhorizons:offset/1",
             "xz_scale": 0.25,
             "y_scale": 0
           },
@@ -18,13 +18,13 @@
             "type": "minecraft:add",
             "argument1": {
               "type": "minecraft:noise",
-              "noise": "tectonic:offset/2",
+              "noise": "mystbornhorizons:offset/2",
               "xz_scale": 0.25,
               "y_scale": 0
             },
             "argument2": {
               "type": "minecraft:noise",
-              "noise": "tectonic:offset/3",
+              "noise": "mystbornhorizons:offset/3",
               "xz_scale": 0.25,
               "y_scale": 0
             }
@@ -34,7 +34,7 @@
           "type": "minecraft:min",
           "argument1": {
             "type": "minecraft:mul",
-            "argument1": "tectonic:overworld/legacy/ridges_folded",
+            "argument1": "mystbornhorizons:overworld/legacy/ridges_folded",
             "argument2": 0.5
           },
           "argument2": 0.03
@@ -52,7 +52,7 @@
                 "type": "minecraft:mul",
                 "argument1": {
                   "type": "minecraft:abs",
-                  "argument": "tectonic:overworld/legacy/ridges_folded"
+                  "argument": "mystbornhorizons:overworld/legacy/ridges_folded"
                 },
                 "argument2": -1
               },

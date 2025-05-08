@@ -1,13 +1,13 @@
 {
   "type": "minecraft:shifted_noise",
-  "noise": "tectonic:hbridges/detailed",
+  "noise": "mystbornhorizons:hbridges/detailed",
   "xz_scale": 2,
   "y_scale": 0,
   "shift_x": {
     "type": "minecraft:mul",
     "argument1": {
       "type": "minecraft:abs",
-      "argument": "tectonic:hbridges/noiseshift/slopex"
+      "argument": "mystbornhorizons:hbridges/noiseshift/slopex"
     },
     "argument2": 3000
   },
@@ -16,7 +16,7 @@
     "type": "minecraft:mul",
     "argument1": {
       "type": "minecraft:abs",
-      "argument": "tectonic:hbridges/noiseshift/slopez"
+      "argument": "mystbornhorizons:hbridges/noiseshift/slopez"
     },
     "argument2": 3000
   }

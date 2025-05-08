@@ -4,11 +4,11 @@
     "type": "minecraft:cache_2d",
     "argument": {
       "type": "minecraft:add",
-      "argument1": "tectonic:hbridges/noiseshift/base",
+      "argument1": "mystbornhorizons:hbridges/noiseshift/base",
       "argument2": {
         "type": "minecraft:mul",
         "argument1": 0.6,
-        "argument2": "tectonic:hbridges/shifteddetail"
+        "argument2": "mystbornhorizons:hbridges/shifteddetail"
       }
     }
   }

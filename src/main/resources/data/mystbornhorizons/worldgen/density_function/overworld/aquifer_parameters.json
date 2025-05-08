@@ -1,8 +1,6 @@
 {
   "type": "minecraft:range_choice",
   "input": {
-    // Temporary hack to fix aquifer issues.
-    // TODO: actually fix the issue
     "type": "minecraft:range_choice",
     "input": "minecraft:y",
     "min_inclusive": 48,
@@ -12,7 +10,7 @@
       "min_value": -64,
       "max_value": 64,
       "spline": {
-        "coordinate": "tectonic:overworld/continents",
+        "coordinate": "mystbornhorizons:overworld/continents",
         "points": [
           {
             "location": -0.24,
@@ -33,7 +31,7 @@
             "location": -0.1,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/ridges",
+              "coordinate": "mystbornhorizons:overworld/ridges",
               "points": [
                 {
                   "location": -0.1,
@@ -68,10 +66,10 @@
   "when_in_range": 1,
   "when_out_of_range": {
     "type": "minecraft:range_choice",
-    "input": "tectonic:overworld/cliff/parameters",
+    "input": "mystbornhorizons:overworld/cliff/parameters",
     "min_inclusive": -0.1,
     "max_exclusive": 0.1,
-    "when_in_range": "tectonic:overworld/underground_river/parameters_3d",
-    "when_out_of_range": "tectonic:overworld/cliff/parameters"
+    "when_in_range": "mystbornhorizons:overworld/underground_river/parameters_3d",
+    "when_out_of_range": "mystbornhorizons:overworld/cliff/parameters"
   }
 }

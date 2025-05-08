@@ -7,7 +7,7 @@
       "min_value": -64,
       "max_value": 64,
       "spline": {
-        "coordinate": "tectonic:overworld/continents",
+        "coordinate": "mystbornhorizons:overworld/continents",
         "points": [
           {
             "location": -0.16,
@@ -18,7 +18,7 @@
             "location": -0.14,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/erosion",
+              "coordinate": "mystbornhorizons:overworld/erosion",
               "points": [
                 {
                   "location": 0.85,
@@ -29,7 +29,7 @@
                   "location": 0.90,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/ridges",
+                    "coordinate": "mystbornhorizons:overworld/ridges",
                     "points": [
                       {
                         "location": 0.0,
@@ -48,7 +48,7 @@
                   "location": 0.95,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/ridges",
+                    "coordinate": "mystbornhorizons:overworld/ridges",
                     "points": [
                       {
                         "location": 0.0,
@@ -75,7 +75,7 @@
             "location": 0,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/erosion",
+              "coordinate": "mystbornhorizons:overworld/erosion",
               "points": [
                 {
                   "location": 0.85,
@@ -86,7 +86,7 @@
                   "location": 0.9,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/ridges",
+                    "coordinate": "mystbornhorizons:overworld/ridges",
                     "points": [
                       {
                         "location": 0.025,
@@ -105,7 +105,7 @@
                   "location": 0.95,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/ridges",
+                    "coordinate": "mystbornhorizons:overworld/ridges",
                     "points": [
                       {
                         "location": 0.025,
@@ -132,7 +132,7 @@
             "location": 0.05,
             "derivative": 0,
             "value": {
-              "coordinate": "tectonic:overworld/erosion",
+              "coordinate": "mystbornhorizons:overworld/erosion",
               "points": [
                 {
                   "location": 0.85,
@@ -143,7 +143,7 @@
                   "location": 0.9,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/legacy/ridges_folded",
+                    "coordinate": "mystbornhorizons:overworld/legacy/ridges_folded",
                     "points": [
                       {
                         "location": 0.025,
@@ -162,7 +162,7 @@
                   "location": 0.95,
                   "derivative": 0,
                   "value": {
-                    "coordinate": "tectonic:overworld/legacy/ridges_folded",
+                    "coordinate": "mystbornhorizons:overworld/legacy/ridges_folded",
                     "points": [
                       {
                         "location": 0.025,
@@ -193,7 +193,7 @@
       "min_value": -64,
       "max_value": 64,
       "spline": {
-        "coordinate": "tectonic:overworld/depth",
+        "coordinate": "mystbornhorizons:overworld/depth",
         "points": [
           {
             "location": -0.75,
