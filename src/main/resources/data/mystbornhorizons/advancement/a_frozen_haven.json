@@ -11,7 +11,7 @@
     "hidden": false
   },
   "criteria": {
-    "in_stronghold": {
+    "ice_tower_0": {
       "conditions": {
         "player": [
           {
