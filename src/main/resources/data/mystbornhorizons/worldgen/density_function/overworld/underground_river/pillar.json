@@ -37,7 +37,7 @@
                 },
                 "argument2": {
                   "type": "minecraft:shifted_noise",
-                  "noise": "tectonic:pillar/location",
+                  "noise": "mystbornhorizons:pillar/location",
                   "xz_scale": 15,
                   "y_scale": 0.3,
                   "shift_x": {
@@ -54,7 +54,7 @@
                       },
                       "argument2": {
                         "type": "minecraft:noise",
-                        "noise": "tectonic:pillar/shift_x",
+                        "noise": "mystbornhorizons:pillar/shift_x",
                         "xz_scale": 0.25,
                         "y_scale": 0
                       }
@@ -75,7 +75,7 @@
                       },
                       "argument2": {
                         "type": "minecraft:noise",
-                        "noise": "tectonic:pillar/shift_z",
+                        "noise": "mystbornhorizons:pillar/shift_z",
                         "xz_scale": 0.25,
                         "y_scale": 0
                       }
@@ -97,7 +97,7 @@
         "min_value": -64,
         "max_value": 64,
         "spline": {
-          "coordinate": "tectonic:overworld/legacy/erosion_folded",
+          "coordinate": "mystbornhorizons:overworld/legacy/erosion_folded",
           "points": [
             {
               "location": 0.15,

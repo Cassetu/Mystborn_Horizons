@@ -42,14 +42,14 @@
                   "type": "minecraft:mul",
                   "argument1": {
                     "type": "minecraft:square",
-                    "argument": "tectonic:overworld/ridges"
+                    "argument": "mystbornhorizons:overworld/ridges"
                   },
                   "argument2": -150
                 },
                 "argument2": 0.35
               }
             },
-            "argument2": "tectonic:overworld/underground_river/pillar"
+            "argument2": "mystbornhorizons:overworld/underground_river/pillar"
           },
           "argument2": {
             "type": "minecraft:mul",
@@ -65,7 +65,7 @@
                       "type": "minecraft:mul",
                       "argument1": {
                         "type": "minecraft:cube",
-                        "argument": "tectonic:overworld/erosion"
+                        "argument": "mystbornhorizons:overworld/erosion"
                       },
                       "argument2": 28
                     }
@@ -89,7 +89,7 @@
                       "type": "minecraft:abs",
                       "argument": {
                         "type": "minecraft:add",
-                        "argument1": "tectonic:overworld_large_biomes/continents",
+                        "argument1": "mystbornhorizons:overworld_large_biomes/continents",
                         "argument2": 0.1
                       }
                     },
@@ -99,7 +99,7 @@
                     "type": "minecraft:abs",
                     "argument": {
                       "type": "minecraft:add",
-                      "argument1": "tectonic:overworld_large_biomes/continents",
+                      "argument1": "mystbornhorizons:overworld_large_biomes/continents",
                       "argument2": 0.2
                     }
                   }
