@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "mystbornhorizons:basalt_stronghold",
+      "weight": 80
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 80,
+    "separation": 47,
+    "salt": 2639633456
+  }
+}
