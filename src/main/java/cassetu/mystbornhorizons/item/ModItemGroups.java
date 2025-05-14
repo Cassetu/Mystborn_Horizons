@@ -37,6 +37,7 @@ public class ModItemGroups {
                         entries.add(ModItems.WATER_HORIZONS_MUSIC_DISC);
                         entries.add(ModItems.MOONSTONE);
                         entries.add(ModItems.PEACEKEEPER_SWORD);
+                        entries.add(ModItems.VANQUISHER_SWORD);
                         entries.add(ModItems.MOONSTONE_RAPIER);
                         entries.add(ModItems.MYSTBORN_DUST);
 

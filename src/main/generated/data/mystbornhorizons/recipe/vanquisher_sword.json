@@ -5,32 +5,29 @@
     "C": {
       "item": "mystbornhorizons:royal_froststone_sword"
     },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
     "M": {
       "item": "mystbornhorizons:mystborn_dust"
     },
     "N": {
-      "item": "minecraft:netherite_sword"
+      "item": "minecraft:netherite_ingot"
     },
     "R": {
-      "item": "mystbornhorizons:moonstone_rapier"
+      "item": "mystbornhorizons:peacekeeper_sword"
+    },
+    "S": {
+      "item": "minecraft:stick"
     },
     "T": {
       "item": "mystbornhorizons:royal_tectonite_sword"
-    },
-    "V": {
-      "item": "minecraft:gold_ingot"
     }
   },
   "pattern": [
-    "IRI",
+    "MRM",
     "CMT",
-    "VNV"
+    "NSN"
   ],
   "result": {
     "count": 1,
-    "id": "mystbornhorizons:peacekeeper_sword"
+    "id": "mystbornhorizons:vanquisher_sword"
   }
 }

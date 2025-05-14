@@ -80,6 +80,16 @@ public class ModItems {
                 }
             });
 
+    public static final Item VANQUISHER_SWORD = registerItem("vanquisher_sword",
+            new SwordItem(ModToolMaterials.MYSTBORN_DUST, new Item.Settings()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.MYSTBORN_DUST, 12, -2.4f))) {
+                @Override
+                public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+                    tooltip.add(Text.translatable("tooltip.mystbornhorizons.vanquish.tooltip"));
+                    super.appendTooltip(stack, context, tooltip, type);
+                }
+            });
+
 
 
 

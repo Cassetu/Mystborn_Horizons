@@ -106,16 +106,30 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, ModItems.PEACEKEEPER_SWORD)
                 .pattern("IRI")
                 .pattern("CMT")
-                .pattern("VSV")
+                .pattern("VNV")
                 .input('R', ModItems.MOONSTONE_RAPIER)
                 .input('C', ModItems.ROYAL_FROSTSTONE_SWORD)
                 .input('T', ModItems.ROYAL_TECTONITE_SWORD)
                 .input('M', ModItems.MYSTBORN_DUST)
-                .input('S', Items.STICK)
+                .input('N', Items.NETHERITE_SWORD)
                 .input('V', Items.GOLD_INGOT)
                 .input('I', Items.IRON_INGOT)
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, ModItems.VANQUISHER_SWORD)
+                .pattern("MRM")
+                .pattern("CMT")
+                .pattern("NSN")
+                .input('R', ModItems.PEACEKEEPER_SWORD)
+                .input('C', ModItems.ROYAL_FROSTSTONE_SWORD)
+                .input('T', ModItems.ROYAL_TECTONITE_SWORD)
+                .input('M', ModItems.MYSTBORN_DUST)
+                .input('S', Items.STICK)
+                .input('N', Items.NETHERITE_INGOT)
+                .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
+                .offerTo(exporter);
+
 
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_CHESTPLATE)
@@ -150,7 +164,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.TITAN_SANDS_MUSIC_DISC)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.TITAN_SANDS_MUSIC_DISC)
                 .pattern("RSR")
                 .pattern("MTM")
                 .pattern("RSR")
@@ -161,7 +175,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC)
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC)
                 .pattern("ESE")
                 .pattern("MTM")
                 .pattern("ESE")

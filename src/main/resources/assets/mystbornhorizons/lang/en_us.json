@@ -35,10 +35,12 @@
   "tooltip.mystbornhorizons.royal_sword.tooltip": "§7A sword made for royalty§r",
   "tooltip.mystbornhorizons.the_royal_sword.tooltip": "§7The First Sword made for Royalty§r",
   "tooltip.mystbornhorizons.peace.tooltip": "§7A Sword Made to Enforce the Peace§r",
+  "tooltip.mystbornhorizons.vanquish.tooltip": "§7To Kill, Or Be Killed§r",
 
   "item.mystbornhorizons.froststone_sword": "Froststone Sword",
   "item.mystbornhorizons.royal_froststone_sword": "§9§lRoyal Froststone Sword§r",
   "item.mystbornhorizons.peacekeeper_sword": "§a§lThe PeaceKeeper§r",
+  "item.mystbornhorizons.vanquisher_sword": "§4§lVanquisher Sword§r",
 
   "item.mystbornhorizons.salmon_nigiri": "Salmon Nigiri",
   "item.mystbornhorizons.cod_nigiri": "Cod Nigiri",
