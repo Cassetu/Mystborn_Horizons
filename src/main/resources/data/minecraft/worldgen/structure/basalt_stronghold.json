@@ -1,19 +1,14 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#mystbornhorizons:has_structure/basalt_stronghold",
+  "biomes": ["minecraft:basalt_deltas","flower_forest"],
   "step": "surface_structures",
+  "adapt_noise": true,
   "spawn_overrides": {
     "monster": {
       "bounding_box": "full",
       "spawns": [
         {
-          "type": "minecraft:piglin_brute",
-          "weight": 1,
-          "minCount": 1,
-          "maxCount": 3
-        },
-        {
-          "type": "minecraft:piglin",
+          "type": "minecraft:iron_golem",
           "weight": 1,
           "minCount": 1,
           "maxCount": 3
@@ -22,12 +17,12 @@
     }
   },
   "terrain_adaptation": "beard_thin",
-  "start_pool": "mystbornhorizons:basalt_stronghold",
+  "start_pool": "mystbornhorizons:basalt_stronghold/start_pool",
   "size": 7,
   "start_height": {
-    "absolute": 20
+    "absolute": -15
   },
-  "project_start_to_heightmap": "WORLD_SURFACE",
-  "max_distance_from_center": 110,
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 100,
   "use_expansion_hack": false
 }

@@ -1,6 +1,6 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": ["minecraft:snowy_taiga","minecraft:frozen_peaks","minecraft:snowy_slopes","snowy_beach","ice_plains","frozen_ocean"],
+  "biomes": ["minecraft:snowy_taiga","minecraft:frozen_peaks","minecraft:snowy_slopes","snowy_beach","frozen_ocean"],
   "step": "surface_structures",
   "spawn_overrides": {},
   "terrain_adaptation": "beard_thin",

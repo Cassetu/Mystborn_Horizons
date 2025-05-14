@@ -2,6 +2,7 @@
   "type": "minecraft:jigsaw",
   "biomes": ["minecraft:jungle","bamboo_jungle"],
   "step": "surface_structures",
+  "adapt_noise": true,
   "spawn_overrides": {},
   "terrain_adaptation": "beard_box",
   "start_pool": "mystbornhorizons:jungle_pyramid/jungle_pyramid",
