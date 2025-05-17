@@ -1,5 +1,5 @@
 {
-  "feature": "mystborn_horizons:configured_feature/crystal_formation",
+  "feature": "mystbornhorizons:crystal_formation",
   "placement": [
     {
       "type": "minecraft:count",
@@ -12,8 +12,12 @@
       "type": "minecraft:height_range",
       "height": {
         "type": "minecraft:uniform",
-        "min_inclusive": 0,
-        "max_inclusive": 100
+        "min_inclusive": {
+          "absolute": 0
+        },
+        "max_inclusive": {
+          "absolute": 100
+        }
       }
     },
     {

@@ -152,7 +152,7 @@
         "if_true": {
           "type": "minecraft:biome",
           "biome_is": [
-            "mystborn_horizons:crystal_highlands"
+            "mystbornhorizons:crystal_highlands"
           ]
         },
         "then_run": {
