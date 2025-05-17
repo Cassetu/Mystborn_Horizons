@@ -16,30 +16,15 @@ public class ModItemGroups {
             FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.MYSTBORN_DUST))
                     .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_items"))
                     .entries((displayContext, entries) -> {
-                        entries.add(ModItems.RAW_FROSTSTONE);
-                        entries.add(ModItems.FROSTSTONE);
-
-                        entries.add(ModBlocks.FROSTSTONE_ORE);
-                        entries.add(ModBlocks.MOONSTONE_DEEPSLATE_ORE);
-                        entries.add(ModBlocks.FROSTSTONE_DEEPSLATE_ORE);
                         entries.add(ModBlocks.SHARD_BLOCK);
-                        entries.add(ModBlocks.STORMITE_ORE);
-                        entries.add(ModBlocks.MYSTBORN_DUST_ORE);
-                        entries.add(ModBlocks.STORMITE_DEEPSLATE_ORE);
-                        entries.add(ModBlocks.LUMINITE_END_ORE);
-                        entries.add(ModItems.STORMITE);
-                        entries.add(ModItems.RAW_STORMITE);
-                        entries.add(ModItems.TECTONITE_GEODE);
                         entries.add(ModItems.DOOMSDAY_MUSIC_DISC);
                         entries.add(ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC);
                         entries.add(ModItems.TITAN_SANDS_MUSIC_DISC);
                         entries.add(ModItems.ENDER_FURY_MUSIC_DISC);
                         entries.add(ModItems.WATER_HORIZONS_MUSIC_DISC);
-                        entries.add(ModItems.MOONSTONE);
                         entries.add(ModItems.PEACEKEEPER_SWORD);
                         entries.add(ModItems.VANQUISHER_SWORD);
                         entries.add(ModItems.MOONSTONE_RAPIER);
-                        entries.add(ModItems.MYSTBORN_DUST);
 
                         entries.add(ModItems.MANTIS_SPAWN_EGG);
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
@@ -91,6 +76,29 @@ public class ModItemGroups {
 
                     }).build());
 
+    public static final ItemGroup MYSTBORN_ORES_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(MystbornHorizons.MOD_ID, "mystbornhorizons_ores"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModBlocks.MYSTBORN_DUST_ORE))
+                    .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_ores"))
+                    .entries((displayContext, entries) -> {
+                        entries.add(ModBlocks.STORMITE_ORE);
+                        entries.add(ModBlocks.MYSTBORN_DUST_ORE);
+                        entries.add(ModBlocks.STORMITE_DEEPSLATE_ORE);
+                        entries.add(ModBlocks.LUMINITE_END_ORE);
+                        entries.add(ModItems.STORMITE);
+                        entries.add(ModItems.MOONSTONE);
+                        entries.add(ModItems.MYSTBORN_DUST);
+                        entries.add(ModItems.SALONDITE);
+                        entries.add(ModItems.RAW_SALONDITE);
+                        entries.add(ModItems.RAW_FROSTSTONE);
+                        entries.add(ModItems.FROSTSTONE);
+                        entries.add(ModBlocks.SALONDITE_ORE);
+                        entries.add(ModBlocks.FROSTSTONE_ORE);
+                        entries.add(ModBlocks.MOONSTONE_DEEPSLATE_ORE);
+                        entries.add(ModBlocks.FROSTSTONE_DEEPSLATE_ORE);
+                        entries.add(ModItems.RAW_STORMITE);
+                        entries.add(ModItems.TECTONITE_GEODE);
+                    }).build());
     public static void registerItemGroups() {
         MystbornHorizons.LOGGER.info("Registering Item Groups for " + MystbornHorizons.MOD_ID);
     }

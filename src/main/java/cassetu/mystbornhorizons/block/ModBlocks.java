@@ -52,7 +52,12 @@ public class ModBlocks {
 
     public static final Block STORMITE_ORE = registerBlock("stormite_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),
-                    AbstractBlock.Settings.create().requiresTool().strength(3f).sounds(BlockSoundGroup.STONE)));
+                    AbstractBlock.Settings.create().requiresTool().strength(3f).sounds(BlockSoundGroup.NETHERRACK)));
+
+    public static final Block SALONDITE_ORE = registerBlock("salondite_ore",
+            new ExperienceDroppingBlock(UniformIntProvider.create(3, 7),
+                    AbstractBlock.Settings.create().requiresTool().strength(5f).sounds(BlockSoundGroup.STONE)));
+
 
     public static final Block MYSTBORN_DUST_ORE = registerBlock("mystborn_dust_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(10, 15),

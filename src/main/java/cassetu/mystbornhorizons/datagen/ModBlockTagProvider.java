@@ -21,6 +21,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.FROSTSTONE_BLOCK)
                 .add(ModBlocks.FROSTSTONE_ORE)
                 .add(ModBlocks.STORMITE_ORE)
+                .add(ModBlocks.SALONDITE_ORE)
                 .add(ModBlocks.LUMINITE_END_ORE)
                 .add(ModBlocks.STORMITE_DEEPSLATE_ORE)
                 .add(ModBlocks.FROSTSTONE_DEEPSLATE_ORE)
@@ -47,6 +48,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
                 .add(ModBlocks.FROSTSTONE_DEEPSLATE_ORE)
                 .add(ModBlocks.TECTONITE_DEEPSLATE_ORE)
+                .add(ModBlocks.SALONDITE_ORE)
                 .add(ModBlocks.LUMINITE_END_ORE)
                 .add(ModBlocks.STORMITE_DEEPSLATE_ORE)
                 .add(ModBlocks.MOONSTONE_DEEPSLATE_ORE);

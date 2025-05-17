@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 17.0,
+  "group": "salondite",
+  "ingredient": {
+    "item": "mystbornhorizons:salondite_ore"
+  },
+  "result": {
+    "id": "mystbornhorizons:salondite"
+  }
+}

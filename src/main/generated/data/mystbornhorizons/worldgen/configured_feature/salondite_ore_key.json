@@ -2,15 +2,15 @@
   "type": "minecraft:ore",
   "config": {
     "discard_chance_on_air_exposure": 0.0,
-    "size": 14,
+    "size": 3,
     "targets": [
       {
         "state": {
-          "Name": "mystbornhorizons:molten_gold_basalt"
+          "Name": "mystbornhorizons:salondite_ore"
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "minecraft:mystbornhorizons"
+          "tag": "minecraft:stone_ore_replaceables"
         }
       }
     ]

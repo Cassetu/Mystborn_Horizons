@@ -27,12 +27,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 ModBlocks.FROSTSTONE_DEEPSLATE_ORE);
         List<ItemConvertible> STORMITE_SMELTABLES = List.of(ModItems.RAW_STORMITE, ModBlocks.STORMITE_ORE,
                 ModBlocks.STORMITE_DEEPSLATE_ORE);
+        List<ItemConvertible> SALONDITE_SMELTABLES = List.of(ModItems.RAW_SALONDITE, ModBlocks.SALONDITE_ORE);
 
 
         offerSmelting(exporter, FROSTSTONE_SMELTABLES, RecipeCategory.MISC, ModItems.FROSTSTONE, 5f, 200, "froststone");
         offerBlasting(exporter, FROSTSTONE_SMELTABLES, RecipeCategory.MISC, ModItems.FROSTSTONE, 5f, 100, "froststone");
         offerSmelting(exporter, STORMITE_SMELTABLES, RecipeCategory.MISC, ModItems.STORMITE, 5f, 200, "stormite");
         offerBlasting(exporter, STORMITE_SMELTABLES, RecipeCategory.MISC, ModItems.STORMITE, 5f, 100, "stormite");
+
+        offerSmelting(exporter, SALONDITE_SMELTABLES, RecipeCategory.MISC, ModItems.SALONDITE, 17f, 400, "salondite");
+        offerBlasting(exporter, SALONDITE_SMELTABLES, RecipeCategory.MISC, ModItems.SALONDITE, 17f, 200, "salondite");
 
         offerReversibleCompactingRecipes(exporter, RecipeCategory.BUILDING_BLOCKS, ModItems.FROSTSTONE, RecipeCategory.DECORATIONS, ModBlocks.FROSTSTONE_BLOCK);
 

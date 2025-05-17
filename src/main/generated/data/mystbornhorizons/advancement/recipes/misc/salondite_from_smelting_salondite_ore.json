@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_salondite_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:salondite_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:salondite_from_smelting_salondite_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_salondite_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:salondite_from_smelting_salondite_ore"
+    ]
+  }
+}

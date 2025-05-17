@@ -1,0 +1,118 @@
+{
+  "temperature": 2.0,
+  "downfall": 0.0,
+  "has_precipitation": false,
+  "effects": {
+    "sky_color": 7842047,
+    "fog_color": 4341314,
+    "water_color": 4159204,
+    "water_fog_color": 329011,
+    "grass_color": 9470285,
+    "foliage_color": 9470285,
+    "ambient_sound": "minecraft:ambient.basalt_deltas.loop",
+    "mood_sound": {
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000,
+      "block_search_extent": 8,
+      "offset": 2.0
+    },
+    "additions_sound": {
+      "sound": "minecraft:ambient.basalt_deltas.additions",
+      "tick_chance": 0.0111
+    },
+    "particle": {
+      "options": {
+        "type": "minecraft:lava"
+      },
+      "probability": 0.02
+    }
+  },
+  "spawners": {
+    "ambient": [],
+    "creature": [],
+    "monster": [
+      {
+        "type": "minecraft:zombified_piglin",
+        "weight": 15,
+        "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:magma_cube",
+        "weight": 100,
+        "minCount": 2,
+        "maxCount": 4
+      },
+      {
+        "type": "minecraft:skeleton",
+        "weight": 20,
+        "minCount": 5,
+        "maxCount": 5
+      },
+      {
+        "type": "minecraft:blaze",
+        "weight": 15,
+        "minCount": 1,
+        "maxCount": 2
+      }
+    ],
+    "underground_water_creature": [],
+    "water_creature": [],
+    "water_ambient": [],
+    "misc": []
+  },
+  "spawn_costs": {
+    "minecraft:magma_cube": {
+      "energy_budget": 0.12,
+      "charge": 1.0
+    },
+    "minecraft:blaze": {
+      "energy_budget": 0.15,
+      "charge": 0.4
+    }
+  },
+  "carvers": {
+    "air": [
+      "minecraft:cave",
+      "minecraft:cave_extra_underground"
+    ]
+  },
+  "features": [
+    [],
+    ["minecraft:lake_lava_underground", "minecraft:lake_lava_surface"],
+    [],
+    ["minecraft:monster_room", "minecraft:monster_room_deep"],
+    [],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_blackstone",
+      "minecraft:ore_magma",
+      "minecraft:ore_soul_sand",
+      "minecraft:ore_gold_deltas",
+      "minecraft:ore_quartz_deltas",
+      "minecraft:ore_gold_nether",
+      "minecraft:ore_quartz_nether",
+      "minecraft:ore_ancient_debris_large",
+      "minecraft:ore_debris_small"
+    ],
+    [],
+    [
+      "minecraft:spring_lava",
+      "minecraft:spring_lava_frozen"
+    ],
+    [
+      "minecraft:large_basalt_columns",
+      "minecraft:basalt_pillar",
+      "minecraft:delta",
+      "minecraft:glowstone_extra",
+      "minecraft:glowstone",
+      "minecraft:brown_mushroom_nether",
+      "minecraft:red_mushroom_nether",
+      "minecraft:ore_magma",
+      "minecraft:patch_fire",
+      "minecraft:patch_soul_fire"
+    ]
+  ]
+}

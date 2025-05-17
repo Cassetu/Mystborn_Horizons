@@ -18,6 +18,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
 
+import javax.swing.text.html.HTML;
 import java.util.List;
 
 public class ModConfiguredFeatures {
@@ -28,6 +29,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>>  STORMITE_ORE_KEY = registerKey("stormite_ore");
     public static final RegistryKey<ConfiguredFeature<?, ?>>  MYSTBORN_DUST_ORE_KEY = registerKey("mystborn_dust_ore");
     public static final RegistryKey<ConfiguredFeature<?, ?>>  MOLTEN_GOLD_BASALT_KEY = registerKey("molten_gold_basalt_key");
+    public static final RegistryKey<ConfiguredFeature<?, ?>>  SALONDITE_ORE_KEY = registerKey("salondite_ore_key");
 
     public static final RegistryKey<ConfiguredFeature<?, ?>>  HONEY_BERRY_BUSH_KEY = registerKey("honey_berry_bush_ore");
 
@@ -53,9 +55,10 @@ public class ModConfiguredFeatures {
                 List.of(OreFeatureConfig.createTarget(netherReplaceables, ModBlocks.STORMITE_ORE.getDefaultState()));
         List<OreFeatureConfig.Target> overworldMystborn_Dust_Ores =
                 List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.MYSTBORN_DUST_ORE.getDefaultState()));
-
+        List<OreFeatureConfig.Target> overworldSalondite_Ores =
+                List.of(OreFeatureConfig.createTarget(stoneReplaceables, ModBlocks.SALONDITE_ORE.getDefaultState()));
         List<OreFeatureConfig.Target> basaltReplaceables_Ores =
-                List.of(OreFeatureConfig.createTarget(netherReplaceables, ModBlocks.MOLTEN_GOLD_BASALT.getDefaultState()));
+                List.of(OreFeatureConfig.createTarget(basaltReplaceables, ModBlocks.MOLTEN_GOLD_BASALT.getDefaultState()));
 
                 register(context, FROSTSTONE_ORE_KEY, Feature.ORE, new OreFeatureConfig(overworldFroststone_Ores, 5));
         register(context, TECTONITE_ORE_KEY, Feature.ORE, new OreFeatureConfig(overworldTectonite_Ores, 5));
@@ -63,6 +66,7 @@ public class ModConfiguredFeatures {
         register(context, STORMITE_ORE_KEY, Feature.ORE, new OreFeatureConfig(netherStormite_Ores, 5));
         register(context, LUMINITE_END_ORE_KEY, Feature.ORE, new OreFeatureConfig(endLuminite_Ores, 5));
         register(context, MYSTBORN_DUST_ORE_KEY, Feature.ORE, new OreFeatureConfig(overworldMystborn_Dust_Ores, 6));
+        register(context, SALONDITE_ORE_KEY, Feature.ORE, new OreFeatureConfig(overworldSalondite_Ores, 4));
 
         register(context, MOLTEN_GOLD_BASALT_KEY, Feature.ORE, new OreFeatureConfig(basaltReplaceables_Ores, 14));
 

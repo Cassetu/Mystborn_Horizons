@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "enhanced_terrain:craggy_peaks",
+    "enhanced_terrain:alpine_meadows",
+    "enhanced_terrain:rocky_tundra"
+  ]
+}

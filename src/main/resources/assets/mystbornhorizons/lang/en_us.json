@@ -5,6 +5,8 @@
   "item.mystbornhorizons.raw_stormite": "Raw Stormite",
   "item.mystbornhorizons.moonstone": "§8§lMoonstone§r",
   "item.mystbornhorizons.tectonite_geode": "§4Tectonite Geode§r",
+  "item.mystbornhorizons.salondite": "Salondite",
+  "item.mystbornhorizons.raw_salondite": "Raw Salondite",
 
 
   "block.mystbornhorizons.froststone_block": "Froststone Block",
@@ -12,6 +14,7 @@
   "block.mystbornhorizons.myst_crate": "Myst Crate",
   "block.mystbornhorizons.froststone_deepslate_ore": "Froststone Deepslate Ore",
   "block.mystbornhorizons.froststone_ore": "Froststone Ore",
+  "block.mystbornhorizons.salondite_ore": "Salondite Ore",
   "block.mystbornhorizons.mystborn_dust_ore": "§6Mystborn Dust Ore§r",
   "block.mystbornhorizons.stormite_deepslate_ore": "Stormite Deepslate Ore",
   "block.mystbornhorizons.moonstone_deepslate_ore": "Moonstone Deepslate Ore",
@@ -28,6 +31,7 @@
   "itemgroup.mystbornhorizons.mystbornhorizons_foods": "§8Mystborn Horizons Foods§r",
   "itemgroup.mystbornhorizons.mystbornhorizons_items": "§8Mystborn Horizons Items§r",
   "itemgroup.mystbornhorizons.mystbornhorizons_decor": "§8Mystborn Horizons Decor§r",
+  "itemgroup.mystbornhorizons.mystbornhorizons_ores": "§8Mystborn Horizons Ores§r",
 
   "tooltip.mystbornhorizons.shard_block.tooltip": "§cWatch out!§r §dThese crystalline shards will hurt you :(§r",
   "tooltip.mystbornhorizons.power_core.tooltip": "§7Fills you with energy, but may hurt you in return§r",

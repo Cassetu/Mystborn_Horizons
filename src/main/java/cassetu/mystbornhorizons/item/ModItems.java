@@ -17,6 +17,10 @@ import java.util.List;
 
 public class ModItems {
     public static final Item FROSTSTONE = registerItem("froststone", new Item(new Item.Settings()));
+
+    public static final Item SALONDITE = registerItem("salondite", new Item(new Item.Settings()));
+    public static final Item RAW_SALONDITE = registerItem("raw_salondite", new Item(new Item.Settings()));
+
     public static final Item RAW_FROSTSTONE = registerItem("raw_froststone", new Item(new Item.Settings()));
     public static final Item STORMITE = registerItem("stormite", new Item(new Item.Settings()));
     public static final Item RAW_STORMITE = registerItem("raw_stormite", new Item(new Item.Settings()));

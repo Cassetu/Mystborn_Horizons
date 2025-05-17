@@ -20,9 +20,11 @@ public class ModOreGeneration {
                 ModPlacedFeatures.MOONSTONE_ORE_PLACED_KEY);
         BiomeModifications.addFeature(BiomeSelectors.foundInTheNether(), GenerationStep.Feature.UNDERGROUND_ORES,
                 ModPlacedFeatures.STORMITE_ORE_PLACED_KEY);
-        BiomeModifications.addFeature(BiomeSelectors.foundInTheNether(), GenerationStep.Feature.UNDERGROUND_ORES,
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BASALT_DELTAS, BiomeKeys.SOUL_SAND_VALLEY), GenerationStep.Feature.UNDERGROUND_ORES,
                 ModPlacedFeatures.MOLTEN_GOLD_BASALT_PLACED_KEY);
         BiomeModifications.addFeature(BiomeSelectors.foundInTheEnd(), GenerationStep.Feature.UNDERGROUND_ORES,
                 ModPlacedFeatures.END_LUMINITE_ORE_PLACED_KEY);
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.BADLANDS, BiomeKeys.ERODED_BADLANDS, BiomeKeys.WOODED_BADLANDS), GenerationStep.Feature.UNDERGROUND_ORES,
+                ModPlacedFeatures.SALONDITE_ORE_PLACED_KEY);
     }
 }

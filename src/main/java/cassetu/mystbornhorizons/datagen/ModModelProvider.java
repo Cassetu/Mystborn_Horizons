@@ -29,6 +29,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MOLTEN_GOLD_BLACKSTONE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MOLTEN_GOLD_BASALT);
 
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SALONDITE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.FROSTSTONE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.FROSTSTONE_DEEPSLATE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.STORMITE_ORE);
@@ -47,6 +48,9 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerator itemModelGenerator) {
         itemModelGenerator.register(ModItems.FROSTSTONE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.SALONDITE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.RAW_SALONDITE, Models.GENERATED);
+
         itemModelGenerator.register(ModItems.RAW_FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.STORMITE, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_STORMITE, Models.GENERATED);
