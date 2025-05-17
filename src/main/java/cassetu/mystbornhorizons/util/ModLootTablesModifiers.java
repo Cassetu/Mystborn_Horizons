@@ -100,7 +100,15 @@ public class ModLootTablesModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
 
-
+            if(LootTables.TRIAL_CHAMBERS_INTERSECTION_CHEST.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1))
+                        .conditionally(RandomChanceLootCondition.builder(1.0f)) // 100% of the time
+                        .with(ItemEntry.builder(ModBlocks.SALONDITE_ORE))
+                        .with(ItemEntry.builder(ModItems.RAW_SALONDITE))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 7.0f)).build());
+                tableBuilder.pool(poolBuilder.build());
+            }
 
 
             if(LootTables.STRONGHOLD_CORRIDOR_CHEST.equals(key)) {

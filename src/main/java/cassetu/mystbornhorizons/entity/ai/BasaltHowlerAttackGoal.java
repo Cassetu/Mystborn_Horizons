@@ -52,11 +52,11 @@ public class BasaltHowlerAttackGoal extends Goal {
         this.speed = speed;
         this.attackDistanceSq = attackDistance * attackDistance;
         this.cooldownTicks = cooldownTicks;
-        this.chargeTime = 40; // 2 seconds at 20 ticks per second
-        this.trembleDuration = 15; // 0.75 seconds of trembling
+        this.chargeTime = 30; // 1.5 seconds at 20 ticks per second
+        this.trembleDuration = 20; // 1 seconds of trembling
         this.tremorRadius = 3.5f; // Block radius for tremor attack
         this.howlRadius = 6.0f; // Block radius for howl attack
-        this.attackDamage = 6.0f; // Base damage for attacks
+        this.attackDamage = 9.0f; // Base damage for attacks
 
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }

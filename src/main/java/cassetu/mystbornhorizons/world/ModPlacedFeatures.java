@@ -49,10 +49,10 @@ public class ModPlacedFeatures {
                         HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(80))));
         register(context, MOLTEN_GOLD_BASALT_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.MOLTEN_GOLD_BASALT_KEY),
                 ModOrePlacement.modifiersWithCount(38,
-                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(160))));
+                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(80))));
         register(context, SALONDITE_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SALONDITE_ORE_KEY),
                 ModOrePlacement.modifiersWithCount(14,
-                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(80))));
+                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(200))));
         register(context, HONEY_BERRY_BUSH_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.HONEY_BERRY_BUSH_KEY),
                 RarityFilterPlacementModifier.of(28), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP, BiomePlacementModifier.of());
     }

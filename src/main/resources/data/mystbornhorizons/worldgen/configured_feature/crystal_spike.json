@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:basalt_pillar",
+  "config": {
+    "height": {
+      "type": "minecraft:uniform",
+      "min_inclusive": 1,
+      "max_inclusive": 2
+    },
+    "target": {
+      "type": "minecraft:matching_blocks",
+      "blocks": ["minecraft:end_stone"]
+    },
+    "state_provider": {
+      "type": "minecraft:weighted_state_provider",
+      "entries": [
+        {
+          "weight": 3,
+          "data": {
+            "Name": "minecraft:purpur_block"
+          }
+        },
+        {
+          "weight": 1,
+          "data": {
+            "Name": "minecraft:purpur_pillar",
+            "Properties": {
+              "axis": "y"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

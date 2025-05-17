@@ -1,0 +1,181 @@
+
+{
+  "sea_level": 0,
+  "disable_mob_generation": false,
+  "aquifers_enabled": false,
+  "ore_veins_enabled": false,
+  "legacy_random_source": false,
+  "spawn_target": [],
+  "default_block": {
+    "Name": "minecraft:end_stone"
+  },
+  "default_fluid": {
+    "Name": "minecraft:air"
+  },
+  "noise": {
+    "min_y": 0,
+    "height": 256,
+    "size_horizontal": 1,
+    "size_vertical": 2
+  },
+  "noise_router": {
+    "barrier": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_barrier",
+      "xz_scale": 1.0,
+      "y_scale": 0.5
+    },
+    "fluid_level_floodedness": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_fluid_level_floodedness",
+      "xz_scale": 1.0,
+      "y_scale": 0.67
+    },
+    "fluid_level_spread": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_fluid_level_spread",
+      "xz_scale": 1.0,
+      "y_scale": 0.7142857142857143
+    },
+    "lava": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_lava",
+      "xz_scale": 1.0,
+      "y_scale": 1.0
+    },
+    "temperature": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:temperature",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "vegetation": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:vegetation",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "continents": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:continentalness",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "erosion": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:erosion",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "depth": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:depth",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "ridges": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:ridge",
+      "xz_scale": 0.25,
+      "y_scale": 0.0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0.0,
+      "shift_z": "minecraft:shift_z"
+    },
+    "initial_density_without_jaggedness": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:end_islands",
+      "xz_scale": 2.0,
+      "y_scale": 1.0
+    },
+    "final_density": {
+      "type": "minecraft:add",
+      "argument1": {
+        "type": "minecraft:mul",
+        "argument1": 4.0,
+        "argument2": {
+          "type": "minecraft:quarter_negative",
+          "argument": {
+            "type": "minecraft:noise",
+            "noise": "minecraft:end_islands",
+            "xz_scale": 1.0,
+            "y_scale": 1.0
+          }
+        }
+      },
+      "argument2": {
+        "type": "minecraft:noise",
+        "noise": "minecraft:end",
+        "xz_scale": 2.0,
+        "y_scale": 1.0
+      }
+    },
+    "vein_toggle": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:ore_veininess",
+      "xz_scale": 1.5,
+      "y_scale": 1.5
+    },
+    "vein_ridged": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:ore_vein_a",
+      "xz_scale": 4.0,
+      "y_scale": 4.0
+    },
+    "vein_gap": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:ore_vein_b",
+      "xz_scale": 4.0,
+      "y_scale": 4.0
+    }
+  },
+  "surface_rule": {
+    "type": "minecraft:sequence",
+    "sequence": [
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:biome",
+          "biome_is": [
+            "mystborn_horizons:crystal_highlands"
+          ]
+        },
+        "then_run": {
+          "type": "minecraft:sequence",
+          "sequence": [
+            {
+              "type": "minecraft:condition",
+              "if_true": {
+                "type": "minecraft:noise_threshold",
+                "noise": "minecraft:erosion",
+                "min_threshold": -1.0,
+                "max_threshold": 1.0
+              },
+              "then_run": {
+                "type": "minecraft:block",
+                "result_state": {
+                  "Name": "minecraft:end_stone"
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
