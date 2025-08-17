@@ -45,7 +45,19 @@ public class ModItems {
 
     public static final Item FROSTSTONE_SWORD = registerItem("froststone_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.4f))));
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.4f))) {
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
+            });
     public static final Item MOONSTONE_RAPIER = registerItem("moonstone_rapier",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -2.0f))) {
@@ -53,6 +65,18 @@ public class ModItems {
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.moonstone_rapier.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
+                }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
                 }
             });
     public static final Item ROYAL_FROSTSTONE_SWORD = registerItem("royal_froststone_sword",
@@ -63,6 +87,18 @@ public class ModItems {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
                 }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
             });
     public static final Item ROYAL_TECTONITE_SWORD = registerItem("royal_tectonite_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
@@ -71,6 +107,18 @@ public class ModItems {
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
+                }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
                 }
             });
 
@@ -81,6 +129,18 @@ public class ModItems {
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.peace.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
+                }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
                 }
             });
 
