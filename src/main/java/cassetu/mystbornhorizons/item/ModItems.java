@@ -119,7 +119,7 @@ public class ModItems {
 
     public static final Item FROSTSTONE_SWORD = registerItem("froststone_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -2.2f))));
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.2f))));
     public static final Item FROSTSTONE_PICKAXE = registerItem("froststone_pickaxe",
             new PickaxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 1, -2.8f))));
@@ -128,10 +128,10 @@ public class ModItems {
                     .attributeModifiers(ShovelItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 1.5f, -3f))));
     public static final Item FROSTSTONE_AXE = registerItem("froststone_axe",
             new AxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 6, -3.2f))));
+                    .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -3.2f))));
     public static final Item FROSTSTONE_HOE = registerItem("froststone_hoe",
             new HoeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -3f))));
+                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -3f))));
 
     public static final Item FROSTSTONE_HELMET = registerItem("froststone_helmet",
             new ArmorItem(ModArmorMaterials.FROSTSTONE_ARMOR_MATERIAL, ArmorItem.Type.HELMET, new Item.Settings()
