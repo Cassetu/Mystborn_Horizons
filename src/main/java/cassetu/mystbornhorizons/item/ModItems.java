@@ -117,7 +117,9 @@ public class ModItems {
 
 
 
-
+    public static final Item FROSTSTONE_SWORD = registerItem("froststone_sword",
+            new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -2.2f))));
     public static final Item FROSTSTONE_PICKAXE = registerItem("froststone_pickaxe",
             new PickaxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 1, -2.8f))));

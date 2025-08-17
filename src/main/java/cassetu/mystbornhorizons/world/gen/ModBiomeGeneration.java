@@ -108,21 +108,21 @@ public class ModBiomeGeneration {
         BiomeModifications.addFeature(
                 BiomeSelectors.includeByKey(alpineMeadowsKey),
                 GenerationStep.Feature.VEGETAL_DECORATION,
-                ModPlacedFeatures.SALONDITE_ORE_PLACED_KEY
+                ModPlacedFeatures.MYSTBORN_DUST_ORE_PLACED_KEY
         );
 
 // Craggy Peaks
         BiomeModifications.addFeature(
                 BiomeSelectors.includeByKey(craggyPeaksKey),
                 GenerationStep.Feature.LOCAL_MODIFICATIONS,
-                ModPlacedFeatures.SALONDITE_ORE_PLACED_KEY
+                ModPlacedFeatures.MYSTBORN_DUST_ORE_PLACED_KEY
         );
 
 // Rocky Tundra
         BiomeModifications.addFeature(
                 BiomeSelectors.includeByKey(rockyTundraKey),
                 GenerationStep.Feature.SURFACE_STRUCTURES,
-                ModPlacedFeatures.SALONDITE_ORE_PLACED_KEY
+                ModPlacedFeatures.MYSTBORN_DUST_ORE_PLACED_KEY
         );
 
         MystbornHorizons.LOGGER.info("Biome placement completed successfully");
