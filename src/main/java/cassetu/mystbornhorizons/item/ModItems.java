@@ -113,13 +113,47 @@ public class ModItems {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.peace.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
                 }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() +  200000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
+            });
+
+    public static final Item VANQUISHER_SWORD = registerItem("vanquisher_sword",
+            new SwordItem(ModToolMaterials.MYSTBORN_DUST, new Item.Settings()
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.MYSTBORN_DUST, 12, -2.4f))) {
+                @Override
+                public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+                    tooltip.add(Text.translatable("tooltip.mystbornhorizons.vanquish.tooltip"));
+                    super.appendTooltip(stack, context, tooltip, type);
+                }
             });
 
 
 
     public static final Item FROSTSTONE_SWORD = registerItem("froststone_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.2f))));
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.2f))) {
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() +  2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
+            });
     public static final Item FROSTSTONE_PICKAXE = registerItem("froststone_pickaxe",
             new PickaxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(PickaxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 1, -2.8f))));

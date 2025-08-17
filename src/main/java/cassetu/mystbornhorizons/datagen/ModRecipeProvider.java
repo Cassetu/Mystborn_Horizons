@@ -117,6 +117,19 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, ModItems.VANQUISHER_SWORD)
+                .pattern("MRM")
+                .pattern("CMT")
+                .pattern("NSN")
+                .input('R', ModItems.PEACEKEEPER_SWORD)
+                .input('C', ModItems.ROYAL_FROSTSTONE_SWORD)
+                .input('T', ModItems.ROYAL_TECTONITE_SWORD)
+                .input('M', ModItems.MYSTBORN_DUST)
+                .input('S', Items.STICK)
+                .input('N', Items.NETHERITE_INGOT)
+                .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
+                .offerTo(exporter);
+
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_CHESTPLATE)
                 .pattern("R R")

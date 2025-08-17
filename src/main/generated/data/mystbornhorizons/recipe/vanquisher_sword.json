@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "mystbornhorizons:royal_froststone_sword"
+    },
+    "M": {
+      "item": "mystbornhorizons:mystborn_dust"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "R": {
+      "item": "mystbornhorizons:peacekeeper_sword"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "T": {
+      "item": "mystbornhorizons:royal_tectonite_sword"
+    }
+  },
+  "pattern": [
+    "MRM",
+    "CMT",
+    "NSN"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:vanquisher_sword"
+  }
+}
