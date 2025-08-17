@@ -23,7 +23,8 @@
 		],
 		"client": [
 			"cassetu.mystbornhorizons.MystbornHorizonsClient"
-		]
+		],
+		"datagen": ["cassetu.mystbornhorizons.datagen.ModDataGeneration"]
 	},
 	"mixins": [
       "mystbornhorizons.mixins.json"

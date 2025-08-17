@@ -12,6 +12,7 @@ import cassetu.mystbornhorizons.item.ModItemGroups;
 import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.sound.ModSounds;
 import cassetu.mystbornhorizons.util.ModLootTablesModifiers;
+import cassetu.mystbornhorizons.world.biome.ModBiomes;
 import cassetu.mystbornhorizons.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -24,6 +25,28 @@ public class MystbornHorizons implements ModInitializer {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+	public static void generateBiomes() {
+		MystbornHorizons.LOGGER.info("Starting biome placement for " + MystbornHorizons.MOD_ID);
+
+		try {
+			// Your existing code for Alpine Meadows
+			MystbornHorizons.LOGGER.info("Registered Alpine Meadows placement");
+
+			// Craggy Peaks code
+			MystbornHorizons.LOGGER.info("Registered Craggy Peaks placement");
+
+			// Rocky Tundra code
+			MystbornHorizons.LOGGER.info("Registered Rocky Tundra placement");
+
+		} catch (Exception e) {
+			MystbornHorizons.LOGGER.error("Error during biome placement: " + e.getMessage());
+			e.printStackTrace();
+		}
+
+		MystbornHorizons.LOGGER.info("Completed biome placement for " + MystbornHorizons.MOD_ID);
+	}
+
+
 	@Override
 	public void onInitialize() {
 		ModItemGroups.registerItemGroups();
@@ -32,6 +55,8 @@ public class MystbornHorizons implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModSounds.registerSounds();
 		ModEnchantmentEffects.registerEnchantmentEffects();
+		ModBiomes.registerBiomes();
+
 		ModWorldGeneration.generateModWorldGen();
 		ModLootTablesModifiers.modifyLootTables();
 

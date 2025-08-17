@@ -39,9 +39,6 @@ public class ModItems {
     public static final Item CHICKEN_NUGGETS = registerItem("chicken_nuggets", new Item(new Item.Settings().food(ModFoodComponents.CHICKEN_NUGGETS)));
     public static final Item VEGGIE_SANDWICH = registerItem("veggie_sandwich", new Item(new Item.Settings().food(ModFoodComponents.VEGGIE_SANDWICH)));
 
-    public static final Item FROSTSTONE_SWORD = registerItem("froststone_sword",
-            new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -2.4f))));
     public static final Item MOONSTONE_RAPIER = registerItem("moonstone_rapier",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -2.0f))) {
@@ -50,7 +47,20 @@ public class ModItems {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.moonstone_rapier.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
                 }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() + 2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
             });
+
     public static final Item ROYAL_FROSTSTONE_SWORD = registerItem("royal_froststone_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -2.4f))) {
@@ -59,7 +69,20 @@ public class ModItems {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
                 }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() +  2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
+                }
             });
+
     public static final Item ROYAL_TECTONITE_SWORD = registerItem("royal_tectonite_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
                     .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 6, -2.8f))) {
@@ -67,6 +90,18 @@ public class ModItems {
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
                     super.appendTooltip(stack, context, tooltip, type);
+                }
+
+                @Override
+                public boolean hasRecipeRemainder() {
+                    return true;
+                }
+
+                @Override
+                public ItemStack getRecipeRemainder(ItemStack stack) {
+                    ItemStack copy = stack.copy();
+                    copy.setDamage(copy.getDamage() +  2000);
+                    return copy.getDamage() >= copy.getMaxDamage() ? ItemStack.EMPTY : copy;
                 }
             });
 

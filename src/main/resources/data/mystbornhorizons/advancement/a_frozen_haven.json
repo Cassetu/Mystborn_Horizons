@@ -30,6 +30,6 @@
     "rewards": {
       "experience": 50
     },
-    "parent": "minecraft:story/follow_ender_eye"
+    "parent": "minecraft:story/root"
   }
 }
