@@ -4,6 +4,7 @@ import cassetu.mystbornhorizons.MystbornHorizons;
 import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.item.custom.ModArmorItem;
+import cassetu.mystbornhorizons.item.custom.TomahawkItem;
 import cassetu.mystbornhorizons.sound.ModSounds;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.item.*;
@@ -30,7 +31,7 @@ public class ModItems {
     public static final Item MYSTBORN_DUST = registerItem("mystborn_dust", new Item(new Item.Settings()));
 
     public static final Item CAULIFLOWER = registerItem("cauliflower", new Item(new Item.Settings().food(ModFoodComponents.CAULIFLOWER)));
-    public static final Item POWER_CORE = registerItem("power_core", new Item(new Item.Settings().food(ModFoodComponents.POWER_CORE)) {
+    public static final Item POWER_CORE = registerItem("power_core", new Item(new Item.Settings().food(ModFoodComponents.POWER_CORE).maxCount(32)) {
         @Override
         public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
             tooltip.add(Text.translatable("tooltip.mystbornhorizons.power_core.tooltip"));
@@ -213,6 +214,9 @@ public class ModItems {
 
     public static final Item HONEY_BERRIES = registerItem("honey_berries",
             new AliasedBlockItem(ModBlocks.HONEY_BERRY_BUSH, new Item.Settings().food(ModFoodComponents.HONEY_BERRY)));
+
+    public static final Item TOMAHAWK = registerItem("tomahawk",
+            new TomahawkItem(new Item.Settings().maxCount(16)));
 
 
     private static Item registerItem(String name, Item item) {

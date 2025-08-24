@@ -1,10 +1,7 @@
 package cassetu.mystbornhorizons.entity;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
-import cassetu.mystbornhorizons.entity.custom.BasaltHowlerEntity;
-import cassetu.mystbornhorizons.entity.custom.CopperBulbEntity;
-import cassetu.mystbornhorizons.entity.custom.IceSpiderEntity;
-import cassetu.mystbornhorizons.entity.custom.MantisEntity;
+import cassetu.mystbornhorizons.entity.custom.*;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registries;
@@ -31,6 +28,11 @@ public class ModEntities {
             Identifier.of(MystbornHorizons.MOD_ID, "basalthowler"),
             EntityType.Builder.create(BasaltHowlerEntity::new, SpawnGroup.MONSTER)
                     .dimensions(1f, 1.65f).build());
+
+    public static final EntityType<TomahawkProjectileEntity> TOMAHAWK = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(MystbornHorizons.MOD_ID, "tomahawk"),
+            EntityType.Builder.<TomahawkProjectileEntity>create(TomahawkProjectileEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5f, 1.15f).build());
 
     public static void registerModEntities() {
         MystbornHorizons.LOGGER.info("Registering Mod Entities for " + MystbornHorizons.MOD_ID);

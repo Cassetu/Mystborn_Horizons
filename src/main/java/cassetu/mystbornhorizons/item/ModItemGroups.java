@@ -45,6 +45,8 @@ public class ModItemGroups {
                         entries.add(ModItems.FROSTSTONE_CHESTPLATE);
                         entries.add(ModItems.FROSTSTONE_LEGGINGS);
                         entries.add(ModItems.FROSTSTONE_BOOTS);
+
+                        entries.add(ModItems.TOMAHAWK);
                     }).build());
 
     public static final ItemGroup MYSTBORN_FOODS_GROUP = Registry.register(Registries.ITEM_GROUP,
