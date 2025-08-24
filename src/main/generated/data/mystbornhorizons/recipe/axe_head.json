@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "I": {
+      "item": "minecraft:cobblestone"
+    }
+  },
+  "pattern": [
+    "   ",
+    " FI",
+    " I "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:axe_head"
+  }
+}

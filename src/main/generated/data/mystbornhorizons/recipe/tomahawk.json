@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "mystbornhorizons:axe_head"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "   ",
+    " IA",
+    "  S"
+  ],
+  "result": {
+    "count": 4,
+    "id": "mystbornhorizons:tomahawk"
+  }
+}

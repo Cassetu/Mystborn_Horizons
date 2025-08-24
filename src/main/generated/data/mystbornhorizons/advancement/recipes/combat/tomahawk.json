@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_froststone": {
+    "has_axe_head": {
       "conditions": {
         "items": [
           {
-            "items": "mystbornhorizons:froststone"
+            "items": "mystbornhorizons:axe_head"
           }
         ]
       },
@@ -21,9 +21,19 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_stick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:stick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "mystbornhorizons:froststone_chestplate"
+        "recipe": "mystbornhorizons:tomahawk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -32,12 +42,13 @@
     [
       "has_the_recipe",
       "has_iron_ingot",
-      "has_froststone"
+      "has_axe_head",
+      "has_stick"
     ]
   ],
   "rewards": {
     "recipes": [
-      "mystbornhorizons:froststone_chestplate"
+      "mystbornhorizons:tomahawk"
     ]
   }
 }

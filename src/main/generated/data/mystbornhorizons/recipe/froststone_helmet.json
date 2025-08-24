@@ -2,13 +2,19 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
+    "C": {
+      "item": "minecraft:iron_helmet"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "R": {
       "item": "mystbornhorizons:froststone"
     }
   },
   "pattern": [
-    "RRR",
-    "R R",
+    "IRI",
+    "ICI",
     "   "
   ],
   "result": {

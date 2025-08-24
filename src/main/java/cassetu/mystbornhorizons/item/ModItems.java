@@ -27,6 +27,7 @@ public class ModItems {
     public static final Item RAW_STORMITE = registerItem("raw_stormite", new Item(new Item.Settings()));
     public static final Item TECTONITE_GEODE = registerItem("tectonite_geode", new Item(new Item.Settings()));
     public static final Item MOONSTONE = registerItem("moonstone", new Item(new Item.Settings()));
+    public static final Item AXE_HEAD = registerItem("axe_head", new Item(new Item.Settings()));
 
     public static final Item MYSTBORN_DUST = registerItem("mystborn_dust", new Item(new Item.Settings()));
 

@@ -2,14 +2,20 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
+    "C": {
+      "item": "minecraft:iron_chestplate"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
     "R": {
       "item": "mystbornhorizons:froststone"
     }
   },
   "pattern": [
-    "R R",
-    "RRR",
-    "RRR"
+    "I I",
+    "RCR",
+    "RIR"
   ],
   "result": {
     "count": 1,

@@ -50,6 +50,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.SALONDITE, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_SALONDITE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.AXE_HEAD, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.STORMITE, Models.GENERATED);

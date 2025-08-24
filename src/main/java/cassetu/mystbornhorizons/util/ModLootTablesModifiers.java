@@ -18,6 +18,8 @@ public class ModLootTablesModifiers {
             = Identifier.of("minecraft", "entities/ender_dragon");
     private static final Identifier CREEPER_ID
             = Identifier.of("minecraft", "entities/creeper");
+    private static final Identifier VINDICATOR_ID
+            = Identifier.of("minecraft", "entities/vindicator");
 
     public static void modifyLootTables() {
         LootTableEvents.MODIFY.register((key, tableBuilder, source, registry) -> {
@@ -31,6 +33,16 @@ public class ModLootTablesModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
 
+            if(VINDICATOR_ID.equals(key.getValue())) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1))
+                        .conditionally(RandomChanceLootCondition.builder(1.0f)) // Drops 100% of the time
+                        .with(ItemEntry.builder(ModItems.TOMAHAWK))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)).build());
+
+                tableBuilder.pool(poolBuilder.build());
+            }
+
             if(LootTables.SHIPWRECK_SUPPLY_CHEST.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
@@ -38,6 +50,26 @@ public class ModLootTablesModifiers {
                         .with(ItemEntry.builder(ModItems.SALMON_NIGIRI))
                         .with(ItemEntry.builder(ModItems.COD_NIGIRI))
                         .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 7.0f)).build());
+
+                tableBuilder.pool(poolBuilder.build());
+            }
+
+            if(LootTables.FISHING_JUNK_GAMEPLAY.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1))
+                        .conditionally(RandomChanceLootCondition.builder(0.12f))
+                        .with(ItemEntry.builder(ModItems.TOMAHAWK))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)).build());
+
+                tableBuilder.pool(poolBuilder.build());
+            }
+
+            if(LootTables.WOODLAND_MANSION_CHEST.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1))
+                        .conditionally(RandomChanceLootCondition.builder(1.0f))
+                        .with(ItemEntry.builder(ModItems.TOMAHAWK))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 5.0f)).build());
 
                 tableBuilder.pool(poolBuilder.build());
             }

@@ -137,35 +137,69 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_CHESTPLATE)
-                .pattern("R R")
-                .pattern("RRR")
-                .pattern("RRR")
+                .pattern("I I")
+                .pattern("RCR")
+                .pattern("RIR")
                 .input('R', ModItems.FROSTSTONE)
+                .input('I', Items.IRON_INGOT)
+                .input('C', Items.IRON_CHESTPLATE)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_BOOTS)
-                .pattern("   ")
-                .pattern("R R")
+                .pattern(" C ")
+                .pattern("I I")
                 .pattern("R R")
                 .input('R', ModItems.FROSTSTONE)
+                .input('I', Items.IRON_INGOT)
+                .input('C', Items.IRON_BOOTS)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_LEGGINGS)
-                .pattern("RRR")
-                .pattern("R R")
+                .pattern("RIR")
+                .pattern("ICI")
                 .pattern("R R")
                 .input('R', ModItems.FROSTSTONE)
+                .input('I', Items.IRON_INGOT)
+                .input('C', Items.IRON_LEGGINGS)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.FROSTSTONE_HELMET)
-                .pattern("RRR")
-                .pattern("R R")
+                .pattern("IRI")
+                .pattern("ICI")
                 .pattern("   ")
                 .input('R', ModItems.FROSTSTONE)
+                .input('I', Items.IRON_INGOT)
+                .input('C', Items.IRON_HELMET)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.TOMAHAWK, 4)
+                .pattern("   ")
+                .pattern(" IA")
+                .pattern("  S")
+                .input('I', Items.IRON_INGOT)
+                .input('A', ModItems.AXE_HEAD)
+                .input('S', Items.STICK)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(ModItems.AXE_HEAD), conditionsFromItem(ModItems.AXE_HEAD))
+                .criterion(hasItem(Items.STICK), conditionsFromItem(Items.STICK))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.AXE_HEAD)
+                .pattern("   ")
+                .pattern(" FI")
+                .pattern(" I ")
+                .input('I', Items.COBBLESTONE)
+                .input('F', Items.FLINT)
+                .criterion(hasItem(Items.COBBLESTONE), conditionsFromItem(Items.COBBLESTONE))
+                .criterion(hasItem(Items.FLINT), conditionsFromItem(Items.FLINT))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.TITAN_SANDS_MUSIC_DISC)
