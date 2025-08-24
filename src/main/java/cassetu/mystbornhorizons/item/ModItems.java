@@ -83,7 +83,7 @@ public class ModItems {
             });
     public static final Item ROYAL_FROSTSTONE_SWORD = registerItem("royal_froststone_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -2.4f))) {
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 4, -2.4f))) {
                 @Override
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
@@ -104,7 +104,7 @@ public class ModItems {
             });
     public static final Item ROYAL_TECTONITE_SWORD = registerItem("royal_tectonite_sword",
             new SwordItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 6, -2.8f))) {
+                    .attributeModifiers(SwordItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -2.8f))) {
                 @Override
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.royal_sword.tooltip"));
@@ -170,7 +170,7 @@ public class ModItems {
                     .attributeModifiers(AxeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 6, -3.2f))));
     public static final Item FROSTSTONE_HOE = registerItem("froststone_hoe",
             new HoeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
-                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 5, -3f))));
+                    .attributeModifiers(HoeItem.createAttributeModifiers(ModToolMaterials.FROSTSTONE, 3, -3f))));
 
     public static final Item FROSTSTONE_HELMET = registerItem("froststone_helmet",
             new ArmorItem(ModArmorMaterials.FROSTSTONE_ARMOR_MATERIAL, ArmorItem.Type.HELMET, new Item.Settings()
