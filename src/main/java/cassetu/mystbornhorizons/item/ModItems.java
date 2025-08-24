@@ -217,7 +217,13 @@ public class ModItems {
             new AliasedBlockItem(ModBlocks.HONEY_BERRY_BUSH, new Item.Settings().food(ModFoodComponents.HONEY_BERRY)));
 
     public static final Item TOMAHAWK = registerItem("tomahawk",
-            new TomahawkItem(new Item.Settings().maxCount(16)));
+            new TomahawkItem(new Item.Settings().maxCount(16)) {
+                @Override
+                public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+                    tooltip.add(Text.translatable("tooltip.mystbornhorizons.throw.tooltip"));
+                    super.appendTooltip(stack, context, tooltip, type);
+                }
+    });
 
 
     private static Item registerItem(String name, Item item) {

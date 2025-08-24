@@ -8,6 +8,7 @@
   "item.mystbornhorizons.salondite": "Salondite",
   "item.mystbornhorizons.raw_salondite": "Raw Salondite",
   "item.mystbornhorizons.tomahawk": "Tomahawk",
+  "item.mystbornhorizons.axe_head": "Axe Head",
 
 
   "block.mystbornhorizons.froststone_block": "Froststone Block",
@@ -41,6 +42,7 @@
   "tooltip.mystbornhorizons.the_royal_sword.tooltip": "§7The First Sword made for Royalty§r",
   "tooltip.mystbornhorizons.peace.tooltip": "§7A Sword Made to Enforce the Peace§r",
   "tooltip.mystbornhorizons.vanquish.tooltip": "§7To Kill, Or Be Killed§r",
+  "tooltip.mystbornhorizons.throw.tooltip": "Strong when thrown, weak otherwise. Flies through enemies.",
 
   "item.mystbornhorizons.froststone_sword": "Froststone Sword",
   "item.mystbornhorizons.royal_froststone_sword": "§9§lRoyal Froststone Sword§r",
