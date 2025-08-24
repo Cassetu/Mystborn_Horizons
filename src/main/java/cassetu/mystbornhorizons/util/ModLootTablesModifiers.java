@@ -92,6 +92,15 @@ public class ModLootTablesModifiers {
                 tableBuilder.pool(poolBuilder.build());
             }
 
+            if(LootTables.HERO_OF_THE_VILLAGE_WEAPONSMITH_GIFT_GAMEPLAY.equals(key)) {
+                LootPool.Builder poolBuilder = LootPool.builder()
+                        .rolls(ConstantLootNumberProvider.create(1))
+                        .conditionally(RandomChanceLootCondition.builder(0.6f))
+                        .with(ItemEntry.builder(ModItems.TOMAHAWK))
+                        .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(1.0f, 1.0f)).build());
+                tableBuilder.pool(poolBuilder.build());
+            }
+
             if(LootTables.VILLAGE_BUTCHER_CHEST.equals(key)) {
                 LootPool.Builder poolBuilder = LootPool.builder()
                         .rolls(ConstantLootNumberProvider.create(1))
