@@ -46,6 +46,10 @@ public class ModBlocks {
             new Block(AbstractBlock.Settings.create().strength(4f).requiresTool()
                     .sounds(BlockSoundGroup.COPPER)));
 
+    public static final Block DUNGEON_ROOTMASS = registerBlock("dungeon_rootmass",
+            new Block(AbstractBlock.Settings.create().strength(50f).requiresTool().burnable()
+                    .sounds(BlockSoundGroup.NETHER_WOOD)));
+
     public static final Block FROSTSTONE_ORE = registerBlock("froststone_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),
                     AbstractBlock.Settings.create().requiresTool().strength(3f).sounds(BlockSoundGroup.STONE)));

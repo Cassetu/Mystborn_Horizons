@@ -17,6 +17,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+                .add(ModBlocks.DUNGEON_ROOTMASS);
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(ModBlocks.FROSTSTONE_BLOCK)
                 .add(ModBlocks.FROSTSTONE_ORE)
@@ -51,7 +53,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.SALONDITE_ORE)
                 .add(ModBlocks.LUMINITE_END_ORE)
                 .add(ModBlocks.STORMITE_DEEPSLATE_ORE)
-                .add(ModBlocks.MOONSTONE_DEEPSLATE_ORE);
+                .add(ModBlocks.MOONSTONE_DEEPSLATE_ORE)
+                .add(ModBlocks.DUNGEON_ROOTMASS);
 
         getOrCreateTagBuilder(ModTags.Blocks.NEEDS_FROSTSTONE_TOOL)
                 .addTag(BlockTags.NEEDS_IRON_TOOL);

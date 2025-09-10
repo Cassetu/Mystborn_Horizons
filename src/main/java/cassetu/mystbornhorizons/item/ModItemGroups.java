@@ -30,6 +30,7 @@ public class ModItemGroups {
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
                         entries.add(ModItems.ICE_SPIDER_SPAWN_EGG);
                         entries.add(ModItems.BASALT_HOWLER_SPAWN_EGG);
+                        entries.add(ModItems.SAMMEL_SPAWN_EGG);
 
 //                      entries.add(ModItems.K_ARMOR_TRIM_SMITHING_TEMPLATE);
 
@@ -76,6 +77,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.CARVED_ICE_BRICKS);
                         entries.add(ModBlocks.MOLTEN_GOLD_BLACKSTONE);
                         entries.add(ModBlocks.MOLTEN_GOLD_BASALT);
+                        entries.add(ModBlocks.DUNGEON_ROOTMASS);
 
                     }).build());
 

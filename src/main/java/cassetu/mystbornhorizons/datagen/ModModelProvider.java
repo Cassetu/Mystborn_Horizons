@@ -38,6 +38,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TECTONITE_DEEPSLATE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MOONSTONE_DEEPSLATE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SHARD_BLOCK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_ROOTMASS);
 
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MYSTBORN_DUST_ORE);
@@ -98,6 +99,9 @@ public class ModModelProvider extends FabricModelProvider {
                 new Model(Optional.of(Identifier.of("item/template_spawn_egg")), Optional.empty()));
 
         itemModelGenerator.register(ModItems.BASALT_HOWLER_SPAWN_EGG,
+                new Model(Optional.of(Identifier.of("item/template_spawn_egg")), Optional.empty()));
+
+        itemModelGenerator.register(ModItems.SAMMEL_SPAWN_EGG,
                 new Model(Optional.of(Identifier.of("item/template_spawn_egg")), Optional.empty()));
     }
 }

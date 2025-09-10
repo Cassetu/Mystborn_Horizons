@@ -39,6 +39,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.PACKED_ICE_BRICKS);
         addDrop(ModBlocks.MOLTEN_GOLD_BLACKSTONE);
         addDrop(ModBlocks.MOLTEN_GOLD_BASALT);
+        addDrop(ModBlocks.DUNGEON_ROOTMASS);
 
         addDrop(ModBlocks.FROSTSTONE_ORE, oreDrops(ModBlocks.FROSTSTONE_ORE, ModItems.RAW_FROSTSTONE));
         addDrop(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, ModItems.RAW_FROSTSTONE, 4, 8));
