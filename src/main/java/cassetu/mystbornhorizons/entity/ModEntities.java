@@ -34,6 +34,11 @@ public class ModEntities {
             EntityType.Builder.<TomahawkProjectileEntity>create(TomahawkProjectileEntity::new, SpawnGroup.MISC)
                     .dimensions(0.5f, 1.15f).build());
 
+    public static final EntityType<SamaelEntity> SAMAEL = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(MystbornHorizons.MOD_ID, "samael"),
+            EntityType.Builder.create(SamaelEntity::new, SpawnGroup.MONSTER)
+                    .dimensions(0.5f, 2f).build());
+
     public static void registerModEntities() {
         MystbornHorizons.LOGGER.info("Registering Mod Entities for " + MystbornHorizons.MOD_ID);
     }

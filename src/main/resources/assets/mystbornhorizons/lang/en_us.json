@@ -28,6 +28,7 @@
   "block.mystbornhorizons.carved_ice_bricks": "Carved Ice Bricks",
   "block.mystbornhorizons.molten_gold_blackstone": "Molten Gold Blackstone",
   "block.mystbornhorizons.molten_gold_basalt": "Molten Gold Basalt",
+  "block.mystbornhorizons.dungeon_rootmass": "Dungeon Rootmass",
 
 
   "itemgroup.mystbornhorizons.mystbornhorizons_foods": "§8Mystborn Horizons Foods§r",
@@ -75,6 +76,7 @@
   "item.mystbornhorizons.copper_bulb_spawn_egg": "Copper Bulb Spawn Egg ",
   "item.mystbornhorizons.ice_spider_spawn_egg": "Ice Spider Spawn Egg ",
   "item.mystbornhorizons.basalt_howler_spawn_egg": "Basalt Howler Spawn Egg",
+  "item.mystbornhorizons.samael_spawn_egg": "Samael Spawn Egg",
 
   "item.mystbornhorizons.froststone_helmet": "Froststone Helmet",
   "item.mystbornhorizons.froststone_chestplate": "Froststone Chestplate",
@@ -105,7 +107,13 @@
   "entity.mystbornhorizons.copperbulb": "Copper Bulb",
   "entity.mystbornhorizons.icespider": "Ice Spider",
   "entity.mystbornhorizons.basalthowler": "Basalt Howler",
+  "entity.mystbornhorizons.samael": "Samael",
 
-  "entity.mystbornhorizons.tomahawk": "Tomahawk"
+  "entity.mystbornhorizons.tomahawk": "Tomahawk",
+
+  "entity.mystbornhorizons.samael.venomous_bloom": "Samael uses Venomous Bloom!",
+  "entity.mystbornhorizons.samael.root_network": "Samael uses Root Network!",
+  "entity.mystbornhorizons.samael.pollen_storm": "Samael uses Pollen Storm!",
+  "entity.mystbornhorizons.samael.gardens_wrath": "Samael enters Garden's Wrath!"
 
 }
