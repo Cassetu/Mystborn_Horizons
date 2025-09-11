@@ -21,6 +21,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,10 +32,12 @@ public class SamaelEntity extends HostileEntity {
     private int venomousBloomCooldown = 0;
     private int rootNetworkCooldown = 0;
     private int pollenStormCooldown = 0;
+    private int tomahawkBarrageCooldown = 0; // New cooldown for tomahawk ability
     private boolean isGardensWrathActive = false;
     private static final int BLOOM_COOLDOWN = 200;
     private static final int ROOT_COOLDOWN = 160;
     private static final int POLLEN_COOLDOWN = 300;
+    private static final int TOMAHAWK_COOLDOWN = 180; // New cooldown constant
 
     // Healing variables
     private int healingTick = 0;
@@ -138,9 +141,10 @@ public class SamaelEntity extends HostileEntity {
             if (venomousBloomCooldown > 0) venomousBloomCooldown--;
             if (rootNetworkCooldown > 0) rootNetworkCooldown--;
             if (pollenStormCooldown > 0) pollenStormCooldown--;
+            if (tomahawkBarrageCooldown > 0) tomahawkBarrageCooldown--; // Decrement new cooldown
 
             healingTick++;
-            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 4 : HEALING_INTERVAL;
+            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 6 : HEALING_INTERVAL;
 
             if (healingTick >= healingInterval) {
                 if (this.getHealth() < this.getMaxHealth()) {
@@ -176,12 +180,118 @@ public class SamaelEntity extends HostileEntity {
                 if (venomousBloomCooldown <= 0) useVenomousBloom(nearestPlayer);
                 if (rootNetworkCooldown <= 0) useRootNetwork(nearestPlayer);
                 if (pollenStormCooldown <= 0) usePollenStorm();
+                if (tomahawkBarrageCooldown <= 0) useTomahawkBarrage(nearestPlayer); // Use new ability
             }
         }
 
         if (this.getWorld().isClient()) {
             this.setupAnimationStates();
         }
+    }
+
+    private void useTomahawkBarrage(PlayerEntity target) {
+        if (!this.getWorld().isClient()) {
+            // Create a summoning circle effect around Samael
+            for (double angle = 0; angle < Math.PI * 2; angle += Math.PI/16) {
+                double radius = 2.0;
+                double x = this.getX() + Math.cos(angle) * radius;
+                double z = this.getZ() + Math.sin(angle) * radius;
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.SOUL_FIRE_FLAME,
+                        x, this.getY() + 0.5, z,
+                        2,
+                        0.1, 0.1, 0.1,
+                        0.05
+                );
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.ENCHANT,
+                        x, this.getY() + 1.0, z,
+                        1,
+                        0.1, 0.1, 0.1,
+                        0.1
+                );
+            }
+
+            // Summon multiple tomahawks in a spread pattern
+            int tomahawkCount = isGardensWrathActive ? 5 : 3; // More tomahawks when enraged
+
+            for (int i = 0; i < tomahawkCount; i++) {
+                // Calculate spread angle for multiple tomahawks
+                double spreadAngle = (i - (tomahawkCount - 1) / 2.0) * 0.3; // 0.3 radians spread
+
+                // Calculate direction to target with spread
+                Vec3d directionToTarget = new Vec3d(
+                        target.getX() - this.getX(),
+                        target.getY() + 1.0 - (this.getY() + 2.0), // Aim slightly higher
+                        target.getZ() - this.getZ()
+                ).normalize();
+
+                // Apply spread by rotating the direction
+                double cos = Math.cos(spreadAngle);
+                double sin = Math.sin(spreadAngle);
+                Vec3d spreadDirection = new Vec3d(
+                        directionToTarget.x * cos - directionToTarget.z * sin,
+                        directionToTarget.y,
+                        directionToTarget.x * sin + directionToTarget.z * cos
+                );
+
+                // Spawn position slightly above Samael
+                Vec3d spawnPos = new Vec3d(
+                        this.getX(),
+                        this.getY() + 2.5,
+                        this.getZ()
+                );
+
+                // Create and configure the tomahawk entity
+                float damage = isGardensWrathActive ? 15.0f : 12.0f; // Increased damage
+                Vec3d velocity = spreadDirection.multiply(1.8); // Faster speed for better accuracy
+
+                TomahawkProjectileEntity tomahawk = new TomahawkProjectileEntity(
+                        this.getWorld(), this, velocity, damage);
+
+                tomahawk.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
+                tomahawk.setBossSummoned(true);
+                this.getWorld().spawnEntity(tomahawk);
+
+                // Spawn visual effects at tomahawk spawn location
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.CRIT,
+                        spawnPos.x, spawnPos.y, spawnPos.z,
+                        5,
+                        0.2, 0.2, 0.2,
+                        0.1
+                );
+
+                // Add a small delay between tomahawk spawns for visual effect
+                // You might want to implement this with a scheduler or delayed task
+            }
+
+            // Additional dramatic effect particles
+            for (int i = 0; i < 10; i++) {
+                double angle = (i / 10.0) * Math.PI * 2;
+                double radius = 1.5;
+                double x = this.getX() + Math.cos(angle) * radius;
+                double z = this.getZ() + Math.sin(angle) * radius;
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.SMOKE,
+                        x, this.getY() + 1.5, z,
+                        3,
+                        0.1, 0.3, 0.1,
+                        0.05
+                );
+            }
+        }
+
+        // Send message to nearby players
+        Box messageRange = this.getBoundingBox().expand(20.0);
+        this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
+                player -> player.sendMessage(Text.translatable("entity.mystbornhorizons.samael.tomahawk_barrage"), true)
+        );
+
+        tomahawkBarrageCooldown = TOMAHAWK_COOLDOWN;
     }
 
     private void useVenomousBloom(PlayerEntity target) {
