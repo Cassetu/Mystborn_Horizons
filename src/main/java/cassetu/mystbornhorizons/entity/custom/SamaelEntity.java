@@ -513,7 +513,7 @@ public class SamaelEntity extends HostileEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        float cappedAmount = Math.min(amount, 5f);
+        float cappedAmount = Math.min(amount, 3.2f);
 
         if (source.getAttacker() instanceof PlayerEntity player) {
             float thornsDamage = isGardensWrathActive ? 6.0f : 3.0f;
