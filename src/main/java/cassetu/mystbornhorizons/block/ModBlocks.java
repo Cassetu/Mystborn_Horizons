@@ -47,8 +47,15 @@ public class ModBlocks {
                     .sounds(BlockSoundGroup.COPPER)));
 
     public static final Block DUNGEON_ROOTMASS = registerBlock("dungeon_rootmass",
-            new Block(AbstractBlock.Settings.create().strength(50f).requiresTool().burnable()
+            new Block(AbstractBlock.Settings.create().strength(35f).requiresTool().burnable()
                     .sounds(BlockSoundGroup.NETHER_WOOD)));
+
+    public static final Block DUNGEON_COBBLE = registerBlock("dungeon_cobble",
+            new Block(AbstractBlock.Settings.create()
+                    .strength(-1.0f, 3600000.0f)
+                    .dropsNothing()
+                    .allowsSpawning(Blocks::never)
+                    .sounds(BlockSoundGroup.STONE)));
 
     public static final Block FROSTSTONE_ORE = registerBlock("froststone_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),

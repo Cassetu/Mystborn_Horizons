@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.Direction;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 public class TomahawkProjectileEntity extends PersistentProjectileEntity {
     private float rotation;
     public Vector2f groundedOffset;
+    private ItemStack tomahawkStack = ItemStack.EMPTY;
 
     public TomahawkProjectileEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -40,8 +42,6 @@ public class TomahawkProjectileEntity extends PersistentProjectileEntity {
         return rotation;
     }
 
-
-
     public boolean isGrounded() {
         return inGround;
     }
@@ -56,7 +56,6 @@ public class TomahawkProjectileEntity extends PersistentProjectileEntity {
         Entity entity = entityHitResult.getEntity();
         entity.damage(this.getDamageSources().thrown(this, this.getOwner()), 12);
     }
-
 
     @Override
     protected void onBlockHit(BlockHitResult result) {
@@ -82,6 +81,54 @@ public class TomahawkProjectileEntity extends PersistentProjectileEntity {
         }
         if(result.getSide() == Direction.UP) {
             groundedOffset = new Vector2f(285f,180f);
+        }
+    }
+
+    // Tomahawk stack methods
+    public void setTomahawkStack(ItemStack stack) {
+        this.tomahawkStack = stack.copy();
+    }
+
+    public ItemStack getTomahawkStack() {
+        return this.tomahawkStack.copy();
+    }
+
+    // Override the pickup behavior to return the tomahawk
+    @Override
+    public boolean tryPickup(PlayerEntity player) {
+        if (this.isNoClip()) {
+            return false;
+        } else if (!this.getWorld().isClient && this.inGround) {
+            // Give back the tomahawk item
+            if (!this.tomahawkStack.isEmpty()) {
+                if (player.getInventory().insertStack(this.tomahawkStack.copy())) {
+                    this.discard();
+                    return true;
+                }
+            } else {
+                // Fallback to default item if no stored stack
+                if (player.getInventory().insertStack(this.getDefaultItemStack())) {
+                    this.discard();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if (!this.tomahawkStack.isEmpty()) {
+            nbt.put("TomahawkStack", this.tomahawkStack.encode(this.getRegistryManager()));
+        }
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        if (nbt.contains("TomahawkStack")) {
+            this.tomahawkStack = ItemStack.fromNbt(this.getRegistryManager(), nbt.getCompound("TomahawkStack")).orElse(ItemStack.EMPTY);
         }
     }
 }

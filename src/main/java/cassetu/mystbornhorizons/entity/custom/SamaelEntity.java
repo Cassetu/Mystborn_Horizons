@@ -139,35 +139,31 @@ public class SamaelEntity extends HostileEntity {
             if (rootNetworkCooldown > 0) rootNetworkCooldown--;
             if (pollenStormCooldown > 0) pollenStormCooldown--;
 
-            // Healing logic - only heal if not glowing
-            if (!this.hasStatusEffect(StatusEffects.GLOWING)) {
-                healingTick++;
-                if (healingTick >= HEALING_INTERVAL) {
-                    if (this.getHealth() < this.getMaxHealth()) {
-                        this.heal(HEALING_AMOUNT);
+            healingTick++;
+            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 4 : HEALING_INTERVAL;
 
-                        // Spawn healing particles
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.HEART,
-                                this.getX(), this.getY() + 1.5, this.getZ(),
-                                3,
-                                0.3, 0.3, 0.3,
-                                0.1
-                        );
+            if (healingTick >= healingInterval) {
+                if (this.getHealth() < this.getMaxHealth()) {
+                    this.heal(HEALING_AMOUNT);
 
-                        // Additional nature-themed healing particles
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.HAPPY_VILLAGER,
-                                this.getX(), this.getY() + 1.0, this.getZ(),
-                                5,
-                                0.5, 0.5, 0.5,
-                                0.05
-                        );
-                    }
-                    healingTick = 0;
+                    // Spawn healing particles
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.HEART,
+                            this.getX(), this.getY() + 1.5, this.getZ(),
+                            3,
+                            0.3, 0.3, 0.3,
+                            0.1
+                    );
+
+                    // Additional nature-themed healing particles
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.HAPPY_VILLAGER,
+                            this.getX(), this.getY() + 1.0, this.getZ(),
+                            5,
+                            0.5, 0.5, 0.5,
+                            0.05
+                    );
                 }
-            } else {
-                // Reset healing tick when glowing (so healing doesn't resume immediately)
                 healingTick = 0;
             }
 
@@ -215,7 +211,7 @@ public class SamaelEntity extends HostileEntity {
         Box searchBox = new Box(target.getX() - 2, target.getY() - 1, target.getZ() - 2,
                 target.getX() + 2, target.getY() + 2, target.getZ() + 2);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, searchBox).forEach(
-                p -> p.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 100, 1))
+                p -> p.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 160, 0))
         );
 
         Box messageRange = this.getBoundingBox().expand(20.0);
