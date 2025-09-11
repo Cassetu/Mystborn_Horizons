@@ -42,7 +42,7 @@ public class SamaelEntity extends HostileEntity {
     // Healing variables
     private int healingTick = 0;
     private static final int HEALING_INTERVAL = 20; // Heal every second (20 ticks)
-    private static final float HEALING_AMOUNT = 4.5f; // Amount to heal each interval
+    private static final float HEALING_AMOUNT = 6.5f; // Amount to heal each interval
 
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -144,7 +144,7 @@ public class SamaelEntity extends HostileEntity {
             if (tomahawkBarrageCooldown > 0) tomahawkBarrageCooldown--; // Decrement new cooldown
 
             healingTick++;
-            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 6 : HEALING_INTERVAL;
+            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 26 : HEALING_INTERVAL;
 
             if (healingTick >= healingInterval) {
                 if (this.getHealth() < this.getMaxHealth()) {
@@ -246,7 +246,7 @@ public class SamaelEntity extends HostileEntity {
 
                 // Create and configure the tomahawk entity
                 float damage = isGardensWrathActive ? 15.0f : 12.0f; // Increased damage
-                Vec3d velocity = spreadDirection.multiply(1.8); // Faster speed for better accuracy
+                Vec3d velocity = spreadDirection.multiply(1.05); // Faster speed for better accuracy
 
                 TomahawkProjectileEntity tomahawk = new TomahawkProjectileEntity(
                         this.getWorld(), this, velocity, damage);
@@ -513,7 +513,7 @@ public class SamaelEntity extends HostileEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        float cappedAmount = Math.min(amount, 2.5f);
+        float cappedAmount = Math.min(amount, 5f);
 
         if (source.getAttacker() instanceof PlayerEntity player) {
             float thornsDamage = isGardensWrathActive ? 6.0f : 3.0f;
@@ -526,7 +526,7 @@ public class SamaelEntity extends HostileEntity {
 
             // Normalize the direction and apply strong knockback
             if (distance > 0) {
-                double knockbackStrength = isGardensWrathActive ? 0.6 : 0.3; // Stronger when enraged
+                double knockbackStrength = isGardensWrathActive ? 1.0 : 0.6; // Stronger when enraged
                 double normalizedX = (deltaX / distance) * knockbackStrength;
                 double normalizedZ = (deltaZ / distance) * knockbackStrength;
                 double upwardForce = isGardensWrathActive ? 0.4 : 0.2; // Launch them up too

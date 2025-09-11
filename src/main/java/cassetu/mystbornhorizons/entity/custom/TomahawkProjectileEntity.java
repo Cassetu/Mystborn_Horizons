@@ -106,8 +106,7 @@ public class TomahawkProjectileEntity extends PersistentProjectileEntity {
             }
         }
 
-        // Auto-despawn boss-summoned tomahawks after some time to prevent world clutter
-        if (isSummonedByBoss && this.age > 1200) { // 60 seconds
+        if (isSummonedByBoss && this.age > 160) {
             this.discard();
         }
     }
