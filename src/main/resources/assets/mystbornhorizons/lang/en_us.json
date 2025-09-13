@@ -110,7 +110,7 @@
   "entity.mystbornhorizons.icespider": "Ice Spider",
   "entity.mystbornhorizons.basalthowler": "Basalt Howler",
   "entity.mystbornhorizons.havenica": "§lHavenica§r",
-
+  "entity.mystbornhorizons.haven_Core": "§lHaven Core§r",
   "entity.mystbornhorizons.tomahawk": "Tomahawk",
 
 
@@ -120,7 +120,7 @@
   "entity.mystbornhorizons.havenica.gardens_wrath": "§c§l❋ §a§lHavenica §r§4enters §c§lGarden's Wrath§r§4! §c❋",
   "entity.mystbornhorizons.havenica.tomahawk_barrage": "§b§l⚔ §a§lHavenica §r§3summons §b§lTomahawks§r§3! §b⚔",
   "entity.mystbornhorizons.havenica.teleport": "§5§l◈ §a§lHavenica §r§3teleports to a §5§lFroglight§r§3! §5◈",
-  "entity.mystbornhorizons.havenica.toxic_laser_charging": "§2§l⚠ §a§lHavenica §r§6charges a §c§lToxic Laser§r§6! §c§lTAKE COVER! §2⚠",
-  "entity.mystbornhorizons.havenica.toxic_laser_fire": "§c§l💀 §a§lHavenica §r§4unleashes §c§ldeadly toxins§r§4! §c💀"
-
+  "entity.mystbornhorizons.havenica.toxic_laser_charging": "§2§l⚠ §a§lHavenica §r§6charges a §c§lToxic Laser§r§6! ⚠",
+  "entity.mystbornhorizons.havenica.toxic_laser_fire": "§c§l💀 §a§lHavenica §r§4unleashes §c§ldeadly toxins§r§4! §c💀",
+  "entity.mystbornhorizons.havenica.shockwave_blast": "§6§l⚡ §a§lHavenica §r§2uses §6§lShockwave Blast§r§2! §6⚡"
 }

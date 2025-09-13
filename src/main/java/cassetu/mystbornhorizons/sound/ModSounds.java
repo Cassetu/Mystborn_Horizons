@@ -35,6 +35,8 @@ public class ModSounds {
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
     }
 
+    public static final SoundEvent HAVENICA_BOSS_MUSIC = registerSoundEvent("havenica_boss_music");
+
     public static void registerSounds() {
         MystbornHorizons.LOGGER.info("Registering Mod Sounds for" + MystbornHorizons.MOD_ID);
     }

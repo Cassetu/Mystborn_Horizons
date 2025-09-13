@@ -38,5 +38,13 @@
         "stream": true
       }
     ]
+  },
+  "havenica_boss_music": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:havenica_boss_music",
+        "stream": true
+      }
+    ]
   }
 }

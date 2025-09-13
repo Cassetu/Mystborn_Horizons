@@ -39,6 +39,11 @@ public class ModEntities {
             EntityType.Builder.create(HavenicaEntity::new, SpawnGroup.MONSTER)
                     .dimensions(0.5f, 2f).build());
 
+    public static final EntityType<HavenCoreEntity> HAVEN_CORE = Registry.register(Registries.ENTITY_TYPE,
+            Identifier.of(MystbornHorizons.MOD_ID, "haven_core"),
+            EntityType.Builder.create(HavenCoreEntity::new, SpawnGroup.MISC)
+                    .dimensions(0.5f, 0.5f).build());
+
     public static void registerModEntities() {
         MystbornHorizons.LOGGER.info("Registering Mod Entities for " + MystbornHorizons.MOD_ID);
     }
