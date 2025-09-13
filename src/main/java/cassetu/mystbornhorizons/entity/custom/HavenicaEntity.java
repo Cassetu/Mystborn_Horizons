@@ -260,6 +260,23 @@ public class HavenicaEntity extends HostileEntity {
     }
 
     @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+
+        if (!this.getWorld().isClient()) {
+            // Stop music for nearby players
+            for (ServerPlayerEntity player : ((ServerWorld) this.getWorld()).getPlayers()) {
+                if (this.squaredDistanceTo(player) <= 400) {
+                    ModPackets.sendToPlayer(
+                            new BossMusicPacket(false, null),
+                            player
+                    );
+                }
+            }
+        }
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -272,6 +289,17 @@ public class HavenicaEntity extends HostileEntity {
                 spawnHavenCores();
             }
 
+            if (!this.isDead()) {
+                for (ServerPlayerEntity player : ((ServerWorld) this.getWorld()).getPlayers()) {
+                    if (this.squaredDistanceTo(player) <= 400) {
+                        ModPackets.sendToPlayer(
+                                new BossMusicPacket(true, ModSounds.HAVENICA_BOSS_MUSIC),
+                                player
+                        );
+                    }
+                }
+            }
+
             if (!hasSentMusicStart) {
                 startBossMusicForNearbyPlayers();
                 hasSentMusicStart = true;
@@ -280,6 +308,7 @@ public class HavenicaEntity extends HostileEntity {
             if (this.isOnFire() && !this.hasStatusEffect(StatusEffects.GLOWING)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 600, 0));
             }
+
 
             if (toxicLaserCooldown > 0) toxicLaserCooldown--;
             if (rootNetworkCooldown > 0) rootNetworkCooldown--;

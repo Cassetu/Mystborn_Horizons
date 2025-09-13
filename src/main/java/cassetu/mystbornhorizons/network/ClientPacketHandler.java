@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.network;
 
+import cassetu.mystbornhorizons.MystbornHorizons;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -7,7 +8,6 @@ import net.minecraft.client.sound.SoundInstance;
 
 public class ClientPacketHandler {
     private static SoundInstance currentBossMusic = null;
-
     public static void registerClientPackets() {
         ClientPlayNetworking.registerGlobalReceiver(BossMusicPacket.ID, (payload, context) -> {
             context.client().execute(() -> {

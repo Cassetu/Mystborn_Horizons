@@ -68,6 +68,11 @@ public class HavenCoreEntity extends HostileEntity {
     }
 
     @Override
+    public boolean isFireImmune() {
+        return true;
+    }
+
+    @Override
     public void tick() {
         super.tick();
 
@@ -77,7 +82,6 @@ public class HavenCoreEntity extends HostileEntity {
     }
 
     //sounds//
-
 
     @Override
     protected @Nullable SoundEvent getAmbientSound() {
