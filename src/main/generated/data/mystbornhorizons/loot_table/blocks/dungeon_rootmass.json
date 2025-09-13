@@ -5,13 +5,34 @@
       "bonus_rolls": 0.0,
       "conditions": [
         {
-          "condition": "minecraft:survives_explosion"
+          "block": "mystbornhorizons:dungeon_rootmass",
+          "condition": "minecraft:block_state_property",
+          "properties": {}
         }
       ],
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "mystbornhorizons:dungeon_rootmass"
+          "name": "mystbornhorizons:root"
+        }
+      ],
+      "functions": [
+        {
+          "add": false,
+          "count": {
+            "type": "minecraft:uniform",
+            "max": 5.0,
+            "min": 3.0
+          },
+          "function": "minecraft:set_count"
+        },
+        {
+          "enchantment": "minecraft:fortune",
+          "formula": "minecraft:uniform_bonus_count",
+          "function": "minecraft:apply_bonus",
+          "parameters": {
+            "bonusMultiplier": 1
+          }
         }
       ],
       "rolls": 1.0

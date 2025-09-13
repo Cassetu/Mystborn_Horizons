@@ -213,14 +213,17 @@ public class ModItems {
     public static final Item BASALT_HOWLER_SPAWN_EGG = registerItem("basalt_howler_spawn_egg",
             new SpawnEggItem(ModEntities.BASALTHOWLER, 0x3a3b48, 0xffa214, new Item.Settings()));
 
-    public static final Item SAMMEL_SPAWN_EGG = registerItem("samael_spawn_egg",
-            new SpawnEggItem(ModEntities.SAMAEL, 0xb2dfdb, 0x80cbc4, new Item.Settings()));
+    public static final Item HAVENICA_SPAWN_EGG = registerItem("havenica_spawn_egg",
+            new SpawnEggItem(ModEntities.HAVENICA, 0xb2dfdb, 0x80cbc4, new Item.Settings()));
 
     public static final Item HONEY_BERRIES = registerItem("honey_berries",
             new AliasedBlockItem(ModBlocks.HONEY_BERRY_BUSH, new Item.Settings().food(ModFoodComponents.HONEY_BERRY)));
 
+    public static final Item ROOT = registerItem("root",
+            new Item(new Item.Settings().food(ModFoodComponents.ROOT)));
+
     public static final Item TOMAHAWK = registerItem("tomahawk",
-            new TomahawkItem(new Item.Settings().maxCount(1).maxDamage(250)) {
+            new TomahawkItem(new Item.Settings().maxCount(1).maxDamage(120)) {
                 @Override
                 public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
                     tooltip.add(Text.translatable("tooltip.mystbornhorizons.throw.tooltip"));

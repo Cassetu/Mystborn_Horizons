@@ -28,6 +28,7 @@
     "minecraft:cactus",
     "minecraft:sugar_cane",
     "minecraft:cocoa_beans",
-    "minecraft:apple"
+    "minecraft:apple",
+    "mystbornhorizons:root"
   ]
 }

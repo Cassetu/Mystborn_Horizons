@@ -73,6 +73,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.VEGGIE_SANDWICH, Models.GENERATED);
         itemModelGenerator.register(ModItems.CAULIFLOWER, Models.GENERATED);
         itemModelGenerator.register(ModItems.POWER_CORE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.ROOT, Models.GENERATED);
 
 
         itemModelGenerator.register(ModItems.FROSTSTONE_SWORD, Models.HANDHELD);
@@ -102,7 +103,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.BASALT_HOWLER_SPAWN_EGG,
                 new Model(Optional.of(Identifier.of("item/template_spawn_egg")), Optional.empty()));
 
-        itemModelGenerator.register(ModItems.SAMMEL_SPAWN_EGG,
+        itemModelGenerator.register(ModItems.HAVENICA_SPAWN_EGG,
                 new Model(Optional.of(Identifier.of("item/template_spawn_egg")), Optional.empty()));
     }
 }

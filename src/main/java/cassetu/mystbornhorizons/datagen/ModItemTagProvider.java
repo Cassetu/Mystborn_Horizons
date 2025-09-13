@@ -47,7 +47,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.CACTUS)
                 .add(Items.SUGAR_CANE)
                 .add(Items.COCOA_BEANS)
-                .add(Items.APPLE);
+                .add(Items.APPLE)
+                .add(ModItems.ROOT);
 
 
         getOrCreateTagBuilder(ItemTags.SWORDS)
@@ -64,6 +65,13 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.FROSTSTONE_AXE);
         getOrCreateTagBuilder(ItemTags.HOES)
                 .add(ModItems.FROSTSTONE_HOE);
+        getOrCreateTagBuilder(ItemTags.SWORD_ENCHANTABLE)
+                .add(ModItems.FROSTSTONE_SWORD)
+                .add(ModItems.ROYAL_FROSTSTONE_SWORD)
+                .add(ModItems.ROYAL_TECTONITE_SWORD)
+                .add(ModItems.MOONSTONE_RAPIER)
+                .add(ModItems.VANQUISHER_SWORD)
+                .add(ModItems.PEACEKEEPER_SWORD);
 
 
         getOrCreateTagBuilder(ItemTags.TRIMMABLE_ARMOR)
@@ -84,7 +92,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.FROSTSTONE_SHOVEL)
                 .add(ModItems.FROSTSTONE_AXE)
                 .add(ModItems.FROSTSTONE_HOE)
-                .add(ModItems.FROSTSTONE_LEGGINGS);
+                .add(ModItems.FROSTSTONE_LEGGINGS)
+                .add(ModItems.TOMAHAWK);
 
         getOrCreateTagBuilder(ItemTags.EQUIPPABLE_ENCHANTABLE)
                 .add(ModItems.FROSTSTONE_CHESTPLATE)

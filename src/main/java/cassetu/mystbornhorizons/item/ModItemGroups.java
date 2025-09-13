@@ -30,7 +30,7 @@ public class ModItemGroups {
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
                         entries.add(ModItems.ICE_SPIDER_SPAWN_EGG);
                         entries.add(ModItems.BASALT_HOWLER_SPAWN_EGG);
-                        entries.add(ModItems.SAMMEL_SPAWN_EGG);
+                        entries.add(ModItems.HAVENICA_SPAWN_EGG);
 
 //                      entries.add(ModItems.K_ARMOR_TRIM_SMITHING_TEMPLATE);
 
@@ -64,6 +64,7 @@ public class ModItemGroups {
                         entries.add(ModItems.VEGGIE_SANDWICH);
                         entries.add(ModItems.HONEY_BERRIES);
                         entries.add(ModItems.POWER_CORE);
+                        entries.add(ModItems.ROOT);
                     }).build());
     public static final ItemGroup MYSTBORN_DECOR_GROUP = Registry.register(Registries.ITEM_GROUP,
             Identifier.of(MystbornHorizons.MOD_ID, "mystbornhorizons_decor"),

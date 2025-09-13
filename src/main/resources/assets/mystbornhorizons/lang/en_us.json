@@ -56,6 +56,7 @@
   "item.mystbornhorizons.waffle": "Waffle",
   "item.mystbornhorizons.chicken_nuggets": "Chicken Nuggets",
   "item.mystbornhorizons.veggie_sandwich": "Veggie Sandwich",
+  "item.mystbornhorizons.root": "Root",
 
   "item.mystbornhorizons.royal_tectonite_sword": "§4§lRoyal Tectonite Sword§r",
   "item.mystbornhorizons.moonstone_rapier": "§8§lMoonstone Rapier§r",
@@ -77,7 +78,7 @@
   "item.mystbornhorizons.copper_bulb_spawn_egg": "Copper Bulb Spawn Egg ",
   "item.mystbornhorizons.ice_spider_spawn_egg": "Ice Spider Spawn Egg ",
   "item.mystbornhorizons.basalt_howler_spawn_egg": "Basalt Howler Spawn Egg",
-  "item.mystbornhorizons.samael_spawn_egg": "Samael Spawn Egg",
+  "item.mystbornhorizons.havenica_spawn_egg": "havenica Spawn Egg",
 
   "item.mystbornhorizons.froststone_helmet": "Froststone Helmet",
   "item.mystbornhorizons.froststone_chestplate": "Froststone Chestplate",
@@ -108,15 +109,18 @@
   "entity.mystbornhorizons.copperbulb": "Copper Bulb",
   "entity.mystbornhorizons.icespider": "Ice Spider",
   "entity.mystbornhorizons.basalthowler": "Basalt Howler",
-  "entity.mystbornhorizons.samael": "Samael",
+  "entity.mystbornhorizons.havenica": "§lHavenica§r",
 
   "entity.mystbornhorizons.tomahawk": "Tomahawk",
 
 
-  "entity.mystbornhorizons.samael.venomous_bloom": "§d§l⚘ §a§lSamael §r§2uses §d§lVenomous Bloom§r§2! §d⚘",
-  "entity.mystbornhorizons.samael.root_network": "§6§l⚡ §a§lSamael §r§2uses §6§lRoot Network§r§2! §6⚡",
-  "entity.mystbornhorizons.samael.pollen_storm": "§e§l☁ §a§lSamael §r§2uses §e§lPollen Storm§r§2! §e☁",
-  "entity.mystbornhorizons.samael.gardens_wrath": "§c§l❋ §a§lSamael §r§4enters §c§lGarden's Wrath§r§4! §c❋",
-  "entity.mystbornhorizons.samael.tomahawk_barrage": "§b§l⚔ §a§lSamael §r§3summons §b§lTomahawks§r§3! §b⚔"
+  "entity.mystbornhorizons.havenica.venomous_bloom": "§d§l⚘ §a§lHavenica §r§2uses §d§lVenomous Bloom§r§2! §d⚘",
+  "entity.mystbornhorizons.havenica.root_network": "§6§l⚡ §a§lHavenica §r§2uses §6§lRoot Network§r§2! §6⚡",
+  "entity.mystbornhorizons.havenica.pollen_storm": "§e§l☁ §a§lHavenica §r§2uses §e§lPollen Storm§r§2! §e☁",
+  "entity.mystbornhorizons.havenica.gardens_wrath": "§c§l❋ §a§lHavenica §r§4enters §c§lGarden's Wrath§r§4! §c❋",
+  "entity.mystbornhorizons.havenica.tomahawk_barrage": "§b§l⚔ §a§lHavenica §r§3summons §b§lTomahawks§r§3! §b⚔",
+  "entity.mystbornhorizons.havenica.teleport": "§5§l◈ §a§lHavenica §r§3teleports to a §5§lFroglight§r§3! §5◈",
+  "entity.mystbornhorizons.havenica.toxic_laser_charging": "§2§l⚠ §a§lHavenica §r§6charges a §c§lToxic Laser§r§6! §c§lTAKE COVER! §2⚠",
+  "entity.mystbornhorizons.havenica.toxic_laser_fire": "§c§l💀 §a§lHavenica §r§4unleashes §c§ldeadly toxins§r§4! §c💀"
 
 }

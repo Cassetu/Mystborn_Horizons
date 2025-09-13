@@ -180,10 +180,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
-        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.TOMAHAWK, 4)
-                .pattern("   ")
+        ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ModItems.TOMAHAWK)
                 .pattern(" IA")
-                .pattern("  S")
+                .pattern(" SI")
+                .pattern(" S ")
                 .input('I', Items.IRON_INGOT)
                 .input('A', ModItems.AXE_HEAD)
                 .input('S', Items.STICK)
@@ -193,13 +193,17 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.AXE_HEAD)
-                .pattern("   ")
-                .pattern(" FI")
+                .pattern("FXF")
+                .pattern("FBI")
                 .pattern(" I ")
                 .input('I', Items.COBBLESTONE)
-                .input('F', Items.FLINT)
+                .input('F', Items.OBSIDIAN)
+                .input('B', Items.INK_SAC)
+                .input('X', Items.BLACKSTONE)
                 .criterion(hasItem(Items.COBBLESTONE), conditionsFromItem(Items.COBBLESTONE))
-                .criterion(hasItem(Items.FLINT), conditionsFromItem(Items.FLINT))
+                .criterion(hasItem(Items.OBSIDIAN), conditionsFromItem(Items.OBSIDIAN))
+                .criterion(hasItem(Items.INK_SAC), conditionsFromItem(Items.INK_SAC))
+                .criterion(hasItem(Items.BLACKSTONE), conditionsFromItem(Items.BLACKSTONE))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.TITAN_SANDS_MUSIC_DISC)
@@ -211,6 +215,14 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .input('S', ModItems.STORMITE)
                 .input('M', ModItems.MYSTBORN_DUST)
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.DUNGEON_ROOTMASS)
+                .pattern("   ")
+                .pattern(" RR")
+                .pattern(" RR")
+                .input('R', ModItems.ROOT)
+                .criterion(hasItem(ModItems.ROOT), conditionsFromItem(ModItems.ROOT))
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC)

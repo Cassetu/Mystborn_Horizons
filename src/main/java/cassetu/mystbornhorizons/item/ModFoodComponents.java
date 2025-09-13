@@ -29,6 +29,12 @@ public class ModFoodComponents {
 
     public static final FoodComponent HONEY_BERRY = new FoodComponent.Builder().nutrition(2).saturationModifier(0.15f)
             .snack()
-            .statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 0, 2), 0.2f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 0, 2), 0.3f)
+            .build();
+
+    public static final FoodComponent ROOT = new FoodComponent.Builder().alwaysEdible().nutrition(1).saturationModifier(5f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40), 1.0f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 40), 1.0f)
+            .statusEffect(new StatusEffectInstance(StatusEffects.ABSORPTION, 140), 0.5f)
             .build();
 }

@@ -1,6 +1,16 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_blackstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:blackstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_cobblestone": {
       "conditions": {
         "items": [
@@ -11,11 +21,21 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_flint": {
+    "has_ink_sac": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:flint"
+            "items": "minecraft:ink_sac"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_obsidian": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:obsidian"
           }
         ]
       },
@@ -32,7 +52,9 @@
     [
       "has_the_recipe",
       "has_cobblestone",
-      "has_flint"
+      "has_obsidian",
+      "has_ink_sac",
+      "has_blackstone"
     ]
   ],
   "rewards": {

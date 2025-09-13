@@ -30,7 +30,7 @@ public class BasaltHowlerEntity extends HostileEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(4, new BasaltHowlerAttackGoal(this, 0.6D, 2.0F, 10));
+        this.goalSelector.add(4, new BasaltHowlerAttackGoal(this, 0.6D, 3.0F, 7));
         this.targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
 
         this.goalSelector.add(4, new WanderAroundFarGoal(this, 0.5));
@@ -38,7 +38,7 @@ public class BasaltHowlerEntity extends HostileEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 60)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 90)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.28)
                 .add(EntityAttributes.GENERIC_ATTACK_SPEED, 34)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.5)

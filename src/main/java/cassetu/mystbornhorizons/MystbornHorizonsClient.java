@@ -24,8 +24,8 @@ public class MystbornHorizonsClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(BasaltHowlerModel.BASALTHOWLER, BasaltHowlerModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.BASALTHOWLER, BasaltHowlerRenderer::new);
 
-        EntityModelLayerRegistry.registerModelLayer(SamaelModel.SAMAEL, SamaelModel::getTexturedModelData);
-        EntityRendererRegistry.register(ModEntities.SAMAEL, SamaelRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(HavenicaModel.HAVENICA, HavenicaModel::getTexturedModelData);
+        EntityRendererRegistry.register(ModEntities.HAVENICA, HavenicaRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(TomahawkProjectileModel.TOMAHAWK, TomahawkProjectileModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.TOMAHAWK, TomahawkProjectileRenderer::new);

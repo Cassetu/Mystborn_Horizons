@@ -5,7 +5,7 @@ import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.animation.Keyframe;
 import net.minecraft.client.render.entity.animation.Transformation;
 
-public class SamaelAnimations {
+public class HavenicaAnimations {
     public static final Animation RAWR = Animation.Builder.create(2f)
             .addBoneAnimation("head",
                     new Transformation(Transformation.Targets.TRANSLATE,

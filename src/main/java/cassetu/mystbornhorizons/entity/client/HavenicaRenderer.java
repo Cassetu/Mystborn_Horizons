@@ -1,25 +1,25 @@
 package cassetu.mystbornhorizons.entity.client;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
-import cassetu.mystbornhorizons.entity.custom.SamaelEntity;
+import cassetu.mystbornhorizons.entity.custom.HavenicaEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-public class SamaelRenderer extends MobEntityRenderer<SamaelEntity, SamaelModel<SamaelEntity>> {
-    public SamaelRenderer(EntityRendererFactory.Context context) {
-        super(context, new SamaelModel<>(context.getPart(SamaelModel.SAMAEL)), 0.75f);
+public class HavenicaRenderer extends MobEntityRenderer<HavenicaEntity, HavenicaModel<HavenicaEntity>> {
+    public HavenicaRenderer(EntityRendererFactory.Context context) {
+        super(context, new HavenicaModel<>(context.getPart(HavenicaModel.HAVENICA)), 0.75f);
     }
 
     @Override
-    public Identifier getTexture(SamaelEntity entity) {
-        return Identifier.of(MystbornHorizons.MOD_ID, "textures/entity/samael.png");
+    public Identifier getTexture(HavenicaEntity entity) {
+        return Identifier.of(MystbornHorizons.MOD_ID, "textures/entity/havenica.png");
     }
 
     @Override
-    public void render(SamaelEntity livingEntity, float f, float g, MatrixStack matrixStack,
+    public void render(HavenicaEntity livingEntity, float f, float g, MatrixStack matrixStack,
                        VertexConsumerProvider vertexConsumerProvider, int i) {
         if(livingEntity.isBaby()) {
             matrixStack.scale(0.5f, 0.5f, 0.5f);

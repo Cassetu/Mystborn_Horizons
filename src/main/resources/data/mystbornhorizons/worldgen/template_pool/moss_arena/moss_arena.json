@@ -1,0 +1,16 @@
+{
+  "name": "mystbornhorizons:moss_arena/moss_arena",
+  "fallback": "minecraft:empty",
+  "elements": [
+	{
+      "weight": 50,
+      "element": {
+        "location": "mystbornhorizons:moss_arena",
+        "processors": "minecraft:empty",
+		"projection": "rigid",
+        "element_type": "minecraft:single_pool_element"
+      }
+    }
+  ]
+}
+

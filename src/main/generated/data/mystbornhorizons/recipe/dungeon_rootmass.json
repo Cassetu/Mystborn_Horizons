@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "R": {
+      "item": "mystbornhorizons:root"
+    }
+  },
+  "pattern": [
+    "   ",
+    " RR",
+    " RR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:dungeon_rootmass"
+  }
+}

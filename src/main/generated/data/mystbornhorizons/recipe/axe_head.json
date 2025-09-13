@@ -2,16 +2,22 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "B": {
+      "item": "minecraft:ink_sac"
+    },
     "F": {
-      "item": "minecraft:flint"
+      "item": "minecraft:obsidian"
     },
     "I": {
       "item": "minecraft:cobblestone"
+    },
+    "X": {
+      "item": "minecraft:blackstone"
     }
   },
   "pattern": [
-    "   ",
-    " FI",
+    "FXF",
+    "FBI",
     " I "
   ],
   "result": {

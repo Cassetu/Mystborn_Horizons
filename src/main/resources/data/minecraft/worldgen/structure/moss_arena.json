@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": ["minecraft:lush_caves"],
+  "step": "surface_structures",
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "full",
+      "spawns": [
+        {
+          "type": "minecraft:bogged",
+          "weight": 1,
+          "minCount": 1,
+          "maxCount": 2
+        }
+      ]
+    }
+  },
+  "terrain_adaptation": "beard_thin",
+  "start_pool": "mystbornhorizons:moss_arena/moss_arena",
+  "size": 19,
+  "start_height": {
+    "absolute": -40
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE",
+  "max_distance_from_center": 100,
+  "use_expansion_hack": false,
+  "liquid_settings": "ignore_waterlogging"
+}

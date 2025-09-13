@@ -13,12 +13,12 @@
     }
   },
   "pattern": [
-    "   ",
     " IA",
-    "  S"
+    " SI",
+    " S "
   ],
   "result": {
-    "count": 4,
+    "count": 1,
     "id": "mystbornhorizons:tomahawk"
   }
 }

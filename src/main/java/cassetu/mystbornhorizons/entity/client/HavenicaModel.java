@@ -1,7 +1,7 @@
 package cassetu.mystbornhorizons.entity.client;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
-import cassetu.mystbornhorizons.entity.custom.SamaelEntity;
+import cassetu.mystbornhorizons.entity.custom.HavenicaEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -10,8 +10,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class SamaelModel<T extends SamaelEntity> extends SinglePartEntityModel<T> {
-    public static final EntityModelLayer SAMAEL = new EntityModelLayer(Identifier.of(MystbornHorizons.MOD_ID, "samael"), "main");
+public class HavenicaModel<T extends HavenicaEntity> extends SinglePartEntityModel<T> {
+    public static final EntityModelLayer HAVENICA = new EntityModelLayer(Identifier.of(MystbornHorizons.MOD_ID, "havenica"), "main");
 
     private final ModelPart root;
     private final ModelPart roots;
@@ -29,7 +29,7 @@ public class SamaelModel<T extends SamaelEntity> extends SinglePartEntityModel<T
     private final ModelPart legs;
     private final ModelPart left2;
     private final ModelPart right2;
-    public SamaelModel(ModelPart root) {
+    public HavenicaModel(ModelPart root) {
         this.root = root.getChild("root");
         this.roots = this.root.getChild("roots");
         this.root1 = this.roots.getChild("root1");
@@ -137,11 +137,11 @@ public class SamaelModel<T extends SamaelEntity> extends SinglePartEntityModel<T
         return TexturedModelData.of(modelData, 64, 64);
     }
     @Override
-    public void setAngles(SamaelEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setAngles(HavenicaEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
         this.setHeadAngles(netHeadYaw, headPitch);
 
-//        this.animateMovement(SamaelAnimations.RAWR, limbSwing, limbSwingAmount, 2f, 2.5f);
+//        this.animateMovement(havenicaAnimations.RAWR, limbSwing, limbSwingAmount, 2f, 2.5f);
 //        this.updateAnimation(entity.idleAnimationState, MantisAnimations.ANIM_MANTIS_IDLE, ageInTicks, 1f);
     }
 

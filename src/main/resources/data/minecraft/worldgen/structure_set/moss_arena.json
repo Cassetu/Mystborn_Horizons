@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "minecraft:moss_arena",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 200,
+    "separation": 120,
+    "salt": 1623523321
+  }
+}

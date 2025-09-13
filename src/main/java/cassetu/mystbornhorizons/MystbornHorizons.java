@@ -39,7 +39,7 @@ public class MystbornHorizons implements ModInitializer {
 		FabricDefaultAttributeRegistry.register(ModEntities.COPPERBULB, CopperBulbEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.ICESPIDER, IceSpiderEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.BASALTHOWLER, BasaltHowlerEntity.createAttributes());
-		FabricDefaultAttributeRegistry.register(ModEntities.SAMAEL, BasaltHowlerEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ModEntities.HAVENICA, BasaltHowlerEntity.createAttributes());
 
 		CompostingChanceRegistry.INSTANCE.add(ModItems.HONEY_BERRIES, 0.35f);
 	}
