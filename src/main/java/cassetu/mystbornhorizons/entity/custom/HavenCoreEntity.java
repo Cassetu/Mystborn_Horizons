@@ -85,7 +85,7 @@ public class HavenCoreEntity extends HostileEntity {
 
     @Override
     protected @Nullable SoundEvent getAmbientSound() {
-        return SoundEvents.BLOCK_MOSS_STEP;
+        return null;
     }
 
     @Override
