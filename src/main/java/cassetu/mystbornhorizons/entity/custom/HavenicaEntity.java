@@ -1171,30 +1171,44 @@ public class HavenicaEntity extends HostileEntity {
                         0.2, 0.2, 0.2,
                         0.05
                 );
-            }
 
-            Box damageBox = new Box(end.x - 2.5, end.y - 1, end.z - 2.5,
-                    end.x + 2.5, end.y + 2, end.z + 2.5);
+                Box damageBox = new Box(
+                        particlePos.x - 1.0, particlePos.y - 0.5, particlePos.z - 1.0,
+                        particlePos.x + 1.0, particlePos.y + 1.5, particlePos.z + 1.0
+                );
 
-            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, damageBox).forEach(player -> {
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 160, 1));
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 100, 1));
-                player.damage(this.getDamageSources().magic(), 7.0f);
+                List<PlayerEntity> playersInRange = this.getWorld().getNonSpectatingEntities(PlayerEntity.class, damageBox);
 
-                for (double angle = 0; angle < Math.PI * 2; angle += Math.PI/6) {
-                    double radius = 1.5;
-                    double x = player.getX() + Math.cos(angle) * radius;
-                    double z = player.getZ() + Math.sin(angle) * radius;
+                for (PlayerEntity player : playersInRange) {
+                    if (!player.hasStatusEffect(StatusEffects.POISON) || player.getStatusEffect(StatusEffects.POISON).getDuration() < 40) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 160, 1));
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 160, 2));
+                        player.damage(this.getDamageSources().magic(), 8.0f);
 
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.FLAME,
-                            x, player.getY() + 1.0, z,
-                            2,
-                            0.1, 0.2, 0.1,
-                            0.05
-                    );
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.DAMAGE_INDICATOR,
+                                player.getX(), player.getY() + 1.0, player.getZ(),
+                                8,
+                                0.5, 0.5, 0.5,
+                                0.1
+                        );
+
+                        for (double angle = 0; angle < Math.PI * 2; angle += Math.PI/6) {
+                            double radius = 1.5;
+                            double x = player.getX() + Math.cos(angle) * radius;
+                            double z = player.getZ() + Math.sin(angle) * radius;
+
+                            ((ServerWorld)this.getWorld()).spawnParticles(
+                                    ParticleTypes.FLAME,
+                                    x, player.getY() + 1.0, z,
+                                    2,
+                                    0.1, 0.2, 0.1,
+                                    0.05
+                            );
+                        }
+                    }
                 }
-            });
+            }
         }
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
