@@ -719,20 +719,15 @@ public class HavenicaEntity extends HostileEntity {
                         player.changeGameMode(originalMode);
                     }
 
-                    Vec3d originalPos = originalPositions.get(player);
-                    if (originalPos != null && isValidPosition(originalPos.x, originalPos.y, originalPos.z)) {
-                        double distanceToHavenica = originalPos.distanceTo(this.getPos());
-                        if (distanceToHavenica < 8.0) {
-                            Vec3d direction = originalPos.subtract(this.getPos()).normalize();
-                            Vec3d safePos = this.getPos().add(direction.multiply(8.0));
-                            if (isValidPosition(safePos.x, safePos.y, safePos.z)) {
-                                player.teleport(player.getServerWorld(), safePos.x, safePos.y, safePos.z, player.getYaw(), player.getPitch());
-                            } else {
-                                player.teleport(player.getServerWorld(), this.getX() + 10, this.getY() + 2, this.getZ(), player.getYaw(), player.getPitch());
-                            }
-                        } else {
-                            player.teleport(player.getServerWorld(), originalPos.x, originalPos.y, originalPos.z, player.getYaw(), player.getPitch());
-                        }
+                    // Find a safe teleport position near the boss
+                    Vec3d safePos = findSafeTeleportPosition(player);
+
+                    if (safePos != null && isValidPosition(safePos.x, safePos.y, safePos.z)) {
+                        player.teleport(player.getServerWorld(), safePos.x, safePos.y, safePos.z, player.getYaw(), player.getPitch());
+                    } else {
+                        // Fallback: teleport to a default safe distance if no safe position found
+                        Vec3d fallbackPos = new Vec3d(this.getX() + 10, this.getY() + 2, this.getZ());
+                        player.teleport(player.getServerWorld(), fallbackPos.x, fallbackPos.y, fallbackPos.z, player.getYaw(), player.getPitch());
                     }
 
                     player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
@@ -759,6 +754,77 @@ public class HavenicaEntity extends HostileEntity {
         cutsceneTick = 0;
 
         System.out.println("DEBUG: Cutscene completed and players restored!");
+    }
+
+    private Vec3d findSafeTeleportPosition(ServerPlayerEntity player) {
+        // Try to find a safe position in a circle around the boss
+        // Start at a safe distance (10 blocks) and work outward if needed
+        double[] distances = {10.0, 12.0, 15.0, 8.0}; // Try these distances in order
+
+        for (double distance : distances) {
+            // Try 16 different angles around the boss
+            for (int angle = 0; angle < 16; angle++) {
+                double radians = (angle / 16.0) * Math.PI * 2;
+                double x = this.getX() + Math.cos(radians) * distance;
+                double z = this.getZ() + Math.sin(radians) * distance;
+
+                // Try different Y levels starting from the boss's Y level
+                for (int yOffset = 0; yOffset <= 5; yOffset++) {
+                    double y = this.getY() + yOffset;
+
+                    if (isSafeTeleportLocation(x, y, z)) {
+                        return new Vec3d(x, y, z);
+                    }
+                }
+
+                // Also try below the boss level
+                for (int yOffset = -1; yOffset >= -3; yOffset--) {
+                    double y = this.getY() + yOffset;
+
+                    if (isSafeTeleportLocation(x, y, z)) {
+                        return new Vec3d(x, y, z);
+                    }
+                }
+            }
+        }
+
+        return null; // No safe position found
+    }
+
+    private boolean isSafeTeleportLocation(double x, double y, double z) {
+        if (!isValidPosition(x, y, z)) {
+            return false;
+        }
+
+        BlockPos pos = new BlockPos((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
+
+        // Check if the position and the block above are air (2 blocks of air for player height)
+        if (!this.getWorld().getBlockState(pos).isAir() ||
+                !this.getWorld().getBlockState(pos.up()).isAir()) {
+            return false;
+        }
+
+        // Check if there's a solid block below to stand on (within 3 blocks down)
+        boolean hasFloorBelow = false;
+        for (int i = 1; i <= 3; i++) {
+            BlockPos belowPos = pos.down(i);
+            if (!this.getWorld().getBlockState(belowPos).isAir()) {
+                hasFloorBelow = true;
+                break;
+            }
+        }
+
+        if (!hasFloorBelow) {
+            return false;
+        }
+
+        // Make sure we're not too close to the boss (minimum 8 blocks)
+        double distanceToBoss = Math.sqrt(
+                Math.pow(x - this.getX(), 2) +
+                        Math.pow(z - this.getZ(), 2)
+        );
+
+        return distanceToBoss >= 8.0;
     }
 
     private void cleanupCutscene() {
