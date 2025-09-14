@@ -39,6 +39,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MOONSTONE_DEEPSLATE_ORE);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SHARD_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_ROOTMASS);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ANCIENT_GROVE_ALTAR);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_COBBLE);
 
@@ -53,6 +54,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.SALONDITE, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_SALONDITE, Models.GENERATED);
         itemModelGenerator.register(ModItems.AXE_HEAD, Models.GENERATED);
+        itemModelGenerator.register(ModItems.FOREST_HEART, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.STORMITE, Models.GENERATED);

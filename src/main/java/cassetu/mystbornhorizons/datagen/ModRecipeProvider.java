@@ -217,6 +217,20 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.FOREST_HEART)
+                .pattern("MED")
+                .pattern("EVE")
+                .pattern("DEM")
+                .input('V', Items.VERDANT_FROGLIGHT)
+                .input('D', Items.DIAMOND)
+                .input('E', Items.EMERALD_BLOCK)
+                .input('M', ModItems.MYSTBORN_DUST)
+                .criterion(hasItem(Items.VERDANT_FROGLIGHT), conditionsFromItem(Items.VERDANT_FROGLIGHT))
+                .criterion(hasItem(Items.DIAMOND),conditionsFromItem(Items.DIAMOND))
+                .criterion(hasItem(Items.EMERALD_BLOCK),conditionsFromItem(Items.EMERALD))
+                .criterion(hasItem(ModItems.MYSTBORN_DUST),conditionsFromItem(ModItems.MYSTBORN_DUST))
+                .offerTo(exporter);
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModBlocks.DUNGEON_ROOTMASS)
                 .pattern("   ")
                 .pattern(" RR")

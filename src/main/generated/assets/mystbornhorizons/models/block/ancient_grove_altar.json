@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mystbornhorizons:block/ancient_grove_altar"
+  }
+}

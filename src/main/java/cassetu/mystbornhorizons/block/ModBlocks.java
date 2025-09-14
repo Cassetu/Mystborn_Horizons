@@ -1,6 +1,7 @@
 package cassetu.mystbornhorizons.block;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
+import cassetu.mystbornhorizons.block.custom.AncientGroveAltarBlock;
 import cassetu.mystbornhorizons.block.custom.HoneyBerryBushBlock;
 import cassetu.mystbornhorizons.block.custom.ShardBlock;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -97,6 +98,14 @@ public class ModBlocks {
     public static final Block SHARD_BLOCK = registerBlock("shard_block",
             new ShardBlock(AbstractBlock.Settings.create().strength(2f)
                     .luminance(state -> 7).requiresTool().sounds(BlockSoundGroup.AMETHYST_BLOCK)));
+
+    public static final Block ANCIENT_GROVE_ALTAR = registerBlock("ancient_grove_altar",
+            new AncientGroveAltarBlock(AbstractBlock.Settings.create()
+                    .strength(-1.0f, 3600000.0f)
+                    .dropsNothing()
+                    .allowsSpawning(Blocks::never)
+                    .luminance(state -> 5)
+                    .sounds(BlockSoundGroup.STONE)));
 
     public static final Block HONEY_BERRY_BUSH = registerBlockWithoutBlockItem("honey_berry_bush",
             new HoneyBerryBushBlock(AbstractBlock.Settings.copy(Blocks.SWEET_BERRY_BUSH)));

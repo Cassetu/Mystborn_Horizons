@@ -16,7 +16,6 @@ public class ModItemGroups {
             FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.MYSTBORN_DUST))
                     .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_items"))
                     .entries((displayContext, entries) -> {
-                        entries.add(ModBlocks.SHARD_BLOCK);
                         entries.add(ModItems.DOOMSDAY_MUSIC_DISC);
                         entries.add(ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC);
                         entries.add(ModItems.TITAN_SANDS_MUSIC_DISC);
@@ -25,6 +24,7 @@ public class ModItemGroups {
                         entries.add(ModItems.PEACEKEEPER_SWORD);
                         entries.add(ModItems.VANQUISHER_SWORD);
                         entries.add(ModItems.MOONSTONE_RAPIER);
+                        entries.add(ModItems.FOREST_HEART);
 
                         entries.add(ModItems.MANTIS_SPAWN_EGG);
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
@@ -71,6 +71,8 @@ public class ModItemGroups {
             FabricItemGroup.builder().icon(() -> new ItemStack(ModBlocks.MYST_CRATE))
                     .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_decor"))
                     .entries((displayContext, entries) -> {
+                        entries.add(ModBlocks.SHARD_BLOCK);
+                        entries.add(ModBlocks.ANCIENT_GROVE_ALTAR);
                         entries.add(ModBlocks.FROSTSTONE_BLOCK);
                         entries.add(ModBlocks.MYST_BRICKS);
                         entries.add(ModBlocks.MYST_CRATE);

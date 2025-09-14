@@ -122,5 +122,13 @@
   "entity.mystbornhorizons.havenica.teleport": "§5§l◈ §a§lHavenica §r§3teleports to a §5§lFroglight§r§3! §5◈",
   "entity.mystbornhorizons.havenica.toxic_laser_charging": "§2§l⚠ §a§lHavenica §r§6charges a §c§lToxic Laser§r§6! ⚠",
   "entity.mystbornhorizons.havenica.toxic_laser_fire": "§c§l💀 §a§lHavenica §r§4unleashes §c§ldeadly toxins§r§4! §c💀",
-  "entity.mystbornhorizons.havenica.shockwave_blast": "§6§l⚡ §a§lHavenica §r§2uses §6§lShockwave Blast§r§2! §6⚡"
+  "entity.mystbornhorizons.havenica.shockwave_blast": "§6§l⚡ §a§lHavenica §r§2uses §6§lShockwave Blast§r§2! §6⚡",
+
+  "tooltip.mystbornhorizons.forest_heart.tooltip1": "A pulsing heart of ancient forest magic",
+  "tooltip.mystbornhorizons.forest_heart.tooltip2": "Use on an Ancient Grove Altar to awaken",
+  "tooltip.mystbornhorizons.forest_heart.tooltip3": "⚠ WARNING: Summons a powerful guardian ⚠",
+
+  "block.mystbornhorizons.ancient_grove_altar": "Ancient Grove Altar",
+
+  "item.mystbornhorizons.forest_heart": "Forest Heart"
 }

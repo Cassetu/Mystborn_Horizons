@@ -3,6 +3,7 @@ package cassetu.mystbornhorizons.item;
 import cassetu.mystbornhorizons.MystbornHorizons;
 import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.entity.ModEntities;
+import cassetu.mystbornhorizons.item.custom.ForestHeartItem;
 import cassetu.mystbornhorizons.item.custom.ModArmorItem;
 import cassetu.mystbornhorizons.item.custom.TomahawkItem;
 import cassetu.mystbornhorizons.sound.ModSounds;
@@ -230,6 +231,9 @@ public class ModItems {
                     super.appendTooltip(stack, context, tooltip, type);
                 }
     });
+
+    public static final Item FOREST_HEART = registerItem("forest_heart",
+            new ForestHeartItem(new Item.Settings().maxCount(1)));
 
 
     private static Item registerItem(String name, Item item) {

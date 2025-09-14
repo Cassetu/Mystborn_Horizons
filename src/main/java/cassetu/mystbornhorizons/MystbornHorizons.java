@@ -9,6 +9,7 @@ import cassetu.mystbornhorizons.item.ModItemGroups;
 import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.network.ModPackets;
 import cassetu.mystbornhorizons.sound.ModSounds;
+import cassetu.mystbornhorizons.util.CutsceneManager;
 import cassetu.mystbornhorizons.util.ModLootTablesModifiers;
 import cassetu.mystbornhorizons.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
@@ -33,6 +34,7 @@ public class MystbornHorizons implements ModInitializer {
 		ModWorldGeneration.generateModWorldGen();
 		ModLootTablesModifiers.modifyLootTables();
 		ModPackets.registerPackets();
+		CutsceneManager.initialize();
 
 		FabricDefaultAttributeRegistry.register(ModEntities.MANTIS, MantisEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.COPPERBULB, CopperBulbEntity.createAttributes());

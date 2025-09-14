@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -719,13 +720,12 @@ public class HavenicaEntity extends HostileEntity {
                         player.changeGameMode(originalMode);
                     }
 
-                    // Find a safe teleport position near the boss
-                    Vec3d safePos = findSafeTeleportPosition(player);
+                    Vec3d originalPos = originalPositions.get(player);
 
-                    if (safePos != null && isValidPosition(safePos.x, safePos.y, safePos.z)) {
-                        player.teleport(player.getServerWorld(), safePos.x, safePos.y, safePos.z, player.getYaw(), player.getPitch());
+                    if (originalPos != null && isValidPosition(originalPos.x, originalPos.y, originalPos.z)) {
+                        player.teleport(player.getServerWorld(), originalPos.x, originalPos.y, originalPos.z, player.getYaw(), player.getPitch());
                     } else {
-                        // Fallback: teleport to a default safe distance if no safe position found
+                        System.out.println("WARNING: Original position for " + player.getName().getString() + " is invalid, using fallback");
                         Vec3d fallbackPos = new Vec3d(this.getX() + 10, this.getY() + 2, this.getZ());
                         player.teleport(player.getServerWorld(), fallbackPos.x, fallbackPos.y, fallbackPos.z, player.getYaw(), player.getPitch());
                     }
@@ -753,22 +753,19 @@ public class HavenicaEntity extends HostileEntity {
         cutsceneActive = false;
         cutsceneTick = 0;
 
-        System.out.println("DEBUG: Cutscene completed and players restored!");
+        System.out.println("DEBUG: Cutscene completed and players restored to original positions!");
     }
 
     private Vec3d findSafeTeleportPosition(ServerPlayerEntity player) {
-        // Try to find a safe position in a circle around the boss
-        // Start at a safe distance (10 blocks) and work outward if needed
-        double[] distances = {10.0, 12.0, 15.0, 8.0}; // Try these distances in order
+
+        double[] distances = {10.0, 12.0, 15.0, 8.0};
 
         for (double distance : distances) {
-            // Try 16 different angles around the boss
             for (int angle = 0; angle < 16; angle++) {
                 double radians = (angle / 16.0) * Math.PI * 2;
                 double x = this.getX() + Math.cos(radians) * distance;
                 double z = this.getZ() + Math.sin(radians) * distance;
 
-                // Try different Y levels starting from the boss's Y level
                 for (int yOffset = 0; yOffset <= 5; yOffset++) {
                     double y = this.getY() + yOffset;
 
@@ -777,7 +774,6 @@ public class HavenicaEntity extends HostileEntity {
                     }
                 }
 
-                // Also try below the boss level
                 for (int yOffset = -1; yOffset >= -3; yOffset--) {
                     double y = this.getY() + yOffset;
 
@@ -788,7 +784,7 @@ public class HavenicaEntity extends HostileEntity {
             }
         }
 
-        return null; // No safe position found
+        return null;
     }
 
     private boolean isSafeTeleportLocation(double x, double y, double z) {
@@ -798,13 +794,11 @@ public class HavenicaEntity extends HostileEntity {
 
         BlockPos pos = new BlockPos((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
 
-        // Check if the position and the block above are air (2 blocks of air for player height)
         if (!this.getWorld().getBlockState(pos).isAir() ||
                 !this.getWorld().getBlockState(pos.up()).isAir()) {
             return false;
         }
 
-        // Check if there's a solid block below to stand on (within 3 blocks down)
         boolean hasFloorBelow = false;
         for (int i = 1; i <= 3; i++) {
             BlockPos belowPos = pos.down(i);
@@ -818,13 +812,11 @@ public class HavenicaEntity extends HostileEntity {
             return false;
         }
 
-        // Make sure we're not too close to the boss (minimum 8 blocks)
         double distanceToBoss = Math.sqrt(
                 Math.pow(x - this.getX(), 2) +
                         Math.pow(z - this.getZ(), 2)
         );
-
-        return distanceToBoss >= 8.0;
+        return distanceToBoss >= 1.0;
     }
 
     private void cleanupCutscene() {
@@ -911,7 +903,6 @@ public class HavenicaEntity extends HostileEntity {
             this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
         }
 
-        // Handle cutscene early in tick - on both client and server for sync
         if (cutsceneActive) {
             handleCutscene();
         }
@@ -973,7 +964,7 @@ public class HavenicaEntity extends HostileEntity {
             if (teleportDelayTicks > 0) {
                 teleportDelayTicks--;
                 if (teleportDelayTicks == 0 && teleportCooldown <= 0) {
-                    tryTeleportToFroglight();
+                    tryTeleportToHavenCore();
                 }
             }
 
@@ -1003,7 +994,6 @@ public class HavenicaEntity extends HostileEntity {
                 healingTick = 0;
             }
 
-            // Check if Gardens Wrath should activate
             if (!isGardensWrathActive && this.getHealth() <= this.getMaxHealth() * 0.5f) {
                 System.out.println("DEBUG: Health threshold reached (" + this.getHealth() + "/" + this.getMaxHealth() + "), activating Gardens Wrath");
                 activateGardensWrath();
@@ -1501,26 +1491,20 @@ public class HavenicaEntity extends HostileEntity {
 
         System.out.println("DEBUG: Gardens Wrath activated!");
 
-        // Dramatic pause - freeze all nearby entities briefly
         Box freezeArea = this.getBoundingBox().expand(25.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
-            // Give players brief slowness to create dramatic pause
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 4, true, false));
-            // Dramatic message
             player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S RAGE AWAKENS §c§l⚠"), true);
         });
 
-        // Play dramatic transformation sounds
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
                 this.getSoundCategory(), 2.0f, 0.5f);
 
-        // Start the cutscene timing system
         this.cutsceneActive = true;
         this.cutsceneTick = 0;
 
         System.out.println("DEBUG: Cutscene started! cutsceneActive=" + cutsceneActive);
 
-        // Set the flag immediately so other systems know we're in wrath mode
         isGardensWrathActive = true;
     }
 
@@ -1529,37 +1513,55 @@ public class HavenicaEntity extends HostileEntity {
         return !effect.getEffectType().equals(StatusEffects.POISON) && super.canHaveStatusEffect(effect);
     }
 
-    private void tryTeleportToFroglight() {
+    private void tryTeleportToHavenCore() {
         if (this.getWorld().isClient()) return;
 
-        List<BlockPos> validFroglights = new ArrayList<>();
-        BlockPos currentPos = this.getBlockPos();
+        List<Vec3d> validHavenCorePositions = new ArrayList<>();
 
-        for (int x = -15; x <= 15; x++) {
-            for (int y = -15; y <= 15; y++) {
-                for (int z = -15; z <= 15; z++) {
-                    BlockPos checkPos = currentPos.add(x, y, z);
-                    Block block = this.getWorld().getBlockState(checkPos).getBlock();
+        // Search for Haven Core entities in a 30 block radius
+        Box searchArea = new Box(
+                this.getX() - 30, this.getY() - 15, this.getZ() - 30,
+                this.getX() + 30, this.getY() + 15, this.getZ() + 30
+        );
 
-                    if (block == Blocks.OCHRE_FROGLIGHT ||
-                            block == Blocks.VERDANT_FROGLIGHT ||
-                            block == Blocks.PEARLESCENT_FROGLIGHT) {
+        // Get all entities in the search area and filter for Haven Cores
+        List<Entity> nearbyEntities = this.getWorld().getOtherEntities(this, searchArea);
 
-                        BlockPos above1 = checkPos.up();
-                        BlockPos above2 = checkPos.up(2);
+        for (Entity entity : nearbyEntities) {
+            // Check if the entity is a Haven Core (adjust the class name as needed)
+            if (entity.getClass().getSimpleName().contains("HavenCore") ||
+                    entity.getType().toString().contains("haven_core")) {
 
-                        if (this.getWorld().getBlockState(above1).isAir() &&
-                                this.getWorld().getBlockState(above2).isAir()) {
-                            validFroglights.add(above1);
-                        }
+                // Check if there's enough space around the Haven Core for teleportation
+                Vec3d corePos = entity.getPos();
+
+                // Try positions around the Haven Core
+                for (int angle = 0; angle < 8; angle++) {
+                    double radians = (angle / 8.0) * Math.PI * 2;
+                    double distance = 3.0; // Distance from the Haven Core
+
+                    double x = corePos.x + Math.cos(radians) * distance;
+                    double z = corePos.z + Math.sin(radians) * distance;
+                    double y = corePos.y;
+
+                    // Check if this position has enough space (2 blocks high)
+                    BlockPos checkPos = new BlockPos((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
+
+                    if (this.getWorld().getBlockState(checkPos).isAir() &&
+                            this.getWorld().getBlockState(checkPos.up()).isAir() &&
+                            !this.getWorld().getBlockState(checkPos.down()).isAir()) { // Has floor below
+
+                        validHavenCorePositions.add(new Vec3d(x, y, z));
+                        break; // Found a valid position for this Haven Core, move to next
                     }
                 }
             }
         }
 
-        if (!validFroglights.isEmpty()) {
-            BlockPos teleportPos = validFroglights.get(this.random.nextInt(validFroglights.size()));
+        if (!validHavenCorePositions.isEmpty()) {
+            Vec3d teleportPos = validHavenCorePositions.get(this.random.nextInt(validHavenCorePositions.size()));
 
+            // Spawn departure particles
             ((ServerWorld)this.getWorld()).spawnParticles(
                     ParticleTypes.PORTAL,
                     this.getX(), this.getY() + 1.0, this.getZ(),
@@ -1571,8 +1573,10 @@ public class HavenicaEntity extends HostileEntity {
             this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT,
                     this.getSoundCategory(), 1.0f, 1.0f);
 
-            this.refreshPositionAndAngles(teleportPos.getX() + 0.5, teleportPos.getY(), teleportPos.getZ() + 0.5, this.getYaw(), this.getPitch());
+            // Teleport to the Haven Core position
+            this.refreshPositionAndAngles(teleportPos.x, teleportPos.y, teleportPos.z, this.getYaw(), this.getPitch());
 
+            // Spawn arrival particles
             ((ServerWorld)this.getWorld()).spawnParticles(
                     ParticleTypes.PORTAL,
                     this.getX(), this.getY() + 1.0, this.getZ(),
@@ -1581,16 +1585,25 @@ public class HavenicaEntity extends HostileEntity {
                     0.1
             );
 
+            // Additional Haven Core-themed particles
+            ((ServerWorld)this.getWorld()).spawnParticles(
+                    ParticleTypes.END_ROD,
+                    this.getX(), this.getY() + 1.0, this.getZ(),
+                    15,
+                    1.0, 1.0, 1.0,
+                    0.2
+            );
+
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.translatable("entity.mystbornhorizons.havenica.teleport"), true)
+                    player -> player.sendMessage(Text.literal("§5§lHavenica teleports to a nearby Haven Core!"), true)
             );
 
             teleportCooldown = TELEPORT_COOLDOWN;
         } else {
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Havenica searches for a froglight to teleport to..."), true)
+                    player -> player.sendMessage(Text.literal("§6Havenica searches for a Haven Core to teleport to..."), true)
             );
         }
     }
@@ -1693,14 +1706,6 @@ public class HavenicaEntity extends HostileEntity {
                         0.0
                 );
             }
-        }
-    }
-
-    // Debug method for testing - remove in production
-    public void debugTriggerCutscene() {
-        if (!this.getWorld().isClient()) {
-            System.out.println("DEBUG: Manually triggering cutscene");
-            this.activateGardensWrath();
         }
     }
 
