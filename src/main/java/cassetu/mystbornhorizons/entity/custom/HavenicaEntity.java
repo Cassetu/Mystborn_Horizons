@@ -2,6 +2,7 @@ package cassetu.mystbornhorizons.entity.custom;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
@@ -33,6 +34,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.GameMode;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +43,8 @@ import cassetu.mystbornhorizons.sound.ModSounds;
 import cassetu.mystbornhorizons.network.ModPackets;
 import cassetu.mystbornhorizons.network.BossMusicPacket;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HavenicaEntity extends HostileEntity {
     private ServerBossBar bossBar;
@@ -52,6 +52,9 @@ public class HavenicaEntity extends HostileEntity {
 
     private boolean cutsceneActive = false;
     private int cutsceneTick = 0;
+    private Set<ServerPlayerEntity> cutscenePlayers = new HashSet<>();
+    private Map<ServerPlayerEntity, GameMode> originalGameModes = new HashMap<>();
+    private Map<ServerPlayerEntity, Vec3d> originalPositions = new HashMap<>();
 
     private int shockwaveCooldown = 0;
     private static final int SHOCKWAVE_COOLDOWN = 500;
@@ -210,7 +213,31 @@ public class HavenicaEntity extends HostileEntity {
 
         cutsceneTick++;
 
-        // Delayed sound effects
+        // Make sure we're on server side
+        if (this.getWorld().isClient()) {
+            return;
+        }
+
+        ServerWorld serverWorld = (ServerWorld) this.getWorld();
+        if (serverWorld == null) {
+            System.out.println("ERROR: ServerWorld is null!");
+            return;
+        }
+
+        // Initialize cutscene on first tick
+        if (cutsceneTick == 1) {
+            initializeCutscene(serverWorld);
+        }
+
+        // Update camera positions during cutscene
+        updateCutsceneCameras();
+
+        // Debug logging every 20 ticks
+        if (cutsceneTick % 20 == 0) {
+            System.out.println("DEBUG: Cutscene tick " + cutsceneTick + "/80");
+        }
+
+        // Delayed sound effects with null checks
         if (cutsceneTick == 20) {
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
                     this.getSoundCategory(), 1.5f, 0.8f);
@@ -220,41 +247,46 @@ public class HavenicaEntity extends HostileEntity {
                     this.getSoundCategory(), 1.0f, 0.7f);
         }
 
-        // Phase 1: Dark energy buildup (0-40 ticks)
-        if (cutsceneTick <= 40) {
+        // Phase 1: Dark energy buildup (0-40 ticks) - Fixed division by zero
+        if (cutsceneTick <= 40 && cutsceneTick > 0) {
             // Dark spiraling energy around Havenica
             for (int spiral = 0; spiral < 3; spiral++) {
-                double spiralHeight = (cutsceneTick / 40.0) * 4.0;
+                double spiralHeight = ((double)cutsceneTick / 40.0) * 4.0;
                 double angle = (cutsceneTick * 0.3) + (spiral * Math.PI * 2 / 3);
-                double radius = 2.0 - (spiralHeight / 4.0) * 0.5;
+                double radius = Math.max(0.5, 2.0 - (spiralHeight / 4.0) * 0.5); // Prevent negative radius
 
                 double x = this.getX() + Math.cos(angle) * radius;
                 double z = this.getZ() + Math.sin(angle) * radius;
 
-                ((ServerWorld)this.getWorld()).spawnParticles(
-                        ParticleTypes.WITCH,
-                        x, this.getY() + spiralHeight, z,
-                        1, 0.1, 0.1, 0.1, 0.0
-                );
+                // Add bounds checking for particle positions
+                if (isValidParticlePosition(x, this.getY() + spiralHeight, z)) {
+                    serverWorld.spawnParticles(
+                            ParticleTypes.WITCH,
+                            x, this.getY() + spiralHeight, z,
+                            1, 0.1, 0.1, 0.1, 0.0
+                    );
 
-                ((ServerWorld)this.getWorld()).spawnParticles(
-                        ParticleTypes.SMOKE,
-                        x, this.getY() + spiralHeight, z,
-                        2, 0.2, 0.2, 0.2, 0.05
-                );
+                    serverWorld.spawnParticles(
+                            ParticleTypes.SMOKE,
+                            x, this.getY() + spiralHeight, z,
+                            2, 0.2, 0.2, 0.2, 0.05
+                    );
+                }
             }
 
-            // Ground cracks expanding outward
-            double expansion = (cutsceneTick / 40.0) * 8.0;
+            // Ground cracks expanding outward - Fixed potential infinity
+            double expansion = Math.min(((double)cutsceneTick / 40.0) * 8.0, 10.0); // Cap at 10 blocks
             for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
                 double x = this.getX() + Math.cos(angle) * expansion;
                 double z = this.getZ() + Math.sin(angle) * expansion;
 
-                ((ServerWorld)this.getWorld()).spawnParticles(
-                        ParticleTypes.EGG_CRACK,
-                        x, this.getY() + 0.1, z,
-                        3, 0.3, 0.1, 0.3, 0.1
-                );
+                if (isValidParticlePosition(x, this.getY() + 0.1, z)) {
+                    serverWorld.spawnParticles(
+                            ParticleTypes.EGG_CRACK,
+                            x, this.getY() + 0.1, z,
+                            3, 0.3, 0.1, 0.3, 0.1
+                    );
+                }
             }
 
             // Pulsing dark aura
@@ -264,11 +296,13 @@ public class HavenicaEntity extends HostileEntity {
                         double x = this.getX() + Math.cos(angle) * r;
                         double z = this.getZ() + Math.sin(angle) * r;
 
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.ASH,
-                                x, this.getY() + 0.5, z,
-                                1, 0.1, 0.1, 0.1, 0.0
-                        );
+                        if (isValidParticlePosition(x, this.getY() + 0.5, z)) {
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.ASH,
+                                    x, this.getY() + 0.5, z,
+                                    1, 0.1, 0.1, 0.1, 0.0
+                            );
+                        }
                     }
                 }
             }
@@ -277,46 +311,38 @@ public class HavenicaEntity extends HostileEntity {
         // Phase 2: Explosive transformation (at tick 40)
         if (cutsceneTick == 40) {
             // Massive explosion of particles
-            ((ServerWorld)this.getWorld()).spawnParticles(
+            serverWorld.spawnParticles(
                     ParticleTypes.EXPLOSION_EMITTER,
                     this.getX(), this.getY() + 2.0, this.getZ(),
                     1, 0.0, 0.0, 0.0, 0.0
             );
 
-            // Ring of energy bursts
-            for (int ring = 0; ring < 5; ring++) {
+            // Ring of energy bursts - Fixed potential performance issue
+            int maxRings = 5;
+            for (int ring = 0; ring < maxRings; ring++) {
                 double radius = (ring + 1) * 2.0;
-                for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 12) {
+                int particlesPerRing = Math.min(12, (int)(radius * 2)); // Limit particles based on radius
+
+                for (int p = 0; p < particlesPerRing; p++) {
+                    double angle = (p / (double)particlesPerRing) * Math.PI * 2;
                     double x = this.getX() + Math.cos(angle) * radius;
                     double z = this.getZ() + Math.sin(angle) * radius;
 
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.SOUL_FIRE_FLAME,
-                            x, this.getY() + 1.0, z,
-                            5, 0.3, 0.5, 0.3, 0.1
-                    );
+                    if (isValidParticlePosition(x, this.getY() + 1.0, z)) {
+                        serverWorld.spawnParticles(
+                                ParticleTypes.SOUL_FIRE_FLAME,
+                                x, this.getY() + 1.0, z,
+                                5, 0.3, 0.5, 0.3, 0.1
+                        );
 
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.LARGE_SMOKE,
-                            x, this.getY() + 2.0, z,
-                            3, 0.5, 0.5, 0.5, 0.1
-                    );
+                        serverWorld.spawnParticles(
+                                ParticleTypes.LARGE_SMOKE,
+                                x, this.getY() + 2.0, z,
+                                3, 0.5, 0.5, 0.5, 0.1
+                        );
+                    }
                 }
             }
-
-            // Screen shake effect for players
-            Box shakeArea = this.getBoundingBox().expand(30.0);
-            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, shakeArea).forEach(player -> {
-                for (int i = 0; i < 20; i++) {
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.CRIT,
-                            player.getX() + (this.random.nextDouble() - 0.5) * 4,
-                            player.getY() + 1 + (this.random.nextDouble() - 0.5) * 2,
-                            player.getZ() + (this.random.nextDouble() - 0.5) * 4,
-                            1, 0.1, 0.1, 0.1, 0.0
-                    );
-                }
-            });
 
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE,
                     this.getSoundCategory(), 2.0f, 0.6f);
@@ -324,7 +350,7 @@ public class HavenicaEntity extends HostileEntity {
 
         // Phase 3: Root emergence and nature awakening (40-80 ticks)
         if (cutsceneTick > 40 && cutsceneTick <= 80) {
-            double progress = (cutsceneTick - 40) / 40.0;
+            double progress = Math.min((cutsceneTick - 40) / 40.0, 1.0); // Ensure progress doesn't exceed 1
             double maxRadius = progress * 12.0;
 
             for (int rootLine = 0; rootLine < 8; rootLine++) {
@@ -335,88 +361,356 @@ public class HavenicaEntity extends HostileEntity {
                         double x = this.getX() + Math.cos(angle) * dist;
                         double z = this.getZ() + Math.sin(angle) * dist;
 
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.MYCELIUM,
-                                x, this.getY() + 0.1, z,
-                                8, 0.5, 0.1, 0.5, 0.1
-                        );
+                        if (isValidParticlePosition(x, this.getY() + 0.1, z)) {
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.MYCELIUM,
+                                    x, this.getY() + 0.1, z,
+                                    8, 0.5, 0.1, 0.5, 0.1
+                            );
 
-                        for (int branch = 0; branch < 3; branch++) {
-                            double branchAngle = angle + (branch - 1) * 0.3;
-                            double branchX = x + Math.cos(branchAngle) * 0.5;
-                            double branchZ = z + Math.sin(branchAngle) * 0.5;
+                            // Branch particles with bounds checking
+                            for (int branch = 0; branch < 3; branch++) {
+                                double branchAngle = angle + (branch - 1) * 0.3;
+                                double branchX = x + Math.cos(branchAngle) * 0.5;
+                                double branchZ = z + Math.sin(branchAngle) * 0.5;
 
-                            ((ServerWorld)this.getWorld()).spawnParticles(
-                                    ParticleTypes.COMPOSTER,
-                                    branchX, this.getY() + 0.1, branchZ,
-                                    3, 0.2, 0.1, 0.2, 0.05
+                                if (isValidParticlePosition(branchX, this.getY() + 0.1, branchZ)) {
+                                    serverWorld.spawnParticles(
+                                            ParticleTypes.COMPOSTER,
+                                            branchX, this.getY() + 0.1, branchZ,
+                                            3, 0.2, 0.1, 0.2, 0.05
+                                    );
+                                }
+                            }
+
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.EGG_CRACK,
+                                    x, this.getY() + 0.5, z,
+                                    5, 0.3, 0.3, 0.3, 0.2
                             );
                         }
-
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.EGG_CRACK,
-                                x, this.getY() + 0.5, z,
-                                5, 0.3, 0.3, 0.3, 0.2
-                        );
                     }
                 }
             }
 
-            // Floating spores
-            for (int i = 0; i < 10; i++) {
+            // Floating spores - Limited to reasonable range
+            int maxSpores = 10;
+            for (int i = 0; i < maxSpores; i++) {
                 double sporeX = this.getX() + (this.random.nextDouble() - 0.5) * 20;
                 double sporeZ = this.getZ() + (this.random.nextDouble() - 0.5) * 20;
                 double sporeY = this.getY() + this.random.nextDouble() * 8;
 
-                ((ServerWorld)this.getWorld()).spawnParticles(
-                        ParticleTypes.SPORE_BLOSSOM_AIR,
-                        sporeX, sporeY, sporeZ,
-                        1, 0.1, 0.1, 0.1, 0.02
-                );
+                if (isValidParticlePosition(sporeX, sporeY, sporeZ)) {
+                    serverWorld.spawnParticles(
+                            ParticleTypes.SPORE_BLOSSOM_AIR,
+                            sporeX, sporeY, sporeZ,
+                            1, 0.1, 0.1, 0.1, 0.02
+                    );
+                }
             }
         }
 
         // Final phase: Completion effects (at tick 80)
         if (cutsceneTick == 80) {
             for (double y = 2; y <= 6; y += 0.3) {
-                double radius = 1.5 + Math.sin(y) * 0.5;
-                int particleCount = (int)(radius * 8);
+                double radius = Math.max(0.5, 1.5 + Math.sin(y) * 0.5); // Prevent negative radius
+                int particleCount = Math.min(32, (int)(radius * 8)); // Cap particle count
 
                 for (int i = 0; i < particleCount; i++) {
                     double angle = (i / (double)particleCount) * Math.PI * 2;
                     double x = this.getX() + Math.cos(angle) * radius;
                     double z = this.getZ() + Math.sin(angle) * radius;
 
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.END_ROD,
-                            x, this.getY() + y, z,
-                            1, 0.05, 0.05, 0.05, 0.0
-                    );
-
-                    if (y > 4) {
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.ENCHANT,
+                    if (isValidParticlePosition(x, this.getY() + y, z)) {
+                        serverWorld.spawnParticles(
+                                ParticleTypes.END_ROD,
                                 x, this.getY() + y, z,
-                                2, 0.1, 0.1, 0.1, 0.02
+                                1, 0.05, 0.05, 0.05, 0.0
                         );
+
+                        if (y > 4) {
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.ENCHANT,
+                                    x, this.getY() + y, z,
+                                    2, 0.1, 0.1, 0.1, 0.02
+                            );
+                        }
                     }
                 }
             }
 
-            Box finalMessageRange = this.getBoundingBox().expand(25.0);
-            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, finalMessageRange).forEach(
-                    player -> {
-                        player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
-                        player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
-                    }
-            );
-
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
                     this.getSoundCategory(), 2.0f, 0.8f);
 
-            cutsceneActive = false;
-            cutsceneTick = 0;
+            endCutscene();
         }
+    }
+
+    // Helper method to validate particle positions
+    private boolean isValidParticlePosition(double x, double y, double z) {
+        // Check for NaN or infinite values
+        if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z)) {
+            return false;
+        }
+
+        // Check reasonable bounds (adjust as needed for your world)
+        double maxDistance = 100.0; // Maximum distance from entity
+        double entityX = this.getX();
+        double entityY = this.getY();
+        double entityZ = this.getZ();
+
+        double distance = Math.sqrt(
+                Math.pow(x - entityX, 2) +
+                        Math.pow(y - entityY, 2) +
+                        Math.pow(z - entityZ, 2)
+        );
+
+        return distance <= maxDistance && y >= -64 && y <= 320; // Minecraft world height bounds
+    }
+
+    // Initialize the cutscene - put players in spectator mode and position cameras
+    private void initializeCutscene(ServerWorld serverWorld) {
+        try {
+            Box cutsceneArea = this.getBoundingBox().expand(30.0);
+            List<ServerPlayerEntity> nearbyPlayers = serverWorld.getNonSpectatingEntities(PlayerEntity.class, cutsceneArea)
+                    .stream()
+                    .filter(player -> player instanceof ServerPlayerEntity)
+                    .map(player -> (ServerPlayerEntity) player)
+                    .filter(Objects::nonNull) // Add null check
+                    .collect(Collectors.toList());
+
+            for (ServerPlayerEntity player : nearbyPlayers) {
+                try {
+                    // Store original state
+                    cutscenePlayers.add(player);
+                    originalGameModes.put(player, player.interactionManager.getGameMode());
+                    originalPositions.put(player, player.getPos());
+
+                    // Set to spectator mode
+                    player.changeGameMode(GameMode.SPECTATOR);
+
+                    // Position camera for cinematic view - with safety checks
+                    double angle = Math.atan2(player.getZ() - this.getZ(), player.getX() - this.getX());
+                    double distance = 12.0;
+                    double cameraX = this.getX() + Math.cos(angle) * distance;
+                    double cameraY = Math.max(this.getY() + 6.0, -60); // Prevent going below world
+                    double cameraZ = this.getZ() + Math.sin(angle) * distance;
+
+                    // Validate teleport position
+                    if (Double.isFinite(cameraX) && Double.isFinite(cameraY) && Double.isFinite(cameraZ)) {
+                        player.teleport(player.getServerWorld(), cameraX, cameraY, cameraZ, player.getYaw(), player.getPitch());
+
+                        // Make them look at Havenica - with safety checks
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
+                        if (Double.isFinite(lookTarget.x) && Double.isFinite(lookTarget.y) && Double.isFinite(lookTarget.z)) {
+                            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
+                        }
+                    }
+
+                    // Send dramatic message
+                    player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S TRANSFORMATION BEGINS §c§l⚠"), false);
+                    player.sendMessage(Text.literal("§6§lWitness the awakening of the Garden's Wrath!"), false);
+                } catch (Exception e) {
+                    System.out.println("ERROR: Failed to initialize cutscene for player " + player.getName().getString() + ": " + e.getMessage());
+                    // Remove player from cutscene if initialization failed
+                    cutscenePlayers.remove(player);
+                    originalGameModes.remove(player);
+                    originalPositions.remove(player);
+                }
+            }
+
+            System.out.println("DEBUG: Cutscene initialized for " + cutscenePlayers.size() + " players");
+        } catch (Exception e) {
+            System.out.println("ERROR: Failed to initialize cutscene: " + e.getMessage());
+            // Cleanup on failure
+            cleanupCutscene();
+        }
+    }
+
+    // Update camera positions during cutscene for cinematic effect
+    private void updateCutsceneCameras() {
+        if (cutscenePlayers.isEmpty()) return;
+
+        // Create a copy to avoid concurrent modification
+        Set<ServerPlayerEntity> playersToUpdate = new HashSet<>(cutscenePlayers);
+
+        for (ServerPlayerEntity player : playersToUpdate) {
+            if (player == null || !player.isAlive()) {
+                // Remove invalid players
+                cutscenePlayers.remove(player);
+                originalGameModes.remove(player);
+                originalPositions.remove(player);
+                continue;
+            }
+
+            try {
+                Vec3d originalPos = originalPositions.get(player);
+                if (originalPos == null) continue;
+
+                // Different camera movements for different phases
+                if (cutsceneTick <= 40) {
+                    // Phase 1: Slowly orbit around Havenica
+                    double baseAngle = Math.atan2(
+                            originalPos.z - this.getZ(),
+                            originalPos.x - this.getX()
+                    );
+                    double angle = (cutsceneTick * 0.02) + baseAngle;
+                    double distance = Math.max(8.0, 10.0 + Math.sin(cutsceneTick * 0.1) * 2.0);
+                    double height = Math.max(this.getY() + 5.0 + Math.sin(cutsceneTick * 0.05) * 1.0, -60);
+
+                    double cameraX = this.getX() + Math.cos(angle) * distance;
+                    double cameraZ = this.getZ() + Math.sin(angle) * distance;
+
+                    if (isValidPosition(cameraX, height, cameraZ)) {
+                        player.teleport(player.getServerWorld(), cameraX, height, cameraZ, player.getYaw(), player.getPitch());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
+                        if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
+                            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
+                        }
+                    }
+
+                } else if (cutsceneTick == 40) {
+                    // Phase 2: Pull back for explosion
+                    double angle = Math.atan2(originalPos.z - this.getZ(), originalPos.x - this.getX());
+                    double distance = 15.0;
+                    double cameraX = this.getX() + Math.cos(angle) * distance;
+                    double cameraY = Math.max(this.getY() + 8.0, -60);
+                    double cameraZ = this.getZ() + Math.sin(angle) * distance;
+
+                    if (isValidPosition(cameraX, cameraY, cameraZ)) {
+                        player.teleport(player.getServerWorld(), cameraX, cameraY, cameraZ, player.getYaw(), player.getPitch());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
+                        if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
+                            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
+                        }
+                    }
+
+                } else if (cutsceneTick > 40) {
+                    // Phase 3: High aerial view to see root network
+                    double progress = Math.min((cutsceneTick - 40) / 40.0, 1.0);
+                    double height = Math.max(this.getY() + 8.0 + progress * 4.0, -60);
+                    double angle = Math.atan2(originalPos.z - this.getZ(), originalPos.x - this.getX());
+                    double distance = Math.max(8.0, 12.0 + progress * 3.0);
+
+                    double cameraX = this.getX() + Math.cos(angle) * distance;
+                    double cameraZ = this.getZ() + Math.sin(angle) * distance;
+
+                    if (isValidPosition(cameraX, height, cameraZ)) {
+                        player.teleport(player.getServerWorld(), cameraX, height, cameraZ, player.getYaw(), player.getPitch());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY(), this.getZ());
+                        if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
+                            player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("ERROR: Failed to update camera for player " + player.getName().getString() + ": " + e.getMessage());
+                // Remove problematic player from cutscene
+                cutscenePlayers.remove(player);
+                originalGameModes.remove(player);
+                originalPositions.remove(player);
+            }
+        }
+    }
+
+    // Helper method to validate positions
+    private boolean isValidPosition(double x, double y, double z) {
+        return Double.isFinite(x) && Double.isFinite(y) && Double.isFinite(z)
+                && y >= -64 && y <= 320; // Minecraft world height bounds
+    }
+
+    // End the cutscene and restore player states
+    private void endCutscene() {
+        // Create a copy to avoid concurrent modification
+        Set<ServerPlayerEntity> playersToRestore = new HashSet<>(cutscenePlayers);
+
+        for (ServerPlayerEntity player : playersToRestore) {
+            if (player != null && player.isAlive()) {
+                try {
+                    // Restore original game mode
+                    GameMode originalMode = originalGameModes.get(player);
+                    if (originalMode != null) {
+                        player.changeGameMode(originalMode);
+                    }
+
+                    // Teleport back to original position (slightly adjusted to avoid being inside Havenica)
+                    Vec3d originalPos = originalPositions.get(player);
+                    if (originalPos != null && isValidPosition(originalPos.x, originalPos.y, originalPos.z)) {
+                        // Move them back a bit if they're too close
+                        double distanceToHavenica = originalPos.distanceTo(this.getPos());
+                        if (distanceToHavenica < 8.0) {
+                            Vec3d direction = originalPos.subtract(this.getPos()).normalize();
+                            Vec3d safePos = this.getPos().add(direction.multiply(8.0));
+                            if (isValidPosition(safePos.x, safePos.y, safePos.z)) {
+                                player.teleport(player.getServerWorld(), safePos.x, safePos.y, safePos.z, player.getYaw(), player.getPitch());
+                            } else {
+                                // Fallback to a safe position near Havenica
+                                player.teleport(player.getServerWorld(), this.getX() + 10, this.getY() + 2, this.getZ(), player.getYaw(), player.getPitch());
+                            }
+                        } else {
+                            player.teleport(player.getServerWorld(), originalPos.x, originalPos.y, originalPos.z, player.getYaw(), player.getPitch());
+                        }
+                    }
+
+                    // Final dramatic messages
+                    player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
+                    player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
+                    player.sendMessage(Text.literal("§c§lPrepare for battle!"), false);
+                } catch (Exception e) {
+                    System.out.println("ERROR: Failed to restore player " + player.getName().getString() + ": " + e.getMessage());
+                    // At least try to restore game mode
+                    try {
+                        GameMode originalMode = originalGameModes.get(player);
+                        if (originalMode != null) {
+                            player.changeGameMode(originalMode);
+                        }
+                    } catch (Exception e2) {
+                        System.out.println("ERROR: Failed to restore game mode for " + player.getName().getString());
+                    }
+                }
+            }
+        }
+
+        // Clear cutscene data
+        cutscenePlayers.clear();
+        originalGameModes.clear();
+        originalPositions.clear();
+        cutsceneActive = false;
+        cutsceneTick = 0;
+
+        System.out.println("DEBUG: Cutscene completed and players restored!");
+    }
+
+    // Enhanced cleanup method with better error handling
+    private void cleanupCutscene() {
+        if (!cutscenePlayers.isEmpty()) {
+            Set<ServerPlayerEntity> playersToCleanup = new HashSet<>(cutscenePlayers);
+
+            for (ServerPlayerEntity player : playersToCleanup) {
+                if (player != null && player.isAlive()) {
+                    try {
+                        GameMode originalMode = originalGameModes.get(player);
+                        if (originalMode != null) {
+                            player.changeGameMode(originalMode);
+                        }
+
+                        Vec3d originalPos = originalPositions.get(player);
+                        if (originalPos != null && isValidPosition(originalPos.x, originalPos.y, originalPos.z)) {
+                            player.teleport(player.getServerWorld(), originalPos.x, originalPos.y, originalPos.z, player.getYaw(), player.getPitch());
+                        }
+                    } catch (Exception e) {
+                        System.out.println("ERROR: Failed to cleanup player " + player.getName().getString() + ": " + e.getMessage());
+                    }
+                }
+            }
+
+            cutscenePlayers.clear();
+            originalGameModes.clear();
+            originalPositions.clear();
+        }
+
+        cutsceneActive = false;
+        cutsceneTick = 0;
     }
 
     private void handleBossMusicForPlayers() {
@@ -472,6 +766,7 @@ public class HavenicaEntity extends HostileEntity {
             this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
         }
 
+        // Handle cutscene early in tick - on both client and server for sync
         if (cutsceneActive) {
             handleCutscene();
         }
@@ -563,7 +858,9 @@ public class HavenicaEntity extends HostileEntity {
                 healingTick = 0;
             }
 
+            // Check if Gardens Wrath should activate
             if (!isGardensWrathActive && this.getHealth() <= this.getMaxHealth() * 0.5f) {
+                System.out.println("DEBUG: Health threshold reached (" + this.getHealth() + "/" + this.getMaxHealth() + "), activating Gardens Wrath");
                 activateGardensWrath();
             }
 
@@ -1043,6 +1340,8 @@ public class HavenicaEntity extends HostileEntity {
     private void activateGardensWrath() {
         if (this.getWorld().isClient()) return;
 
+        System.out.println("DEBUG: Gardens Wrath activated!");
+
         // Dramatic pause - freeze all nearby entities briefly
         Box freezeArea = this.getBoundingBox().expand(25.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
@@ -1059,6 +1358,8 @@ public class HavenicaEntity extends HostileEntity {
         // Start the cutscene timing system
         this.cutsceneActive = true;
         this.cutsceneTick = 0;
+
+        System.out.println("DEBUG: Cutscene started! cutsceneActive=" + cutsceneActive);
 
         // Set the flag immediately so other systems know we're in wrath mode
         isGardensWrathActive = true;
@@ -1233,6 +1534,14 @@ public class HavenicaEntity extends HostileEntity {
                         0.0
                 );
             }
+        }
+    }
+
+    // Debug method for testing - remove in production
+    public void debugTriggerCutscene() {
+        if (!this.getWorld().isClient()) {
+            System.out.println("DEBUG: Manually triggering cutscene");
+            this.activateGardensWrath();
         }
     }
 
