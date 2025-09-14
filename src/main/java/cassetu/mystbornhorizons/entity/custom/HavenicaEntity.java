@@ -213,7 +213,6 @@ public class HavenicaEntity extends HostileEntity {
 
         cutsceneTick++;
 
-        // Make sure we're on server side
         if (this.getWorld().isClient()) {
             return;
         }
@@ -224,59 +223,61 @@ public class HavenicaEntity extends HostileEntity {
             return;
         }
 
-        // Initialize cutscene on first tick
         if (cutsceneTick == 1) {
             initializeCutscene(serverWorld);
         }
 
-        // Update camera positions during cutscene
         updateCutsceneCameras();
 
-        // Debug logging every 20 ticks
         if (cutsceneTick % 20 == 0) {
-            System.out.println("DEBUG: Cutscene tick " + cutsceneTick + "/80");
+            System.out.println("DEBUG: Cutscene tick " + cutsceneTick + "/100");
         }
 
-        // Delayed sound effects with null checks
-        if (cutsceneTick == 20) {
+        if (cutsceneTick == 15) {
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
-                    this.getSoundCategory(), 1.5f, 0.8f);
+                    this.getSoundCategory(), 2.0f, 0.6f);
         }
-        if (cutsceneTick == 40) {
+        if (cutsceneTick == 35) {
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_WARDEN_ROAR,
-                    this.getSoundCategory(), 1.0f, 0.7f);
+                    this.getSoundCategory(), 1.5f, 0.5f);
+        }
+        if (cutsceneTick == 55) {
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE,
+                    this.getSoundCategory(), 2.5f, 0.4f);
         }
 
-        // Phase 1: Dark energy buildup (0-40 ticks) - Fixed division by zero
-        if (cutsceneTick <= 40 && cutsceneTick > 0) {
-            // Dark spiraling energy around Havenica
-            for (int spiral = 0; spiral < 3; spiral++) {
-                double spiralHeight = ((double)cutsceneTick / 40.0) * 4.0;
-                double angle = (cutsceneTick * 0.3) + (spiral * Math.PI * 2 / 3);
-                double radius = Math.max(0.5, 2.0 - (spiralHeight / 4.0) * 0.5); // Prevent negative radius
+        if (cutsceneTick <= 50 && cutsceneTick > 0) {
+            for (int spiral = 0; spiral < 5; spiral++) {
+                double spiralHeight = ((double)cutsceneTick / 50.0) * 6.0;
+                double angle = (cutsceneTick * 0.4) + (spiral * Math.PI * 2 / 5);
+                double radius = Math.max(0.8, 3.0 - (spiralHeight / 6.0) * 0.8);
 
                 double x = this.getX() + Math.cos(angle) * radius;
                 double z = this.getZ() + Math.sin(angle) * radius;
 
-                // Add bounds checking for particle positions
                 if (isValidParticlePosition(x, this.getY() + spiralHeight, z)) {
                     serverWorld.spawnParticles(
                             ParticleTypes.WITCH,
                             x, this.getY() + spiralHeight, z,
-                            1, 0.1, 0.1, 0.1, 0.0
+                            3, 0.2, 0.2, 0.2, 0.0
+                    );
+
+                    serverWorld.spawnParticles(
+                            ParticleTypes.SCULK_SOUL,
+                            x, this.getY() + spiralHeight, z,
+                            2, 0.15, 0.15, 0.15, 0.08
                     );
 
                     serverWorld.spawnParticles(
                             ParticleTypes.SMOKE,
                             x, this.getY() + spiralHeight, z,
-                            2, 0.2, 0.2, 0.2, 0.05
+                            4, 0.3, 0.3, 0.3, 0.1
                     );
                 }
             }
 
-            // Ground cracks expanding outward - Fixed potential infinity
-            double expansion = Math.min(((double)cutsceneTick / 40.0) * 8.0, 10.0); // Cap at 10 blocks
-            for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
+            double expansion = Math.min(((double)cutsceneTick / 50.0) * 12.0, 15.0);
+            for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 20) {
                 double x = this.getX() + Math.cos(angle) * expansion;
                 double z = this.getZ() + Math.sin(angle) * expansion;
 
@@ -284,23 +285,54 @@ public class HavenicaEntity extends HostileEntity {
                     serverWorld.spawnParticles(
                             ParticleTypes.EGG_CRACK,
                             x, this.getY() + 0.1, z,
-                            3, 0.3, 0.1, 0.3, 0.1
+                            5, 0.4, 0.1, 0.4, 0.15
                     );
+
+                    if (cutsceneTick > 25) {
+                        serverWorld.spawnParticles(
+                                ParticleTypes.LAVA,
+                                x, this.getY() + 0.2, z,
+                                2, 0.2, 0.1, 0.2, 0.05
+                        );
+                    }
                 }
             }
 
-            // Pulsing dark aura
-            if (cutsceneTick % 5 == 0) {
-                for (double r = 1; r <= 4; r += 0.5) {
-                    for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
+            if (cutsceneTick % 3 == 0) {
+                for (double r = 1; r <= 6; r += 0.4) {
+                    for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 12) {
                         double x = this.getX() + Math.cos(angle) * r;
                         double z = this.getZ() + Math.sin(angle) * r;
 
-                        if (isValidParticlePosition(x, this.getY() + 0.5, z)) {
+                        if (isValidParticlePosition(x, this.getY() + 0.8, z)) {
                             serverWorld.spawnParticles(
                                     ParticleTypes.ASH,
-                                    x, this.getY() + 0.5, z,
+                                    x, this.getY() + 0.8, z,
+                                    2, 0.15, 0.15, 0.15, 0.02
+                            );
+
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.ELECTRIC_SPARK,
+                                    x, this.getY() + 1.2, z,
                                     1, 0.1, 0.1, 0.1, 0.0
+                            );
+                        }
+                    }
+                }
+            }
+
+            if (cutsceneTick % 10 == 0) {
+                for (int i = 0; i < 8; i++) {
+                    double height = 2.0 + this.random.nextDouble() * 4.0;
+                    double lightningX = this.getX() + (this.random.nextDouble() - 0.5) * 8.0;
+                    double lightningZ = this.getZ() + (this.random.nextDouble() - 0.5) * 8.0;
+
+                    if (isValidParticlePosition(lightningX, this.getY() + height, lightningZ)) {
+                        for (double y = 0; y <= height; y += 0.2) {
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.ELECTRIC_SPARK,
+                                    lightningX, this.getY() + y, lightningZ,
+                                    1, 0.05, 0.05, 0.05, 0.0
                             );
                         }
                     }
@@ -308,20 +340,17 @@ public class HavenicaEntity extends HostileEntity {
             }
         }
 
-        // Phase 2: Explosive transformation (at tick 40)
-        if (cutsceneTick == 40) {
-            // Massive explosion of particles
+        if (cutsceneTick == 50) {
             serverWorld.spawnParticles(
                     ParticleTypes.EXPLOSION_EMITTER,
-                    this.getX(), this.getY() + 2.0, this.getZ(),
-                    1, 0.0, 0.0, 0.0, 0.0
+                    this.getX(), this.getY() + 3.0, this.getZ(),
+                    3, 0.5, 0.5, 0.5, 0.0
             );
 
-            // Ring of energy bursts - Fixed potential performance issue
-            int maxRings = 5;
+            int maxRings = 8;
             for (int ring = 0; ring < maxRings; ring++) {
-                double radius = (ring + 1) * 2.0;
-                int particlesPerRing = Math.min(12, (int)(radius * 2)); // Limit particles based on radius
+                double radius = (ring + 1) * 2.5;
+                int particlesPerRing = Math.min(20, (int)(radius * 3));
 
                 for (int p = 0; p < particlesPerRing; p++) {
                     double angle = (p / (double)particlesPerRing) * Math.PI * 2;
@@ -332,31 +361,55 @@ public class HavenicaEntity extends HostileEntity {
                         serverWorld.spawnParticles(
                                 ParticleTypes.SOUL_FIRE_FLAME,
                                 x, this.getY() + 1.0, z,
-                                5, 0.3, 0.5, 0.3, 0.1
+                                8, 0.5, 0.8, 0.5, 0.2
                         );
 
                         serverWorld.spawnParticles(
                                 ParticleTypes.LARGE_SMOKE,
-                                x, this.getY() + 2.0, z,
-                                3, 0.5, 0.5, 0.5, 0.1
+                                x, this.getY() + 3.0, z,
+                                5, 0.8, 0.8, 0.8, 0.15
+                        );
+
+                        serverWorld.spawnParticles(
+                                ParticleTypes.GLOW_SQUID_INK,
+                                x, this.getY() + 1.5, z,
+                                4, 0.3, 0.3, 0.3, 0.1
+                        );
+                    }
+                }
+            }
+
+            for (double height = 0; height <= 10; height += 0.5) {
+                double ringRadius = 1.0 + Math.sin(height * 0.3) * 2.0;
+                int ringParticles = 16;
+
+                for (int i = 0; i < ringParticles; i++) {
+                    double angle = (i / (double)ringParticles) * Math.PI * 2;
+                    double x = this.getX() + Math.cos(angle) * ringRadius;
+                    double z = this.getZ() + Math.sin(angle) * ringRadius;
+
+                    if (isValidParticlePosition(x, this.getY() + height, z)) {
+                        serverWorld.spawnParticles(
+                                ParticleTypes.ENCHANT,
+                                x, this.getY() + height, z,
+                                2, 0.1, 0.1, 0.1, 0.05
                         );
                     }
                 }
             }
 
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE,
-                    this.getSoundCategory(), 2.0f, 0.6f);
+                    this.getSoundCategory(), 3.0f, 0.3f);
         }
 
-        // Phase 3: Root emergence and nature awakening (40-80 ticks)
-        if (cutsceneTick > 40 && cutsceneTick <= 80) {
-            double progress = Math.min((cutsceneTick - 40) / 40.0, 1.0); // Ensure progress doesn't exceed 1
-            double maxRadius = progress * 12.0;
+        if (cutsceneTick > 50 && cutsceneTick <= 100) {
+            double progress = Math.min((cutsceneTick - 50) / 50.0, 1.0);
+            double maxRadius = progress * 15.0;
 
-            for (int rootLine = 0; rootLine < 8; rootLine++) {
-                double angle = rootLine * (Math.PI / 4);
+            for (int rootLine = 0; rootLine < 12; rootLine++) {
+                double angle = rootLine * (Math.PI / 6);
 
-                for (double dist = 0; dist <= maxRadius; dist += 0.8) {
+                for (double dist = 0; dist <= maxRadius; dist += 0.6) {
                     if (Math.abs(dist - maxRadius) < 0.8) {
                         double x = this.getX() + Math.cos(angle) * dist;
                         double z = this.getZ() + Math.sin(angle) * dist;
@@ -365,56 +418,89 @@ public class HavenicaEntity extends HostileEntity {
                             serverWorld.spawnParticles(
                                     ParticleTypes.MYCELIUM,
                                     x, this.getY() + 0.1, z,
-                                    8, 0.5, 0.1, 0.5, 0.1
+                                    12, 0.8, 0.2, 0.8, 0.2
                             );
 
-                            // Branch particles with bounds checking
-                            for (int branch = 0; branch < 3; branch++) {
-                                double branchAngle = angle + (branch - 1) * 0.3;
-                                double branchX = x + Math.cos(branchAngle) * 0.5;
-                                double branchZ = z + Math.sin(branchAngle) * 0.5;
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.SPORE_BLOSSOM_AIR,
+                                    x, this.getY() + 1.5, z,
+                                    6, 0.5, 0.5, 0.5, 0.1
+                            );
+
+                            for (int branch = 0; branch < 4; branch++) {
+                                double branchAngle = angle + (branch - 2) * 0.25;
+                                double branchX = x + Math.cos(branchAngle) * 0.8;
+                                double branchZ = z + Math.sin(branchAngle) * 0.8;
 
                                 if (isValidParticlePosition(branchX, this.getY() + 0.1, branchZ)) {
                                     serverWorld.spawnParticles(
                                             ParticleTypes.COMPOSTER,
                                             branchX, this.getY() + 0.1, branchZ,
-                                            3, 0.2, 0.1, 0.2, 0.05
+                                            4, 0.3, 0.1, 0.3, 0.08
+                                    );
+
+                                    serverWorld.spawnParticles(
+                                            ParticleTypes.HAPPY_VILLAGER,
+                                            branchX, this.getY() + 0.8, branchZ,
+                                            2, 0.2, 0.2, 0.2, 0.05
                                     );
                                 }
                             }
 
                             serverWorld.spawnParticles(
                                     ParticleTypes.EGG_CRACK,
-                                    x, this.getY() + 0.5, z,
-                                    5, 0.3, 0.3, 0.3, 0.2
+                                    x, this.getY() + 0.8, z,
+                                    8, 0.4, 0.4, 0.4, 0.3
                             );
                         }
                     }
                 }
             }
 
-            // Floating spores - Limited to reasonable range
-            int maxSpores = 10;
+            int maxSpores = 20;
             for (int i = 0; i < maxSpores; i++) {
-                double sporeX = this.getX() + (this.random.nextDouble() - 0.5) * 20;
-                double sporeZ = this.getZ() + (this.random.nextDouble() - 0.5) * 20;
-                double sporeY = this.getY() + this.random.nextDouble() * 8;
+                double sporeX = this.getX() + (this.random.nextDouble() - 0.5) * 30;
+                double sporeZ = this.getZ() + (this.random.nextDouble() - 0.5) * 30;
+                double sporeY = this.getY() + this.random.nextDouble() * 12;
 
                 if (isValidParticlePosition(sporeX, sporeY, sporeZ)) {
                     serverWorld.spawnParticles(
                             ParticleTypes.SPORE_BLOSSOM_AIR,
                             sporeX, sporeY, sporeZ,
+                            2, 0.2, 0.2, 0.2, 0.04
+                    );
+
+                    serverWorld.spawnParticles(
+                            ParticleTypes.TRIAL_SPAWNER_DETECTION,
+                            sporeX, sporeY, sporeZ,
                             1, 0.1, 0.1, 0.1, 0.02
                     );
                 }
             }
+
+            if (cutsceneTick % 8 == 0) {
+                for (int wave = 0; wave < 3; wave++) {
+                    double waveRadius = 4.0 + wave * 3.0;
+                    for (double waveAngle = 0; waveAngle < Math.PI * 2; waveAngle += Math.PI / 16) {
+                        double waveX = this.getX() + Math.cos(waveAngle) * waveRadius;
+                        double waveZ = this.getZ() + Math.sin(waveAngle) * waveRadius;
+
+                        if (isValidParticlePosition(waveX, this.getY() + 0.3, waveZ)) {
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.GLOW,
+                                    waveX, this.getY() + 0.3, waveZ,
+                                    3, 0.2, 0.1, 0.2, 0.0
+                            );
+                        }
+                    }
+                }
+            }
         }
 
-        // Final phase: Completion effects (at tick 80)
-        if (cutsceneTick == 80) {
-            for (double y = 2; y <= 6; y += 0.3) {
-                double radius = Math.max(0.5, 1.5 + Math.sin(y) * 0.5); // Prevent negative radius
-                int particleCount = Math.min(32, (int)(radius * 8)); // Cap particle count
+        if (cutsceneTick == 100) {
+            for (double y = 1; y <= 8; y += 0.2) {
+                double radius = Math.max(0.8, 2.0 + Math.sin(y * 0.5) * 1.0);
+                int particleCount = Math.min(48, (int)(radius * 12));
 
                 for (int i = 0; i < particleCount; i++) {
                     double angle = (i / (double)particleCount) * Math.PI * 2;
@@ -425,12 +511,18 @@ public class HavenicaEntity extends HostileEntity {
                         serverWorld.spawnParticles(
                                 ParticleTypes.END_ROD,
                                 x, this.getY() + y, z,
-                                1, 0.05, 0.05, 0.05, 0.0
+                                2, 0.08, 0.08, 0.08, 0.0
                         );
 
-                        if (y > 4) {
+                        if (y > 5) {
                             serverWorld.spawnParticles(
                                     ParticleTypes.ENCHANT,
+                                    x, this.getY() + y, z,
+                                    4, 0.15, 0.15, 0.15, 0.04
+                            );
+
+                            serverWorld.spawnParticles(
+                                    ParticleTypes.TOTEM_OF_UNDYING,
                                     x, this.getY() + y, z,
                                     2, 0.1, 0.1, 0.1, 0.02
                             );
@@ -439,22 +531,37 @@ public class HavenicaEntity extends HostileEntity {
                 }
             }
 
+            for (double pillarY = 0; pillarY <= 12; pillarY += 0.3) {
+                serverWorld.spawnParticles(
+                        ParticleTypes.SOUL_FIRE_FLAME,
+                        this.getX(), this.getY() + pillarY, this.getZ(),
+                        4, 0.3, 0.1, 0.3, 0.05
+                );
+
+                if (pillarY > 8) {
+                    serverWorld.spawnParticles(
+                            ParticleTypes.DRAGON_BREATH,
+                            this.getX(), this.getY() + pillarY, this.getZ(),
+                            2, 0.2, 0.1, 0.2, 0.02
+                    );
+                }
+            }
+
             this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
-                    this.getSoundCategory(), 2.0f, 0.8f);
+                    this.getSoundCategory(), 2.5f, 0.6f);
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
+                    this.getSoundCategory(), 1.5f, 0.7f);
 
             endCutscene();
         }
     }
 
-    // Helper method to validate particle positions
     private boolean isValidParticlePosition(double x, double y, double z) {
-        // Check for NaN or infinite values
         if (!Double.isFinite(x) || !Double.isFinite(y) || !Double.isFinite(z)) {
             return false;
         }
 
-        // Check reasonable bounds (adjust as needed for your world)
-        double maxDistance = 100.0; // Maximum distance from entity
+        double maxDistance = 100.0;
         double entityX = this.getX();
         double entityY = this.getY();
         double entityZ = this.getZ();
@@ -465,10 +572,9 @@ public class HavenicaEntity extends HostileEntity {
                         Math.pow(z - entityZ, 2)
         );
 
-        return distance <= maxDistance && y >= -64 && y <= 320; // Minecraft world height bounds
+        return distance <= maxDistance && y >= -64 && y <= 320;
     }
 
-    // Initialize the cutscene - put players in spectator mode and position cameras
     private void initializeCutscene(ServerWorld serverWorld) {
         try {
             Box cutsceneArea = this.getBoundingBox().expand(30.0);
@@ -476,43 +582,36 @@ public class HavenicaEntity extends HostileEntity {
                     .stream()
                     .filter(player -> player instanceof ServerPlayerEntity)
                     .map(player -> (ServerPlayerEntity) player)
-                    .filter(Objects::nonNull) // Add null check
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toList());
 
             for (ServerPlayerEntity player : nearbyPlayers) {
                 try {
-                    // Store original state
                     cutscenePlayers.add(player);
                     originalGameModes.put(player, player.interactionManager.getGameMode());
                     originalPositions.put(player, player.getPos());
 
-                    // Set to spectator mode
                     player.changeGameMode(GameMode.SPECTATOR);
 
-                    // Position camera for cinematic view - with safety checks
                     double angle = Math.atan2(player.getZ() - this.getZ(), player.getX() - this.getX());
-                    double distance = 12.0;
+                    double distance = 8.0;
                     double cameraX = this.getX() + Math.cos(angle) * distance;
-                    double cameraY = Math.max(this.getY() + 6.0, -60); // Prevent going below world
+                    double cameraY = Math.max(this.getY() + 4.0, -60);
                     double cameraZ = this.getZ() + Math.sin(angle) * distance;
 
-                    // Validate teleport position
                     if (Double.isFinite(cameraX) && Double.isFinite(cameraY) && Double.isFinite(cameraZ)) {
                         player.teleport(player.getServerWorld(), cameraX, cameraY, cameraZ, player.getYaw(), player.getPitch());
 
-                        // Make them look at Havenica - with safety checks
                         Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
                         if (Double.isFinite(lookTarget.x) && Double.isFinite(lookTarget.y) && Double.isFinite(lookTarget.z)) {
                             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
                         }
                     }
 
-                    // Send dramatic message
-                    player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S TRANSFORMATION BEGINS §c§l⚠"), false);
+                    player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S POWER GROWS §c§l⚠"), false);
                     player.sendMessage(Text.literal("§6§lWitness the awakening of the Garden's Wrath!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to initialize cutscene for player " + player.getName().getString() + ": " + e.getMessage());
-                    // Remove player from cutscene if initialization failed
                     cutscenePlayers.remove(player);
                     originalGameModes.remove(player);
                     originalPositions.remove(player);
@@ -522,21 +621,17 @@ public class HavenicaEntity extends HostileEntity {
             System.out.println("DEBUG: Cutscene initialized for " + cutscenePlayers.size() + " players");
         } catch (Exception e) {
             System.out.println("ERROR: Failed to initialize cutscene: " + e.getMessage());
-            // Cleanup on failure
             cleanupCutscene();
         }
     }
 
-    // Update camera positions during cutscene for cinematic effect
     private void updateCutsceneCameras() {
         if (cutscenePlayers.isEmpty()) return;
 
-        // Create a copy to avoid concurrent modification
         Set<ServerPlayerEntity> playersToUpdate = new HashSet<>(cutscenePlayers);
 
         for (ServerPlayerEntity player : playersToUpdate) {
             if (player == null || !player.isAlive()) {
-                // Remove invalid players
                 cutscenePlayers.remove(player);
                 originalGameModes.remove(player);
                 originalPositions.remove(player);
@@ -547,57 +642,53 @@ public class HavenicaEntity extends HostileEntity {
                 Vec3d originalPos = originalPositions.get(player);
                 if (originalPos == null) continue;
 
-                // Different camera movements for different phases
-                if (cutsceneTick <= 40) {
-                    // Phase 1: Slowly orbit around Havenica
+                if (cutsceneTick <= 50) {
                     double baseAngle = Math.atan2(
                             originalPos.z - this.getZ(),
                             originalPos.x - this.getX()
                     );
-                    double angle = (cutsceneTick * 0.02) + baseAngle;
-                    double distance = Math.max(8.0, 10.0 + Math.sin(cutsceneTick * 0.1) * 2.0);
-                    double height = Math.max(this.getY() + 5.0 + Math.sin(cutsceneTick * 0.05) * 1.0, -60);
+                    double angle = (cutsceneTick * 0.025) + baseAngle;
+                    double distance = Math.max(6.0, 7.0 + Math.sin(cutsceneTick * 0.08) * 1.5);
+                    double height = Math.max(this.getY() + 3.5 + Math.sin(cutsceneTick * 0.06) * 1.5, -60);
 
                     double cameraX = this.getX() + Math.cos(angle) * distance;
                     double cameraZ = this.getZ() + Math.sin(angle) * distance;
 
                     if (isValidPosition(cameraX, height, cameraZ)) {
                         player.teleport(player.getServerWorld(), cameraX, height, cameraZ, player.getYaw(), player.getPitch());
-                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2.5, this.getZ());
                         if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
                             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
                         }
                     }
 
-                } else if (cutsceneTick == 40) {
-                    // Phase 2: Pull back for explosion
+                } else if (cutsceneTick == 50) {
                     double angle = Math.atan2(originalPos.z - this.getZ(), originalPos.x - this.getX());
-                    double distance = 15.0;
+                    double distance = 12.0;
                     double cameraX = this.getX() + Math.cos(angle) * distance;
                     double cameraY = Math.max(this.getY() + 8.0, -60);
                     double cameraZ = this.getZ() + Math.sin(angle) * distance;
 
                     if (isValidPosition(cameraX, cameraY, cameraZ)) {
                         player.teleport(player.getServerWorld(), cameraX, cameraY, cameraZ, player.getYaw(), player.getPitch());
-                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 2, this.getZ());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 3.0, this.getZ());
                         if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
                             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
                         }
                     }
 
-                } else if (cutsceneTick > 40) {
-                    // Phase 3: High aerial view to see root network
-                    double progress = Math.min((cutsceneTick - 40) / 40.0, 1.0);
-                    double height = Math.max(this.getY() + 8.0 + progress * 4.0, -60);
-                    double angle = Math.atan2(originalPos.z - this.getZ(), originalPos.x - this.getX());
-                    double distance = Math.max(8.0, 12.0 + progress * 3.0);
+                } else if (cutsceneTick > 50) {
+                    double progress = Math.min((cutsceneTick - 50) / 50.0, 1.0);
+                    double height = Math.max(this.getY() + 6.0 + progress * 6.0, -60);
+                    double angle = Math.atan2(originalPos.z - this.getZ(), originalPos.x - this.getX()) + (progress * 0.3);
+                    double distance = Math.max(6.0, 8.0 + progress * 4.0);
 
                     double cameraX = this.getX() + Math.cos(angle) * distance;
                     double cameraZ = this.getZ() + Math.sin(angle) * distance;
 
                     if (isValidPosition(cameraX, height, cameraZ)) {
                         player.teleport(player.getServerWorld(), cameraX, height, cameraZ, player.getYaw(), player.getPitch());
-                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY(), this.getZ());
+                        Vec3d lookTarget = new Vec3d(this.getX(), this.getY() + 1.0, this.getZ());
                         if (isValidPosition(lookTarget.x, lookTarget.y, lookTarget.z)) {
                             player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
                         }
@@ -605,7 +696,6 @@ public class HavenicaEntity extends HostileEntity {
                 }
             } catch (Exception e) {
                 System.out.println("ERROR: Failed to update camera for player " + player.getName().getString() + ": " + e.getMessage());
-                // Remove problematic player from cutscene
                 cutscenePlayers.remove(player);
                 originalGameModes.remove(player);
                 originalPositions.remove(player);
@@ -613,30 +703,24 @@ public class HavenicaEntity extends HostileEntity {
         }
     }
 
-    // Helper method to validate positions
     private boolean isValidPosition(double x, double y, double z) {
         return Double.isFinite(x) && Double.isFinite(y) && Double.isFinite(z)
-                && y >= -64 && y <= 320; // Minecraft world height bounds
+                && y >= -64 && y <= 320;
     }
 
-    // End the cutscene and restore player states
     private void endCutscene() {
-        // Create a copy to avoid concurrent modification
         Set<ServerPlayerEntity> playersToRestore = new HashSet<>(cutscenePlayers);
 
         for (ServerPlayerEntity player : playersToRestore) {
             if (player != null && player.isAlive()) {
                 try {
-                    // Restore original game mode
                     GameMode originalMode = originalGameModes.get(player);
                     if (originalMode != null) {
                         player.changeGameMode(originalMode);
                     }
 
-                    // Teleport back to original position (slightly adjusted to avoid being inside Havenica)
                     Vec3d originalPos = originalPositions.get(player);
                     if (originalPos != null && isValidPosition(originalPos.x, originalPos.y, originalPos.z)) {
-                        // Move them back a bit if they're too close
                         double distanceToHavenica = originalPos.distanceTo(this.getPos());
                         if (distanceToHavenica < 8.0) {
                             Vec3d direction = originalPos.subtract(this.getPos()).normalize();
@@ -644,7 +728,6 @@ public class HavenicaEntity extends HostileEntity {
                             if (isValidPosition(safePos.x, safePos.y, safePos.z)) {
                                 player.teleport(player.getServerWorld(), safePos.x, safePos.y, safePos.z, player.getYaw(), player.getPitch());
                             } else {
-                                // Fallback to a safe position near Havenica
                                 player.teleport(player.getServerWorld(), this.getX() + 10, this.getY() + 2, this.getZ(), player.getYaw(), player.getPitch());
                             }
                         } else {
@@ -652,13 +735,11 @@ public class HavenicaEntity extends HostileEntity {
                         }
                     }
 
-                    // Final dramatic messages
                     player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
                     player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
                     player.sendMessage(Text.literal("§c§lPrepare for battle!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to restore player " + player.getName().getString() + ": " + e.getMessage());
-                    // At least try to restore game mode
                     try {
                         GameMode originalMode = originalGameModes.get(player);
                         if (originalMode != null) {
@@ -671,7 +752,6 @@ public class HavenicaEntity extends HostileEntity {
             }
         }
 
-        // Clear cutscene data
         cutscenePlayers.clear();
         originalGameModes.clear();
         originalPositions.clear();
@@ -681,7 +761,6 @@ public class HavenicaEntity extends HostileEntity {
         System.out.println("DEBUG: Cutscene completed and players restored!");
     }
 
-    // Enhanced cleanup method with better error handling
     private void cleanupCutscene() {
         if (!cutscenePlayers.isEmpty()) {
             Set<ServerPlayerEntity> playersToCleanup = new HashSet<>(cutscenePlayers);
