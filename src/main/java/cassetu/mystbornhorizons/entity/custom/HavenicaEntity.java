@@ -2,6 +2,7 @@ package cassetu.mystbornhorizons.entity.custom;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -12,15 +13,23 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.mob.BoggedEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.trim.ArmorTrim;
+import net.minecraft.item.trim.ArmorTrimMaterial;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -33,26 +42,33 @@ import cassetu.mystbornhorizons.network.ModPackets;
 import cassetu.mystbornhorizons.network.BossMusicPacket;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HavenicaEntity extends HostileEntity {
     private ServerBossBar bossBar;
+    private Set<ServerPlayerEntity> playersHearingMusic = new HashSet<>();
+
+    private boolean cutsceneActive = false;
+    private int cutsceneTick = 0;
 
     private int shockwaveCooldown = 0;
-    private static final int SHOCKWAVE_COOLDOWN = 300;
+    private static final int SHOCKWAVE_COOLDOWN = 500;
     private boolean shockwaveActive = false;
     private int shockwaveTimer = 0;
     private List<Double> waveDistances = new ArrayList<>();
     private List<Integer> waveDelays = new ArrayList<>();
-    private static final double WAVE_SPEED = 0.8;
+    private static final double WAVE_SPEED = 1.4;
     private static final double MAX_WAVE_DISTANCE = 15.0;
 
     private int toxicLaserCooldown = 0;
     private int rootNetworkCooldown = 0;
-    private int pollenStormCooldown = 0;
+    private int boggedSummonCooldown = 0;
     private boolean isGardensWrathActive = false;
-    private static final int LASER_COOLDOWN = 200;
-    private static final int ROOT_COOLDOWN = 160;
+    private static final int LASER_COOLDOWN = 95;
+    private static final int ROOT_COOLDOWN = 260;
+    private static final int BOGGED_SUMMON_COOLDOWN = 570;
 
     private Vec3d[] lockedLaserTargets = new Vec3d[3];
 
@@ -68,16 +84,13 @@ public class HavenicaEntity extends HostileEntity {
 
     private int healingTick = 0;
     private static final int HEALING_INTERVAL = 20;
-    private static final float HEALING_AMOUNT = 28f;
+    private static final float HEALING_AMOUNT = 25f;
 
     private boolean rootNetworkActive = false;
     private int rootNetworkTimer = 0;
     private static final int ROOT_PILLAR_PHASE = 60;
     private static final int ROOT_LINE_PHASE = 220;
     private List<Vec3d> rootPillars = new ArrayList<>();
-
-    private boolean hasSpawnedCores = false;
-    private boolean hasSentMusicStart = false;
 
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -109,6 +122,10 @@ public class HavenicaEntity extends HostileEntity {
         if (this.bossBar != null) {
             this.bossBar.removePlayer(player);
         }
+        if (playersHearingMusic.contains(player)) {
+            ModPackets.sendToPlayer(new BossMusicPacket(false, null), player);
+            playersHearingMusic.remove(player);
+        }
     }
 
     @Override
@@ -119,14 +136,26 @@ public class HavenicaEntity extends HostileEntity {
         }
 
         if (!this.getWorld().isClient()) {
-            stopBossMusicForNearbyPlayers();
+            for (ServerPlayerEntity player : playersHearingMusic) {
+                ModPackets.sendToPlayer(
+                        new BossMusicPacket(false, null),
+                        player
+                );
+            }
+            playersHearingMusic.clear();
         }
     }
 
     @Override
     public void remove(RemovalReason reason) {
         if (!this.getWorld().isClient()) {
-            stopBossMusicForNearbyPlayers();
+            for (ServerPlayerEntity player : playersHearingMusic) {
+                ModPackets.sendToPlayer(
+                        new BossMusicPacket(false, null),
+                        player
+                );
+            }
+            playersHearingMusic.clear();
         }
         super.remove(reason);
     }
@@ -176,86 +205,247 @@ public class HavenicaEntity extends HostileEntity {
         }
     }
 
-    private void spawnHavenCores() {
-        if (this.getWorld().isClient() || hasSpawnedCores) return;
+    private void handleCutscene() {
+        if (!cutsceneActive) return;
 
-        List<BlockPos> validFroglights = new ArrayList<>();
-        BlockPos currentPos = this.getBlockPos();
+        cutsceneTick++;
 
-        for (int x = -25; x <= 25; x++) {
-            for (int y = -25; y <= 25; y++) {
-                for (int z = -25; z <= 25; z++) {
-                    BlockPos checkPos = currentPos.add(x, y, z);
-                    Block block = this.getWorld().getBlockState(checkPos).getBlock();
+        // Delayed sound effects
+        if (cutsceneTick == 20) {
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER,
+                    this.getSoundCategory(), 1.5f, 0.8f);
+        }
+        if (cutsceneTick == 40) {
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_WARDEN_ROAR,
+                    this.getSoundCategory(), 1.0f, 0.7f);
+        }
 
-                    if (block == Blocks.OCHRE_FROGLIGHT ||
-                            block == Blocks.VERDANT_FROGLIGHT ||
-                            block == Blocks.PEARLESCENT_FROGLIGHT) {
+        // Phase 1: Dark energy buildup (0-40 ticks)
+        if (cutsceneTick <= 40) {
+            // Dark spiraling energy around Havenica
+            for (int spiral = 0; spiral < 3; spiral++) {
+                double spiralHeight = (cutsceneTick / 40.0) * 4.0;
+                double angle = (cutsceneTick * 0.3) + (spiral * Math.PI * 2 / 3);
+                double radius = 2.0 - (spiralHeight / 4.0) * 0.5;
 
-                        BlockPos above1 = checkPos.up();
-                        BlockPos above2 = checkPos.up(2);
-                        BlockPos spawnPos = checkPos.up(2);
+                double x = this.getX() + Math.cos(angle) * radius;
+                double z = this.getZ() + Math.sin(angle) * radius;
 
-                        if (this.getWorld().getBlockState(above1).isAir() &&
-                                this.getWorld().getBlockState(above2).isAir()) {
-                            validFroglights.add(spawnPos);
-                        }
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.WITCH,
+                        x, this.getY() + spiralHeight, z,
+                        1, 0.1, 0.1, 0.1, 0.0
+                );
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.SMOKE,
+                        x, this.getY() + spiralHeight, z,
+                        2, 0.2, 0.2, 0.2, 0.05
+                );
+            }
+
+            // Ground cracks expanding outward
+            double expansion = (cutsceneTick / 40.0) * 8.0;
+            for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 16) {
+                double x = this.getX() + Math.cos(angle) * expansion;
+                double z = this.getZ() + Math.sin(angle) * expansion;
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.EGG_CRACK,
+                        x, this.getY() + 0.1, z,
+                        3, 0.3, 0.1, 0.3, 0.1
+                );
+            }
+
+            // Pulsing dark aura
+            if (cutsceneTick % 5 == 0) {
+                for (double r = 1; r <= 4; r += 0.5) {
+                    for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 8) {
+                        double x = this.getX() + Math.cos(angle) * r;
+                        double z = this.getZ() + Math.sin(angle) * r;
+
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.ASH,
+                                x, this.getY() + 0.5, z,
+                                1, 0.1, 0.1, 0.1, 0.0
+                        );
                     }
                 }
             }
         }
 
-        for (BlockPos spawnPos : validFroglights) {
-            HavenCoreEntity havenCore = ModEntities.HAVEN_CORE.create(this.getWorld());
-            if (havenCore != null) {
-                havenCore.refreshPositionAndAngles(
-                        spawnPos.getX() + 0.5,
-                        spawnPos.getY(),
-                        spawnPos.getZ() + 0.5,
-                        0,
-                        0
-                );
+        // Phase 2: Explosive transformation (at tick 40)
+        if (cutsceneTick == 40) {
+            // Massive explosion of particles
+            ((ServerWorld)this.getWorld()).spawnParticles(
+                    ParticleTypes.EXPLOSION_EMITTER,
+                    this.getX(), this.getY() + 2.0, this.getZ(),
+                    1, 0.0, 0.0, 0.0, 0.0
+            );
 
-                this.getWorld().spawnEntity(havenCore);
+            // Ring of energy bursts
+            for (int ring = 0; ring < 5; ring++) {
+                double radius = (ring + 1) * 2.0;
+                for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 12) {
+                    double x = this.getX() + Math.cos(angle) * radius;
+                    double z = this.getZ() + Math.sin(angle) * radius;
+
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.SOUL_FIRE_FLAME,
+                            x, this.getY() + 1.0, z,
+                            5, 0.3, 0.5, 0.3, 0.1
+                    );
+
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.LARGE_SMOKE,
+                            x, this.getY() + 2.0, z,
+                            3, 0.5, 0.5, 0.5, 0.1
+                    );
+                }
+            }
+
+            // Screen shake effect for players
+            Box shakeArea = this.getBoundingBox().expand(30.0);
+            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, shakeArea).forEach(player -> {
+                for (int i = 0; i < 20; i++) {
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.CRIT,
+                            player.getX() + (this.random.nextDouble() - 0.5) * 4,
+                            player.getY() + 1 + (this.random.nextDouble() - 0.5) * 2,
+                            player.getZ() + (this.random.nextDouble() - 0.5) * 4,
+                            1, 0.1, 0.1, 0.1, 0.0
+                    );
+                }
+            });
+
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE,
+                    this.getSoundCategory(), 2.0f, 0.6f);
+        }
+
+        // Phase 3: Root emergence and nature awakening (40-80 ticks)
+        if (cutsceneTick > 40 && cutsceneTick <= 80) {
+            double progress = (cutsceneTick - 40) / 40.0;
+            double maxRadius = progress * 12.0;
+
+            for (int rootLine = 0; rootLine < 8; rootLine++) {
+                double angle = rootLine * (Math.PI / 4);
+
+                for (double dist = 0; dist <= maxRadius; dist += 0.8) {
+                    if (Math.abs(dist - maxRadius) < 0.8) {
+                        double x = this.getX() + Math.cos(angle) * dist;
+                        double z = this.getZ() + Math.sin(angle) * dist;
+
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.MYCELIUM,
+                                x, this.getY() + 0.1, z,
+                                8, 0.5, 0.1, 0.5, 0.1
+                        );
+
+                        for (int branch = 0; branch < 3; branch++) {
+                            double branchAngle = angle + (branch - 1) * 0.3;
+                            double branchX = x + Math.cos(branchAngle) * 0.5;
+                            double branchZ = z + Math.sin(branchAngle) * 0.5;
+
+                            ((ServerWorld)this.getWorld()).spawnParticles(
+                                    ParticleTypes.COMPOSTER,
+                                    branchX, this.getY() + 0.1, branchZ,
+                                    3, 0.2, 0.1, 0.2, 0.05
+                            );
+                        }
+
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.EGG_CRACK,
+                                x, this.getY() + 0.5, z,
+                                5, 0.3, 0.3, 0.3, 0.2
+                        );
+                    }
+                }
+            }
+
+            // Floating spores
+            for (int i = 0; i < 10; i++) {
+                double sporeX = this.getX() + (this.random.nextDouble() - 0.5) * 20;
+                double sporeZ = this.getZ() + (this.random.nextDouble() - 0.5) * 20;
+                double sporeY = this.getY() + this.random.nextDouble() * 8;
 
                 ((ServerWorld)this.getWorld()).spawnParticles(
-                        ParticleTypes.PORTAL,
-                        spawnPos.getX() + 0.5, spawnPos.getY() + 1.0, spawnPos.getZ() + 0.5,
-                        15,
-                        0.5, 1.0, 0.5,
-                        0.1
+                        ParticleTypes.SPORE_BLOSSOM_AIR,
+                        sporeX, sporeY, sporeZ,
+                        1, 0.1, 0.1, 0.1, 0.02
                 );
             }
         }
 
-        hasSpawnedCores = true;
+        // Final phase: Completion effects (at tick 80)
+        if (cutsceneTick == 80) {
+            for (double y = 2; y <= 6; y += 0.3) {
+                double radius = 1.5 + Math.sin(y) * 0.5;
+                int particleCount = (int)(radius * 8);
 
-        if (!validFroglights.isEmpty()) {
-            Box messageRange = this.getBoundingBox().expand(25.0);
-            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Haven Cores emerge from the froglights!"), true)
+                for (int i = 0; i < particleCount; i++) {
+                    double angle = (i / (double)particleCount) * Math.PI * 2;
+                    double x = this.getX() + Math.cos(angle) * radius;
+                    double z = this.getZ() + Math.sin(angle) * radius;
+
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.END_ROD,
+                            x, this.getY() + y, z,
+                            1, 0.05, 0.05, 0.05, 0.0
+                    );
+
+                    if (y > 4) {
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.ENCHANT,
+                                x, this.getY() + y, z,
+                                2, 0.1, 0.1, 0.1, 0.02
+                        );
+                    }
+                }
+            }
+
+            Box finalMessageRange = this.getBoundingBox().expand(25.0);
+            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, finalMessageRange).forEach(
+                    player -> {
+                        player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
+                        player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
+                    }
             );
 
-            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_BEACON_ACTIVATE,
-                    this.getSoundCategory(), 1.0f, 0.7f);
+            this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
+                    this.getSoundCategory(), 2.0f, 0.8f);
+
+            cutsceneActive = false;
+            cutsceneTick = 0;
         }
     }
 
-    private void startBossMusicForNearbyPlayers() {
-        Box musicRange = this.getBoundingBox().expand(35.0);
-        List<ServerPlayerEntity> playersInRange = this.getWorld().getNonSpectatingEntities(ServerPlayerEntity.class, musicRange);
+    private void handleBossMusicForPlayers() {
+        Set<ServerPlayerEntity> currentNearbyPlayers = new HashSet<>();
 
-        for (ServerPlayerEntity player : playersInRange) {
-            ModPackets.sendToPlayer(new BossMusicPacket(true, ModSounds.HAVENICA_BOSS_MUSIC), player);
+        for (ServerPlayerEntity player : ((ServerWorld) this.getWorld()).getPlayers()) {
+            if (this.squaredDistanceTo(player) <= 2025) {
+                currentNearbyPlayers.add(player);
+            }
         }
-    }
 
-    private void stopBossMusicForNearbyPlayers() {
-        Box musicRange = this.getBoundingBox().expand(50.0);
-        List<ServerPlayerEntity> playersInRange = this.getWorld().getNonSpectatingEntities(ServerPlayerEntity.class, musicRange);
+        for (ServerPlayerEntity player : currentNearbyPlayers) {
+            if (!playersHearingMusic.contains(player)) {
+                ModPackets.sendToPlayer(
+                        new BossMusicPacket(true, ModSounds.HAVENICA_BOSS_MUSIC),
+                        player
+                );
+                playersHearingMusic.add(player);
+            }
+        }
 
-        for (ServerPlayerEntity player : playersInRange) {
-            ModPackets.sendToPlayer(new BossMusicPacket(false, null), player);
+        for (ServerPlayerEntity player : new HashSet<>(playersHearingMusic)) {
+            if (!currentNearbyPlayers.contains(player)) {
+                ModPackets.sendToPlayer(
+                        new BossMusicPacket(false, null),
+                        player
+                );
+                playersHearingMusic.remove(player);
+            }
         }
     }
 
@@ -264,15 +454,13 @@ public class HavenicaEntity extends HostileEntity {
         super.onDeath(damageSource);
 
         if (!this.getWorld().isClient()) {
-            // Stop music for nearby players
-            for (ServerPlayerEntity player : ((ServerWorld) this.getWorld()).getPlayers()) {
-                if (this.squaredDistanceTo(player) <= 400) {
-                    ModPackets.sendToPlayer(
-                            new BossMusicPacket(false, null),
-                            player
-                    );
-                }
+            for (ServerPlayerEntity player : playersHearingMusic) {
+                ModPackets.sendToPlayer(
+                        new BossMusicPacket(false, null),
+                        player
+                );
             }
+            playersHearingMusic.clear();
         }
     }
 
@@ -284,35 +472,22 @@ public class HavenicaEntity extends HostileEntity {
             this.bossBar.setPercent(this.getHealth() / this.getMaxHealth());
         }
 
+        if (cutsceneActive) {
+            handleCutscene();
+        }
+
         if (!this.getWorld().isClient()) {
-            if (!hasSpawnedCores) {
-                spawnHavenCores();
-            }
-
             if (!this.isDead()) {
-                for (ServerPlayerEntity player : ((ServerWorld) this.getWorld()).getPlayers()) {
-                    if (this.squaredDistanceTo(player) <= 400) {
-                        ModPackets.sendToPlayer(
-                                new BossMusicPacket(true, ModSounds.HAVENICA_BOSS_MUSIC),
-                                player
-                        );
-                    }
-                }
-            }
-
-            if (!hasSentMusicStart) {
-                startBossMusicForNearbyPlayers();
-                hasSentMusicStart = true;
+                handleBossMusicForPlayers();
             }
 
             if (this.isOnFire() && !this.hasStatusEffect(StatusEffects.GLOWING)) {
                 this.addStatusEffect(new StatusEffectInstance(StatusEffects.GLOWING, 600, 0));
             }
 
-
             if (toxicLaserCooldown > 0) toxicLaserCooldown--;
             if (rootNetworkCooldown > 0) rootNetworkCooldown--;
-            if (pollenStormCooldown > 0) pollenStormCooldown--;
+            if (boggedSummonCooldown > 0) boggedSummonCooldown--;
             if (teleportCooldown > 0) teleportCooldown--;
             if (shockwaveCooldown > 0) shockwaveCooldown--;
 
@@ -363,7 +538,7 @@ public class HavenicaEntity extends HostileEntity {
             }
 
             healingTick++;
-            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 5 : HEALING_INTERVAL;
+            int healingInterval = this.hasStatusEffect(StatusEffects.GLOWING) ? HEALING_INTERVAL * 8 : HEALING_INTERVAL;
 
             if (healingTick >= healingInterval) {
                 if (this.getHealth() < this.getMaxHealth()) {
@@ -396,13 +571,85 @@ public class HavenicaEntity extends HostileEntity {
             if (nearestPlayer != null) {
                 if (toxicLaserCooldown <= 0 && !toxicLaserCharging) useToxicLaser(nearestPlayer);
                 if (rootNetworkCooldown <= 0 && !rootNetworkActive) useRootNetwork(nearestPlayer);
-                if (shockwaveCooldown <= 0) useShockwaveBlast();
+                if (!isGardensWrathActive && shockwaveCooldown <= 0) useShockwaveBlast();
+                if (isGardensWrathActive && boggedSummonCooldown <= 0) summonBoggedMinions();
             }
         }
 
         if (this.getWorld().isClient()) {
             this.setupAnimationStates();
         }
+    }
+
+    private void summonBoggedMinions() {
+        for (int i = 0; i < 2; i++) {
+            double angle = i * (Math.PI / 2);
+            double distance = 3.0;
+            double x = this.getX() + Math.cos(angle) * distance;
+            double z = this.getZ() + Math.sin(angle) * distance;
+
+            BoggedEntity bogged = EntityType.BOGGED.create(this.getWorld());
+            if (bogged != null) {
+                bogged.refreshPositionAndAngles(x, this.getY(), z, 0, 0);
+
+                ItemStack chestplate = new ItemStack(Items.IRON_CHESTPLATE);
+
+                try {
+                    RegistryEntry<ArmorTrimMaterial> emeraldMaterial =
+                            this.getWorld().getRegistryManager().get(RegistryKeys.TRIM_MATERIAL).getEntry(Identifier.of("minecraft", "emerald")).orElse(null);
+                    RegistryEntry<net.minecraft.item.trim.ArmorTrimPattern> eyePattern =
+                            this.getWorld().getRegistryManager().get(RegistryKeys.TRIM_PATTERN).getEntry(Identifier.of("minecraft", "eye")).orElse(null);
+
+                    if (emeraldMaterial != null && eyePattern != null) {
+                        ArmorTrim trim = new ArmorTrim(emeraldMaterial, eyePattern);
+                        chestplate.set(net.minecraft.component.DataComponentTypes.TRIM, trim);
+                    }
+                } catch (Exception e) {
+                }
+
+                bogged.equipStack(net.minecraft.entity.EquipmentSlot.CHEST, chestplate);
+
+                ItemStack helmet = new ItemStack(Items.DIAMOND_HELMET);
+
+                try {
+                    RegistryEntry<ArmorTrimMaterial> emeraldMaterial =
+                            this.getWorld().getRegistryManager().get(RegistryKeys.TRIM_MATERIAL).getEntry(Identifier.of("minecraft", "emerald")).orElse(null);
+                    RegistryEntry<net.minecraft.item.trim.ArmorTrimPattern> ribPattern =
+                            this.getWorld().getRegistryManager().get(RegistryKeys.TRIM_PATTERN).getEntry(Identifier.of("minecraft", "rib")).orElse(null);
+
+                    if (emeraldMaterial != null && ribPattern != null) {
+                        ArmorTrim helmetTrim = new ArmorTrim(emeraldMaterial, ribPattern);
+                        helmet.set(net.minecraft.component.DataComponentTypes.TRIM, helmetTrim);
+                    }
+                } catch (Exception e) {
+                }
+
+                bogged.equipStack(net.minecraft.entity.EquipmentSlot.HEAD, helmet);
+
+                ItemStack bow = new ItemStack(Items.BOW);
+                bogged.equipStack(net.minecraft.entity.EquipmentSlot.MAINHAND, bow);
+
+                this.getWorld().spawnEntity(bogged);
+
+                ((ServerWorld)this.getWorld()).spawnParticles(
+                        ParticleTypes.TRIAL_SPAWNER_DETECTION_OMINOUS,
+                        x, this.getY() + 1.0, z,
+                        25,
+                        0.5, 1.0, 0.5,
+                        0.1
+                );
+            }
+        }
+
+        Box messageRange = this.getBoundingBox().expand(20.0);
+        this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
+                player -> player.sendMessage(Text.literal("§2§l⚘ §a§lHavenica §r§2summons §6§lBogged Guardians§r§2! §2⚘"), true)
+        );
+
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BOGGED_AMBIENT,
+                this.getSoundCategory(), 1.0f, 0.8f);
+
+        boggedSummonCooldown = BOGGED_SUMMON_COOLDOWN;
     }
 
     private void useToxicLaser(PlayerEntity target) {
@@ -794,67 +1041,27 @@ public class HavenicaEntity extends HostileEntity {
     }
 
     private void activateGardensWrath() {
-        if (!this.getWorld().isClient()) {
-            for (double y = 0; y < 3; y += 0.2) {
-                for (int root = 0; root < 4; root++) {
-                    double baseAngle = (root * Math.PI / 2) + (y * 2);
-                    double radius = 0.8 - (y * 0.1);
+        if (this.getWorld().isClient()) return;
 
-                    double x = this.getX() + Math.cos(baseAngle) * radius;
-                    double z = this.getZ() + Math.sin(baseAngle) * radius;
+        // Dramatic pause - freeze all nearby entities briefly
+        Box freezeArea = this.getBoundingBox().expand(25.0);
+        this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
+            // Give players brief slowness to create dramatic pause
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 4, true, false));
+            // Dramatic message
+            player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S RAGE AWAKENS §c§l⚠"), true);
+        });
 
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.MYCELIUM,
-                            x, this.getY() + y, z,
-                            1,
-                            0.05, 0.05, 0.05,
-                            0.0
-                    );
+        // Play dramatic transformation sounds
+        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
+                this.getSoundCategory(), 2.0f, 0.5f);
 
-                    for (int branch = 0; branch < 2; branch++) {
-                        double branchAngle = baseAngle + (Math.sin(y * 3) * 0.5);
-                        double branchRadius = radius * 0.7;
-                        double branchX = x + Math.cos(branchAngle) * 0.3;
-                        double branchZ = z + Math.sin(branchAngle) * 0.3;
+        // Start the cutscene timing system
+        this.cutsceneActive = true;
+        this.cutsceneTick = 0;
 
-                        ((ServerWorld)this.getWorld()).spawnParticles(
-                                ParticleTypes.ASH,
-                                branchX, this.getY() + y, branchZ,
-                                1,
-                                0.05, 0.05, 0.05,
-                                0.0
-                        );
-                    }
-                }
-            }
-
-            for (double angle = 0; angle < Math.PI * 2; angle += Math.PI/8) {
-                for (double r = 0.5; r < 2; r += 0.3) {
-                    double x = this.getX() + Math.cos(angle) * r;
-                    double z = this.getZ() + Math.sin(angle) * r;
-
-                    ((ServerWorld)this.getWorld()).spawnParticles(
-                            ParticleTypes.MYCELIUM,
-                            x, this.getY() + 0.1, z,
-                            1,
-                            0.05, 0, 0.05,
-                            0.0
-                    );
-                }
-            }
-        }
-
-        Box messageRange = this.getBoundingBox().expand(20.0);
-        this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                player -> player.sendMessage(Text.translatable("entity.mystbornhorizons.havenica.gardens_wrath"), true)
-        );
+        // Set the flag immediately so other systems know we're in wrath mode
         isGardensWrathActive = true;
-    }
-
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        float cappedAmount = Math.min(amount, 50f);
-        return super.damage(source, cappedAmount);
     }
 
     @Override
@@ -1031,7 +1238,7 @@ public class HavenicaEntity extends HostileEntity {
 
     @Override
     protected @Nullable SoundEvent getAmbientSound() {
-        return SoundEvents.BLOCK_MOSS_STEP;
+        return null;
     }
 
     @Override
@@ -1041,6 +1248,6 @@ public class HavenicaEntity extends HostileEntity {
 
     @Override
     protected @Nullable SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_MOSS_BREAK;
+        return SoundEvents.BLOCK_CHORUS_FLOWER_DEATH;
     }
 }
