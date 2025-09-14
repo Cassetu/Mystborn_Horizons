@@ -1535,26 +1535,12 @@ public class HavenicaEntity extends HostileEntity {
                 // Check if there's enough space around the Haven Core for teleportation
                 Vec3d corePos = entity.getPos();
 
-                // Try positions around the Haven Core
-                for (int angle = 0; angle < 8; angle++) {
-                    double radians = (angle / 8.0) * Math.PI * 2;
-                    double distance = 3.0; // Distance from the Haven Core
+                // Teleport directly onto the Haven Core entity
+                double x = corePos.x;
+                double z = corePos.z;
+                double y = corePos.y + 0.5; // Slightly above the Haven Core to avoid clipping
 
-                    double x = corePos.x + Math.cos(radians) * distance;
-                    double z = corePos.z + Math.sin(radians) * distance;
-                    double y = corePos.y;
-
-                    // Check if this position has enough space (2 blocks high)
-                    BlockPos checkPos = new BlockPos((int)Math.floor(x), (int)Math.floor(y), (int)Math.floor(z));
-
-                    if (this.getWorld().getBlockState(checkPos).isAir() &&
-                            this.getWorld().getBlockState(checkPos.up()).isAir() &&
-                            !this.getWorld().getBlockState(checkPos.down()).isAir()) { // Has floor below
-
-                        validHavenCorePositions.add(new Vec3d(x, y, z));
-                        break; // Found a valid position for this Haven Core, move to next
-                    }
-                }
+                validHavenCorePositions.add(new Vec3d(x, y, z));
             }
         }
 
