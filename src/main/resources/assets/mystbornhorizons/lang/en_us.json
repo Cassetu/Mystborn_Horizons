@@ -130,5 +130,8 @@
 
   "block.mystbornhorizons.ancient_grove_altar": "Ancient Grove Altar",
 
-  "item.mystbornhorizons.forest_heart": "Forest Heart"
+  "item.mystbornhorizons.forest_heart": "Forest Heart",
+  "item.mystbornhorizons.forest_heart.no_structure": "No Moss Arena found nearby...",
+  "item.mystbornhorizons.forest_heart.direction": "The forest whispers... %s"
+
 }
