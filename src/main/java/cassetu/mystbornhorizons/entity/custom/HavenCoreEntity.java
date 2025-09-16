@@ -36,11 +36,11 @@ public class HavenCoreEntity extends HostileEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 120)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
-                .add(EntityAttributes.GENERIC_ARMOR, 20)
+                .add(EntityAttributes.GENERIC_ARMOR, 10)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 100);
     }
 

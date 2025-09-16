@@ -973,12 +973,18 @@ public class HavenicaEntity extends HostileEntity {
 
             if (healingTick >= healingInterval) {
                 if (this.getHealth() < this.getMaxHealth()) {
-                    this.heal(HEALING_AMOUNT);
+                    int havenCoreCount = countNearbyHavenCores(50.0);
+
+                    float dynamicHealingAmount = Math.max(5.0f, havenCoreCount * 5.0f);
+
+                    this.heal(dynamicHealingAmount);
+
+                    int particleCount = Math.min(3 + (havenCoreCount * 2), 15); // More particles for more cores
 
                     ((ServerWorld)this.getWorld()).spawnParticles(
                             ParticleTypes.HEART,
                             this.getX(), this.getY() + 1.5, this.getZ(),
-                            3,
+                            particleCount,
                             0.3, 0.3, 0.3,
                             0.1
                     );
@@ -986,10 +992,26 @@ public class HavenicaEntity extends HostileEntity {
                     ((ServerWorld)this.getWorld()).spawnParticles(
                             ParticleTypes.HAPPY_VILLAGER,
                             this.getX(), this.getY() + 1.0, this.getZ(),
-                            5,
+                            Math.min(5 + havenCoreCount, 12),
                             0.5, 0.5, 0.5,
                             0.05
                     );
+
+                    if (havenCoreCount >= 3) {
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.END_ROD,
+                                this.getX(), this.getY() + 2.0, this.getZ(),
+                                havenCoreCount,
+                                0.8, 0.8, 0.8,
+                                0.1
+                        );
+
+                        this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
+                                this.getSoundCategory(), 0.5f, 1.5f);
+                    }
+
+                    // Debug message (remove in production)
+                    System.out.println("DEBUG: Healed " + dynamicHealingAmount + " HP with " + havenCoreCount + " Haven Cores nearby");
                 }
                 healingTick = 0;
             }
@@ -1013,6 +1035,37 @@ public class HavenicaEntity extends HostileEntity {
         }
     }
 
+    private int countNearbyHavenCores(double radius) {
+        if (this.getWorld().isClient()) return 0;
+
+        int coreCount = 0;
+
+        Box searchArea = new Box(
+                this.getX() - radius, this.getY() - radius, this.getZ() - radius,
+                this.getX() + radius, this.getY() + radius, this.getZ() + radius
+        );
+
+        List<Entity> nearbyEntities = this.getWorld().getOtherEntities(this, searchArea);
+
+        for (Entity entity : nearbyEntities) {
+            if (entity.getClass().getSimpleName().contains("HavenCore") ||
+                    entity.getType().toString().contains("haven_core") ||
+                    entity.getName().getString().toLowerCase().contains("haven core")) {
+
+                double actualDistance = Math.sqrt(
+                        Math.pow(entity.getX() - this.getX(), 2) +
+                                Math.pow(entity.getY() - this.getY(), 2) +
+                                Math.pow(entity.getZ() - this.getZ(), 2)
+                );
+
+                if (actualDistance <= radius) {
+                    coreCount++;
+                }
+            }
+        }
+
+        return coreCount;
+    }
     private void summonBoggedMinions() {
         for (int i = 0; i < 2; i++) {
             double angle = i * (Math.PI / 2);
