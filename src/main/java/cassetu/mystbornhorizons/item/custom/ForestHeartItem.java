@@ -24,6 +24,11 @@ import net.minecraft.world.gen.structure.Structure;
 import java.util.List;
 
 public class ForestHeartItem extends Item {
+
+    // NOTICE: THE SYSTEM PRINTS A LOT OF DEBUG INFO TO THE SERVER CONSOLE.
+    // THIS IS INTENTIONAL TO HELP WITH TROUBLESHOOTING STRUCTURE LOCATING
+    // AND WAS MADE WITH THE HELP OF CLAUDE.AI
+
     public ForestHeartItem(Settings settings) {
         super(settings);
     }
@@ -38,7 +43,7 @@ public class ForestHeartItem extends Item {
 
     @Override
     public boolean hasGlint(ItemStack stack) {
-        return true; // Makes the item have an enchanted glint
+        return true;
     }
 
     @Override
@@ -48,27 +53,17 @@ public class ForestHeartItem extends Item {
         if (!world.isClient) {
             ServerWorld serverWorld = (ServerWorld) world;
 
-            // Find the nearest moss arena structure
             BlockPos mossArenaPos = findNearestMossArena(serverWorld, user.getBlockPos());
 
             if (mossArenaPos != null) {
-                // Create a trail of green particles pointing toward the structure
                 createParticleTrail(serverWorld, user.getPos(), mossArenaPos);
 
-                // Play a mystical sound effect
                 world.playSound(null, user.getX(), user.getY(), user.getZ(),
                         SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, SoundCategory.PLAYERS, 1.0f,
                         1.2f + world.getRandom().nextFloat() * 0.4f);
 
-                // Increment usage stat
                 user.incrementStat(Stats.USED.getOrCreateStat(this));
 
-                // Consume the item if not in creative mode
-                if (!user.getAbilities().creativeMode) {
-                    itemStack.decrement(1);
-                }
-
-                // Send a message indicating direction and distance
                 Vec3d direction = Vec3d.of(mossArenaPos).subtract(user.getPos()).normalize();
                 String directionText = getDirectionText(direction);
                 int distance = (int) Math.sqrt(user.getBlockPos().getSquaredDistance(mossArenaPos));
@@ -78,67 +73,153 @@ public class ForestHeartItem extends Item {
 
                 return TypedActionResult.success(itemStack);
             } else {
-                // No structure found - send a message to the player
                 user.sendMessage(Text.translatable("item.mystbornhorizons.forest_heart.no_structure")
                         .formatted(Formatting.RED), true);
                 return TypedActionResult.fail(itemStack);
             }
         }
-
         return TypedActionResult.success(itemStack);
     }
 
     private BlockPos findNearestMossArena(ServerWorld world, BlockPos playerPos) {
-        // Try multiple approaches to find the structure
+        System.out.println("[ForestHeart] Starting structure search from position: " + playerPos);
 
-        // Method 1: Try with your mod's namespace first
-        Identifier mossId1 = Identifier.of("mystbornhorizons", "moss_arena");
-        TagKey<Structure> mossArenaTag1 = TagKey.of(RegistryKeys.STRUCTURE, mossId1);
+        Identifier mossId = Identifier.of("minecraft", "moss_arena");
+        System.out.println("[ForestHeart] Looking for structure: " + mossId);
 
-        int searchRadius = 200; // Increased search radius
-        BlockPos found = world.locateStructure(mossArenaTag1, playerPos, searchRadius, false);
+        try {
+            var structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
+            System.out.println("[ForestHeart] Structure registry size: " + structureRegistry.size());
 
-        if (found != null) {
-            System.out.println("[ForestHeart] Found Moss Arena (mod namespace) at " + found);
-            return found;
+            var structureEntry = structureRegistry.getEntry(mossId);
+            if (structureEntry.isPresent()) {
+                System.out.println("[ForestHeart] Found structure entry in registry");
+
+                var entryList = structureRegistry.getEntryList(TagKey.of(RegistryKeys.STRUCTURE, mossId));
+
+                if (entryList.isEmpty()) {
+                    System.out.println("[ForestHeart] No entry list found, trying individual entry...");
+                    var singleEntryList = net.minecraft.registry.entry.RegistryEntryList.of(structureEntry.get());
+
+                    var result = world.getChunkManager().getChunkGenerator()
+                            .locateStructure(world, singleEntryList, playerPos, 100, false);
+
+                    if (result != null) {
+                        BlockPos structurePos = result.getFirst();
+                        double distance = Math.sqrt(playerPos.getSquaredDistance(structurePos));
+                        System.out.println("[ForestHeart] ✓ Found via single entry method: " + structurePos + " (distance: " + (int)distance + " blocks)");
+                        return structurePos;
+                    }
+                } else {
+                    System.out.println("[ForestHeart] Using entry list...");
+                    var result = world.getChunkManager().getChunkGenerator()
+                            .locateStructure(world, entryList.get(), playerPos, 100, false);
+
+                    if (result != null) {
+                        BlockPos structurePos = result.getFirst();
+                        double distance = Math.sqrt(playerPos.getSquaredDistance(structurePos));
+                        System.out.println("[ForestHeart] ✓ Found via entry list: " + structurePos + " (distance: " + (int)distance + " blocks)");
+                        return structurePos;
+                    }
+                }
+            } else {
+                System.out.println("[ForestHeart] Structure entry not found in registry!");
+            }
+        } catch (Exception e) {
+            System.out.println("[ForestHeart] Error in ChunkGenerator approach: " + e.getMessage());
+            e.printStackTrace();
         }
 
-        // Method 2: Try with minecraft namespace
-        Identifier mossId2 = Identifier.of("minecraft", "moss_arena");
-        TagKey<Structure> mossArenaTag2 = TagKey.of(RegistryKeys.STRUCTURE, mossId2);
+        System.out.println("[ForestHeart] Trying structure sets approach...");
+        try {
+            var structureSetRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE_SET);
+            System.out.println("[ForestHeart] Available structure sets:");
+            for (var entry : structureSetRegistry.getEntrySet()) {
+                String setName = entry.getKey().getValue().toString();
+                System.out.println("  - " + setName);
 
-        found = world.locateStructure(mossArenaTag2, playerPos, searchRadius, false);
-
-        if (found != null) {
-            System.out.println("[ForestHeart] Found Moss Arena (minecraft namespace) at " + found);
-            return found;
-        }
-
-        // Method 3: Try to find by iterating through all structures (debugging)
-        System.out.println("[ForestHeart] Attempting to find structure by iteration...");
-        var structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
-
-        for (var entry : structureRegistry.getEntrySet()) {
-            String structureName = entry.getKey().getValue().toString();
-            if (structureName.contains("moss") || structureName.contains("arena")) {
-                System.out.println("[ForestHeart] Found potential structure: " + structureName);
-
-                // Try to locate this structure
-                TagKey<Structure> tag = TagKey.of(RegistryKeys.STRUCTURE, entry.getKey().getValue());
-                BlockPos pos = world.locateStructure(tag, playerPos, searchRadius, false);
-                if (pos != null) {
-                    System.out.println("[ForestHeart] Successfully located: " + structureName + " at " + pos);
-                    return pos;
+                if (setName.contains("moss") || setName.contains("arena")) {
+                    System.out.println("[ForestHeart] Found potential structure set: " + setName);
                 }
             }
+        } catch (Exception e) {
+            System.out.println("[ForestHeart] Error checking structure sets: " + e.getMessage());
         }
 
-        System.out.println("[ForestHeart] Moss Arena not found within " + searchRadius + " chunks.");
-        System.out.println("[ForestHeart] Available structures:");
-        for (var entry : structureRegistry.getEntrySet()) {
-            System.out.println("  - " + entry.getKey().getValue().toString());
+        System.out.println("[ForestHeart] Trying command-style locate...");
+        try {
+            var registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
+            var holder = registry.getEntry(mossId);
+
+            if (holder.isPresent()) {
+                System.out.println("[ForestHeart] Structure holder found, attempting locate...");
+
+                int[] radii = {50, 100, 200, 500};
+                for (int radius : radii) {
+                    System.out.println("[ForestHeart] Searching with radius: " + radius + " chunks");
+
+                    var pair = world.getChunkManager().getChunkGenerator().locateStructure(
+                            world,
+                            net.minecraft.registry.entry.RegistryEntryList.of(holder.get()),
+                            playerPos,
+                            radius,
+                            false
+                    );
+
+                    if (pair != null) {
+                        BlockPos foundPos = pair.getFirst();
+                        double distance = Math.sqrt(playerPos.getSquaredDistance(foundPos));
+                        System.out.println("[ForestHeart] ✓ Found with command-style locate: " + foundPos + " (distance: " + (int)distance + " blocks)");
+                        return foundPos;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("[ForestHeart] Error in command-style locate: " + e.getMessage());
+            e.printStackTrace();
         }
 
+        System.out.println("[ForestHeart] Falling back to manual chunk scanning...");
+        try {
+            int chunkRadius = 100;
+            int checked = 0;
+
+            for (int x = -chunkRadius; x <= chunkRadius; x += 2) {
+                for (int z = -chunkRadius; z <= chunkRadius; z += 2) {
+                    checked++;
+                    if (checked % 1000 == 0) {
+                        System.out.println("[ForestHeart] Checked " + checked + " chunks...");
+                    }
+
+                    int chunkX = (playerPos.getX() >> 4) + x;
+                    int chunkZ = (playerPos.getZ() >> 4) + z;
+
+                    var chunk = world.getChunk(chunkX, chunkZ);
+                    var structureStarts = chunk.getStructureStarts();
+
+                    for (var entry : structureStarts.entrySet()) {
+                        var structureKey = entry.getKey();
+                        var start = entry.getValue();
+
+                        var structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
+                        var structureId = structureRegistry.getId(structureKey);
+
+                        if (structureId != null && structureId.toString().equals("minecraft:moss_arena") && start.hasChildren()) {
+                            BlockPos structurePos = new BlockPos(chunkX * 16 + 8, 64, chunkZ * 16 + 8);
+                            System.out.println("[ForestHeart] ✓ Found via manual scanning: " + structurePos);
+                            return structurePos;
+                        }
+                    }
+                }
+            }
+
+            System.out.println("[ForestHeart] Manual scan completed, checked " + checked + " chunks");
+        } catch (Exception e) {
+            System.out.println("[ForestHeart] Error in manual scanning: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        System.out.println("[ForestHeart] All methods exhausted. Structure may be further than 100 chunks away.");
         return null;
     }
 
@@ -146,42 +227,34 @@ public class ForestHeartItem extends Item {
         Vec3d target = Vec3d.of(targetPos);
         Vec3d direction = target.subtract(playerPos).normalize();
 
-        // Create a trail of particles extending outward from the player
-        double maxDistance = Math.min(30.0, playerPos.distanceTo(target) * 0.3); // Shorter, more visible trail
-        int particleCount = 20; // Fixed number of particles for consistency
+        double maxDistance = Math.min(30.0, playerPos.distanceTo(target) * 0.3);
+        int particleCount = 20;
 
         for (int i = 0; i < particleCount; i++) {
             double progress = (double) i / (particleCount - 1);
             double distance = progress * maxDistance;
 
-            // Calculate position along the direction vector
             Vec3d particlePos = playerPos.add(direction.multiply(distance));
 
-            // Elevate particles slightly for better visibility
             particlePos = particlePos.add(0, 1.0 + progress * 2.0, 0);
 
-            // Add some randomness to make it look more organic, but less chaotic
             double randomX = (world.getRandom().nextDouble() - 0.5) * 0.3;
             double randomY = (world.getRandom().nextDouble() - 0.5) * 0.3;
             double randomZ = (world.getRandom().nextDouble() - 0.5) * 0.3;
 
             particlePos = particlePos.add(randomX, randomY, randomZ);
 
-            // Use more visible particles
             if (i % 2 == 0) {
-                // Happy villager particles (green) - very visible
                 world.spawnParticles(ParticleTypes.HAPPY_VILLAGER,
                         particlePos.x, particlePos.y, particlePos.z,
                         3, 0.1, 0.1, 0.1, 0.02);
             } else {
-                // Composter particles (also green)
                 world.spawnParticles(ParticleTypes.COMPOSTER,
                         particlePos.x, particlePos.y, particlePos.z,
                         2, 0.1, 0.1, 0.1, 0.0);
             }
         }
 
-        // Add a burst of particles around the player for emphasis
         for (int i = 0; i < 15; i++) {
             double angle = (2 * Math.PI * i) / 15;
             double radius = 2.0;
@@ -193,7 +266,6 @@ public class ForestHeartItem extends Item {
                     x, y, z, 2, 0.0, 0.3, 0.0, 0.1);
         }
 
-        // Add some upward-floating particles for extra effect
         for (int i = 0; i < 8; i++) {
             double randomX = playerPos.x + (world.getRandom().nextDouble() - 0.5) * 4.0;
             double randomZ = playerPos.z + (world.getRandom().nextDouble() - 0.5) * 4.0;
@@ -208,7 +280,6 @@ public class ForestHeartItem extends Item {
         double x = direction.x;
         double z = direction.z;
 
-        // Determine primary direction with better precision
         double angle = Math.atan2(z, x) * 180.0 / Math.PI;
         if (angle < 0) angle += 360;
 
