@@ -18,23 +18,19 @@ public class ClientPacketHandler {
                 SoundManager soundManager = context.client().getSoundManager();
 
                 if (payload.startMusic() && payload.soundEvent() != null) {
-                    // Stop any existing boss music
                     if (currentBossMusic != null) {
                         soundManager.stop(currentBossMusic);
                     }
 
-                    // Stop background music if it's playing
                     if (!backgroundMusicWasStopped) {
                         soundManager.stopSounds(null, SoundCategory.MUSIC);
                         backgroundMusicWasStopped = true;
                     }
 
-                    // Start boss music
                     currentBossMusic = PositionedSoundInstance.music(payload.soundEvent());
                     soundManager.play(currentBossMusic);
 
                 } else {
-                    // Stop boss music
                     if (currentBossMusic != null) {
                         soundManager.stop(currentBossMusic);
                         currentBossMusic = null;
