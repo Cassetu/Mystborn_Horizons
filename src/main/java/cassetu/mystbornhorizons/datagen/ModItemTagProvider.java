@@ -56,7 +56,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.ROYAL_FROSTSTONE_SWORD)
                 .add(ModItems.ROYAL_TECTONITE_SWORD)
                 .add(ModItems.MOONSTONE_RAPIER)
-                .add(ModItems.PEACEKEEPER_SWORD);
+                .add(ModItems.PEACEKEEPER_SWORD)
+                .add(ModItems.VANQUISHER_SWORD);
         getOrCreateTagBuilder(ItemTags.PICKAXES)
                 .add(ModItems.FROSTSTONE_PICKAXE);
         getOrCreateTagBuilder(ItemTags.SHOVELS)
@@ -93,7 +94,9 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(ModItems.FROSTSTONE_AXE)
                 .add(ModItems.FROSTSTONE_HOE)
                 .add(ModItems.FROSTSTONE_LEGGINGS)
-                .add(ModItems.TOMAHAWK);
+                .add(ModItems.TOMAHAWK)
+                .add(ModItems.PEACEKEEPER_SWORD)
+                .add(ModItems.VANQUISHER_SWORD);
 
         getOrCreateTagBuilder(ItemTags.EQUIPPABLE_ENCHANTABLE)
                 .add(ModItems.FROSTSTONE_CHESTPLATE)

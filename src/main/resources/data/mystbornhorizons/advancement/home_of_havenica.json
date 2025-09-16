@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:ancient_grove_altar"
+    },
+    "title": "Grove of Havenica",
+    "description": "Find the Lost Grove",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "home_of_havenica_0": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structures": "mystbornhorizons:moss_arena"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    },
+    "rewards": {
+      "experience": 150
+    },
+    "parent": "minecraft:story/follow_ender_eye"
+  }
+}

@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_diamond": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:diamond"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_emerald_block": {
       "conditions": {
         "items": [
           {
             "items": "minecraft:emerald"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_luminite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:luminite"
           }
         ]
       },
@@ -52,7 +52,7 @@
     [
       "has_the_recipe",
       "has_verdant_froglight",
-      "has_diamond",
+      "has_luminite",
       "has_emerald_block",
       "has_mystborn_dust"
     ]

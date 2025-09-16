@@ -49,7 +49,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, ModItems.RAW_FROSTSTONE, 4, 8));
         addDrop(ModBlocks.STORMITE_ORE, oreDrops(ModBlocks.STORMITE_ORE, ModItems.RAW_STORMITE));
         addDrop(ModBlocks.STORMITE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.STORMITE_DEEPSLATE_ORE, ModItems.RAW_STORMITE, 4, 8));
-        addDrop(ModBlocks.LUMINITE_END_ORE, multipleOreDrops(ModBlocks.LUMINITE_END_ORE, ModItems.STORMITE, 2, 4));
+        addDrop(ModBlocks.LUMINITE_END_ORE, multipleOreDrops(ModBlocks.LUMINITE_END_ORE, ModItems.LUMINITE, 1, 2));
         addDrop(ModBlocks.TECTONITE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.TECTONITE_DEEPSLATE_ORE, ModItems.TECTONITE_GEODE, 1, 2));
         addDrop(ModBlocks.MOONSTONE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.MOONSTONE_DEEPSLATE_ORE, ModItems.MOONSTONE, 1, 2));
 

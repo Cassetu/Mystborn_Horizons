@@ -218,15 +218,15 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .offerTo(exporter);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.FOREST_HEART)
-                .pattern("MED")
+                .pattern("MEL")
                 .pattern("EVE")
-                .pattern("DEM")
+                .pattern("LEM")
                 .input('V', Items.VERDANT_FROGLIGHT)
-                .input('D', Items.DIAMOND)
+                .input('L', ModItems.LUMINITE)
                 .input('E', Items.EMERALD_BLOCK)
                 .input('M', ModItems.MYSTBORN_DUST)
                 .criterion(hasItem(Items.VERDANT_FROGLIGHT), conditionsFromItem(Items.VERDANT_FROGLIGHT))
-                .criterion(hasItem(Items.DIAMOND),conditionsFromItem(Items.DIAMOND))
+                .criterion(hasItem(ModItems.LUMINITE),conditionsFromItem(ModItems.LUMINITE))
                 .criterion(hasItem(Items.EMERALD_BLOCK),conditionsFromItem(Items.EMERALD))
                 .criterion(hasItem(ModItems.MYSTBORN_DUST),conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);

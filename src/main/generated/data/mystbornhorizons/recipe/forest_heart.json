@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "D": {
-      "item": "minecraft:diamond"
-    },
     "E": {
       "item": "minecraft:emerald_block"
+    },
+    "L": {
+      "item": "mystbornhorizons:luminite"
     },
     "M": {
       "item": "mystbornhorizons:mystborn_dust"
@@ -16,9 +16,9 @@
     }
   },
   "pattern": [
-    "MED",
+    "MEL",
     "EVE",
-    "DEM"
+    "LEM"
   ],
   "result": {
     "count": 1,

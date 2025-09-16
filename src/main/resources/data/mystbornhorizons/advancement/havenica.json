@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "id": "mystbornhorizons:forest_heart"
+    },
+    "title": "Havenica, Guardian of the Grove",
+    "description": "Defeat Havenica",
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "havenica": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "entity": {
+          "type": "mystbornhorizons:havenica"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 120
+  },
+  "parent": "minecraft:adventure/kill_a_mob"
+}
