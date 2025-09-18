@@ -40,7 +40,7 @@ public class HavenCoreEntity extends HostileEntity {
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
-                .add(EntityAttributes.GENERIC_ARMOR, 10)
+                .add(EntityAttributes.GENERIC_ARMOR, 13)
                 .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 100);
     }
 

@@ -36,11 +36,8 @@ public class ClientPacketHandler {
                         currentBossMusic = null;
                     }
 
-                    // Allow background music to resume naturally
                     if (backgroundMusicWasStopped) {
                         backgroundMusicWasStopped = false;
-                        // Note: Minecraft will naturally start playing background music again
-                        // after a short delay when no music is playing
                     }
                 }
             });

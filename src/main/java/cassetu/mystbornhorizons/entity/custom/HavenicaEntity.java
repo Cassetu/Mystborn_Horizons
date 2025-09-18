@@ -84,7 +84,7 @@ public class HavenicaEntity extends HostileEntity {
     private boolean toxicLaserCharging = false;
     private int toxicLaserChargeTicks = 0;
     private PlayerEntity toxicLaserTarget = null;
-    private static final int LASER_CHARGE_TIME = 75;
+    private static final int LASER_CHARGE_TIME = 60;
 
     private int healingTick = 0;
     private static final int HEALING_INTERVAL = 20;
@@ -979,7 +979,7 @@ public class HavenicaEntity extends HostileEntity {
 
                     this.heal(dynamicHealingAmount);
 
-                    int particleCount = Math.min(3 + (havenCoreCount * 2), 15); // More particles for more cores
+                    int particleCount = Math.min(3 + (havenCoreCount * 2), 15);
 
                     ((ServerWorld)this.getWorld()).spawnParticles(
                             ParticleTypes.HEART,
@@ -1282,8 +1282,8 @@ public class HavenicaEntity extends HostileEntity {
                 );
 
                 Box damageBox = new Box(
-                        particlePos.x - 1.0, particlePos.y - 0.5, particlePos.z - 1.0,
-                        particlePos.x + 1.0, particlePos.y + 1.5, particlePos.z + 1.0
+                        particlePos.x - 0.75, particlePos.y - 0.5, particlePos.z - 0.75,
+                        particlePos.x + 0.75, particlePos.y + 1.5, particlePos.z + 0.75
                 );
 
                 List<PlayerEntity> playersInRange = this.getWorld().getNonSpectatingEntities(PlayerEntity.class, damageBox);

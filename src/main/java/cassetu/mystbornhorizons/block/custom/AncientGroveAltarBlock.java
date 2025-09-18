@@ -36,50 +36,47 @@ public class AncientGroveAltarBlock extends Block {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player,
                               BlockHitResult hit) {
-            if (!world.isClient) {
-                ServerWorld serverWorld = (ServerWorld) world;
+        if (!world.isClient) {
+            ServerWorld serverWorld = (ServerWorld) world;
 
-                // Check if player has Forest Heart
-                ItemStack heldItem = player.getMainHandStack();
-                if (!heldItem.isOf(ModItems.FOREST_HEART)) {
-                    player.sendMessage(Text.literal("§c This altar requires a §2Forest Heart§c to activate..."), false);
-                    return ActionResult.FAIL;
-                }
-
-                // Prevent multiple bosses
-                Box searchBox = new Box(pos).expand(50);
-                if (!serverWorld.getEntitiesByClass(HavenicaEntity.class, searchBox, e -> true).isEmpty()) {
-                    player.sendMessage(Text.literal("§cHavenica's presence is already felt in this area..."), false);
-                    return ActionResult.FAIL;
-                }
-
-                // Prevent duplicate cutscenes
-                if (CutsceneManager.isCutsceneActive(serverWorld, pos)) {
-                    player.sendMessage(Text.literal("§6The ritual is already in progress..."), false);
-                    return ActionResult.FAIL;
-                }
-
-                // Consume the Forest Heart
-                if (!player.getAbilities().creativeMode) {
-                    heldItem.decrement(1);
-                }
-
-                // Start the spawning cutscene
-                startSpawningCutscene(serverWorld, pos);
+            ItemStack heldItem = player.getMainHandStack();
+            if (!heldItem.isOf(ModItems.FOREST_HEART)) {
+                player.sendMessage(Text.literal("§c This altar requires a §2Forest Heart§c to activate..."), false);
+                return ActionResult.FAIL;
             }
 
-            return ActionResult.SUCCESS;
+            Box searchBox = new Box(pos).expand(50);
+            if (!serverWorld.getEntitiesByClass(HavenicaEntity.class, searchBox, e -> true).isEmpty()) {
+                player.sendMessage(Text.literal("§cHavenica's presence is already felt in this area..."), false);
+                return ActionResult.FAIL;
+            }
+
+            if (CutsceneManager.isCutsceneActive(serverWorld, pos)) {
+                player.sendMessage(Text.literal("§6The ritual is already in progress..."), false);
+                return ActionResult.FAIL;
+            }
+
+            if (!player.getAbilities().creativeMode) {
+                heldItem.decrement(1);
+            }
+
+            startSpawningCutscene(serverWorld, pos);
         }
+
+        return ActionResult.SUCCESS;
+    }
 
     private void startSpawningCutscene(ServerWorld world, BlockPos pos) {
         System.out.println("DEBUG: Starting spawning cutscene at " + pos);
 
-        // Initialize cutscene data
         Set<ServerPlayerEntity> cutscenePlayers = new HashSet<>();
         Map<ServerPlayerEntity, GameMode> originalGameModes = new HashMap<>();
         Map<ServerPlayerEntity, Vec3d> originalPositions = new HashMap<>();
+        Map<ServerPlayerEntity, Vec3d> cutscenePositions = new HashMap<>();
+        Map<ServerPlayerEntity, Boolean> originalFlying = new HashMap<>();
+        Map<ServerPlayerEntity, Float> originalYaw = new HashMap<>();
+        Map<ServerPlayerEntity, Float> originalPitch = new HashMap<>();
 
-        // Find nearby players and put them in spectator mode
         Box cutsceneArea = new Box(pos).expand(25.0);
         List<ServerPlayerEntity> nearbyPlayers = world.getNonSpectatingEntities(PlayerEntity.class, cutsceneArea)
                 .stream()
@@ -93,17 +90,30 @@ public class AncientGroveAltarBlock extends Block {
                 cutscenePlayers.add(player);
                 originalGameModes.put(player, player.interactionManager.getGameMode());
                 originalPositions.put(player, player.getPos());
+                originalFlying.put(player, player.getAbilities().flying);
+                originalYaw.put(player, player.getYaw());
+                originalPitch.put(player, player.getPitch());
 
                 player.changeGameMode(GameMode.SPECTATOR);
 
-                // Position camera for dramatic view
                 double cameraX = pos.getX() + 0.5;
                 double cameraY = pos.getY() + 8.0;
                 double cameraZ = pos.getZ() + 12.0;
 
-                player.teleport(world, cameraX, cameraY, cameraZ, 0, 15);
+                Vec3d cutscenePos = new Vec3d(cameraX, cameraY, cameraZ);
+                cutscenePositions.put(player, cutscenePos);
+
                 Vec3d lookTarget = new Vec3d(pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5);
-                player.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, lookTarget);
+                Vec3d lookDirection = lookTarget.subtract(cutscenePos).normalize();
+
+                float targetYaw = (float) Math.toDegrees(Math.atan2(-lookDirection.x, lookDirection.z));
+                float targetPitch = (float) Math.toDegrees(Math.asin(-lookDirection.y));
+
+                player.teleport(world, cameraX, cameraY, cameraZ, targetYaw, targetPitch);
+
+                player.getAbilities().flying = false;
+                player.getAbilities().allowFlying = false;
+                player.sendAbilitiesUpdate();
 
                 player.sendMessage(Text.literal("§2§l⚡ §a§lTHE FOREST AWAKENS §2§l⚡")
                         .formatted(Formatting.GREEN), false);
@@ -115,22 +125,77 @@ public class AncientGroveAltarBlock extends Block {
             }
         }
 
-        // Start the cutscene using CutsceneManager
         CutsceneManager.startCutscene(world, pos, (serverWorld, altarPos, tick) -> {
-            return tickSpawningCutscene(serverWorld, altarPos, tick, cutscenePlayers, originalGameModes, originalPositions);
+            return tickSpawningCutscene(serverWorld, altarPos, tick, cutscenePlayers, originalGameModes,
+                    originalPositions, cutscenePositions, originalFlying, originalYaw, originalPitch);
         });
     }
 
     private boolean tickSpawningCutscene(ServerWorld serverWorld, BlockPos altarPos, int cutsceneTick,
                                          Set<ServerPlayerEntity> cutscenePlayers,
                                          Map<ServerPlayerEntity, GameMode> originalGameModes,
-                                         Map<ServerPlayerEntity, Vec3d> originalPositions) {
+                                         Map<ServerPlayerEntity, Vec3d> originalPositions,
+                                         Map<ServerPlayerEntity, Vec3d> cutscenePositions,
+                                         Map<ServerPlayerEntity, Boolean> originalFlying,
+                                         Map<ServerPlayerEntity, Float> originalYaw,
+                                         Map<ServerPlayerEntity, Float> originalPitch) {
+
+        for (ServerPlayerEntity player : cutscenePlayers) {
+            if (player != null && player.isAlive()) {
+                if (player.interactionManager.getGameMode() != GameMode.SPECTATOR) {
+                    player.changeGameMode(GameMode.SPECTATOR);
+                }
+
+                if (player.getAbilities().flying) {
+                    player.getAbilities().flying = false;
+                    player.getAbilities().allowFlying = false;
+                    player.sendAbilitiesUpdate();
+                }
+            }
+        }
+
+        if (cutsceneTick >= 1) {
+            double totalDuration = 120.0;
+            double progress = Math.min(cutsceneTick / totalDuration, 1.0);
+
+            double smoothProgress = progress * progress * (3.0 - 2.0 * progress);
+            double orbitAngle = smoothProgress * Math.PI * 1.5;
+
+            for (ServerPlayerEntity player : cutscenePlayers) {
+                if (player != null && player.isAlive()) {
+                    double baseRadius = 12.0;
+                    double radiusVariation = Math.sin(progress * Math.PI * 2) * 1.5;
+                    double radius = baseRadius + radiusVariation;
+
+                    double baseHeight = 8.0;
+                    double heightVariation = Math.sin(progress * Math.PI * 1.2) * 0.8;
+                    double height = baseHeight + heightVariation;
+
+                    double newX = altarPos.getX() + 0.5 + Math.cos(orbitAngle) * radius;
+                    double newY = altarPos.getY() + height;
+                    double newZ = altarPos.getZ() + 0.5 + Math.sin(orbitAngle) * radius;
+
+                    Vec3d lookTarget = new Vec3d(altarPos.getX() + 0.5, altarPos.getY() + 2.5, altarPos.getZ() + 0.5);
+                    Vec3d newCameraPos = new Vec3d(newX, newY, newZ);
+                    Vec3d lookDirection = lookTarget.subtract(newCameraPos).normalize();
+
+                    float targetYaw = (float) Math.toDegrees(Math.atan2(-lookDirection.x, lookDirection.z));
+                    float targetPitch = (float) Math.toDegrees(Math.asin(-lookDirection.y));
+
+                    player.teleport(serverWorld, newX, newY, newZ, targetYaw, targetPitch);
+
+                    if (cutsceneTick % 10 == 0) {
+                        player.getAbilities().flying = false;
+                        player.getAbilities().allowFlying = false;
+                        player.sendAbilitiesUpdate();
+                    }
+                }
+            }
+        }
 
         Vec3d altarCenter = new Vec3d(altarPos.getX() + 0.5, altarPos.getY() + 1, altarPos.getZ() + 0.5);
 
-        // Phase 1: Ground awakening (ticks 1-40)
         if (cutsceneTick <= 40) {
-            // Expanding ground circles
             double maxRadius = (cutsceneTick / 40.0) * 15.0;
             for (double r = 0; r <= maxRadius; r += 0.8) {
                 int particlesInRing = Math.max(8, (int) (r * 4));
@@ -149,7 +214,6 @@ public class AncientGroveAltarBlock extends Block {
                 }
             }
 
-            // Sound effects
             if (cutsceneTick == 10) {
                 serverWorld.playSound(null, altarPos, SoundEvents.BLOCK_ROOTED_DIRT_BREAK,
                         SoundCategory.BLOCKS, 1.5f, 0.8f);
@@ -160,19 +224,15 @@ public class AncientGroveAltarBlock extends Block {
             }
         }
 
-        // Phase 2: Orb summoning (ticks 41-80)
         else if (cutsceneTick <= 80) {
-            // Spawn haven orbs at designated positions
             if (cutsceneTick == 45) {
                 spawnHavenOrbs(serverWorld, altarPos);
             }
 
-            // Energy beams from orbs to altar
             if (cutsceneTick > 50) {
                 createOrbToAltarBeams(serverWorld, altarPos);
             }
 
-            // Rising energy pillar at altar
             double pillarHeight = Math.min(((cutsceneTick - 40) / 40.0) * 10.0, 10.0);
             for (double y = 0; y <= pillarHeight; y += 0.2) {
                 serverWorld.spawnParticles(ParticleTypes.SOUL_FIRE_FLAME,
@@ -187,9 +247,7 @@ public class AncientGroveAltarBlock extends Block {
             }
         }
 
-        // Phase 3: Boss materialization (ticks 81-119)
         else if (cutsceneTick <= 119) {
-            // Intense swirling effects
             double intensity = (cutsceneTick - 80) / 40.0;
             for (int spiral = 0; spiral < 6; spiral++) {
                 double spiralHeight = intensity * 8.0;
@@ -205,7 +263,6 @@ public class AncientGroveAltarBlock extends Block {
                         x, altarCenter.y + spiralHeight, z, 2, 0.15, 0.15, 0.15, 0.05);
             }
 
-            // Dramatic sound buildup
             if (cutsceneTick == 90) {
                 serverWorld.playSound(null, altarPos, SoundEvents.ENTITY_WARDEN_ROAR,
                         SoundCategory.HOSTILE, 2.0f, 0.5f);
@@ -216,17 +273,13 @@ public class AncientGroveAltarBlock extends Block {
             }
         }
 
-        // Phase 4: Boss spawn and finale (tick 120)
-        // Phase 4: Boss spawn and finale (ticks 120-125)
         else if (cutsceneTick >= 120 && cutsceneTick <= 125) {
             if (cutsceneTick == 120) {
                 System.out.println("DEBUG: Starting boss spawn sequence at tick 120");
 
-                // Massive explosion effect
                 serverWorld.spawnParticles(ParticleTypes.EXPLOSION_EMITTER,
                         altarCenter.x, altarCenter.y + 4, altarCenter.z, 5, 1.0, 1.0, 1.0, 0.0);
 
-                // Debug entity type registration
                 System.out.println("DEBUG: ModEntities.HAVENICA = " + ModEntities.HAVENICA);
 
                 try {
@@ -242,15 +295,12 @@ public class AncientGroveAltarBlock extends Block {
                     }
 
                     if (havenica != null) {
-                        // Set position and properties
                         havenica.refreshPositionAndAngles(
                                 altarCenter.x, altarPos.getY() + 1, altarCenter.z, 0, 0);
 
-                        // Set custom name
                         havenica.setCustomName(Text.literal("§2§lHavenica, Guardian of the Grove"));
                         System.out.println("DEBUG: Set custom name: " + havenica.getCustomName());
 
-                        // Try to spawn the entity properly
                         System.out.println("DEBUG: Attempting to spawn entity with spawnNewEntityAndPassengers...");
                         boolean spawned = serverWorld.spawnNewEntityAndPassengers(havenica);
                         System.out.println("DEBUG: Spawn result: " + spawned);
@@ -260,7 +310,6 @@ public class AncientGroveAltarBlock extends Block {
                         } else {
                             System.out.println("SUCCESS: Havenica spawned successfully!");
 
-                            // Verify nearby Havenicas
                             java.util.List<HavenicaEntity> nearbyHavenicas = serverWorld.getEntitiesByClass(
                                     HavenicaEntity.class,
                                     new Box(altarPos).expand(10),
@@ -269,7 +318,6 @@ public class AncientGroveAltarBlock extends Block {
                             System.out.println("DEBUG: Found " + nearbyHavenicas.size() + " Havenica entities nearby after spawn");
                         }
 
-                        // Spawn effect rings
                         for (int ring = 0; ring < 5; ring++) {
                             double ringRadius = (ring + 1) * 2.0;
                             int particleCount = (int) (ringRadius * 8);
@@ -298,9 +346,7 @@ public class AncientGroveAltarBlock extends Block {
                         SoundCategory.HOSTILE, 3.0f, 0.4f);
             }
 
-            // Continue with finale effects for ticks 121-124
             if (cutsceneTick > 120 && cutsceneTick < 125) {
-                // Add some lingering particle effects after boss spawn
                 for (int i = 0; i < 3; i++) {
                     double angle = Math.random() * Math.PI * 2;
                     double radius = Math.random() * 5;
@@ -312,43 +358,37 @@ public class AncientGroveAltarBlock extends Block {
                 }
             }
 
-            // End cutscene at tick 125
             if (cutsceneTick >= 125) {
-                endSpawningCutscene(cutscenePlayers, originalGameModes, originalPositions);
-                return false; // End the cutscene
+                endSpawningCutscene(cutscenePlayers, originalGameModes, originalPositions, originalFlying, originalYaw, originalPitch);
+                return false;
             }
 
-            return true; // Continue cutscene
+            return true;
         }
         return true;
     }
 
-
-        private void spawnHavenOrbs(ServerWorld world, BlockPos altarPos) {
+    private void spawnHavenOrbs(ServerWorld world, BlockPos altarPos) {
         System.out.println("DEBUG: Spawning Haven Orbs");
 
-        // Cardinal directions (N, S, E, W) - 11 blocks out
         BlockPos[] cardinalPositions = {
-                altarPos.add(0, 2, -11),  // North
-                altarPos.add(0, 2, 11),   // South
-                altarPos.add(11, 2, 0),   // East
-                altarPos.add(-11, 2, 0)   // West
+                altarPos.add(0, 2, -11),
+                altarPos.add(0, 2, 11),
+                altarPos.add(11, 2, 0),
+                altarPos.add(-11, 2, 0)
         };
 
-        // Diagonal directions (NE, NW, SE, SW) - 11 blocks out
         BlockPos[] diagonalPositions = {
-                altarPos.add(11, 2, -11),  // Northeast (8+3 = 11)
-                altarPos.add(-11, 2, -11), // Northwest
-                altarPos.add(11, 2, 11),   // Southeast
-                altarPos.add(-11, 2, 11)   // Southwest
+                altarPos.add(11, 2, -11),
+                altarPos.add(-11, 2, -11),
+                altarPos.add(11, 2, 11),
+                altarPos.add(-11, 2, 11)
         };
 
-        // Spawn cardinal orbs
         for (BlockPos pos : cardinalPositions) {
             spawnHavenOrbEntityAt(world, pos, true);
         }
 
-        // Spawn diagonal orbs
         for (BlockPos pos : diagonalPositions) {
             spawnHavenOrbEntityAt(world, pos, false);
         }
@@ -361,14 +401,12 @@ public class AncientGroveAltarBlock extends Block {
         try {
             System.out.println("DEBUG: Spawning Haven Orb at " + pos + " (Cardinal: " + isCardinal + ")");
 
-            // Check if ModEntities.HAVEN_CORE exists
             if (ModEntities.HAVEN_CORE == null) {
                 System.out.println("ERROR: ModEntities.HAVEN_CORE is null! Make sure it's registered.");
-                spawnHavenOrbParticlesOnly(world, pos, isCardinal); // Fallback to particles
+                spawnHavenOrbParticlesOnly(world, pos, isCardinal);
                 return;
             }
 
-            // Create the Haven Core entity
             HavenCoreEntity havenCore = ModEntities.HAVEN_CORE.create(world);
             if (havenCore != null) {
                 havenCore.refreshPositionAndAngles(
@@ -389,13 +427,11 @@ public class AncientGroveAltarBlock extends Block {
         } catch (Exception e) {
             System.out.println("EXCEPTION during Haven Orb spawn: " + e.getMessage());
             e.printStackTrace();
-            // Fallback to particle effect
             spawnHavenOrbParticlesOnly(world, pos, isCardinal);
         }
     }
 
     private void spawnHavenOrbParticlesOnly(ServerWorld world, BlockPos pos, boolean isCardinal) {
-        // Create visual orb effect (particle-only fallback)
         for (int i = 0; i < 20; i++) {
             double angle = (i / 20.0) * Math.PI * 2;
             double radius = 1.0;
@@ -408,27 +444,6 @@ public class AncientGroveAltarBlock extends Block {
                     x, pos.getY() + 0.5, z, 1, 0.05, 0.05, 0.05, 0.02);
         }
 
-        // Central orb core
-        world.spawnParticles(ParticleTypes.GLOW,
-                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                10, 0.2, 0.2, 0.2, 0.0);
-    }
-
-    private void spawnHavenOrbAt(ServerWorld world, BlockPos pos, boolean isCardinal) {
-        // Create visual orb effect (you might want to create an actual entity for these)
-        for (int i = 0; i < 20; i++) {
-            double angle = (i / 20.0) * Math.PI * 2;
-            double radius = 1.0;
-            double x = pos.getX() + 0.5 + Math.cos(angle) * radius;
-            double z = pos.getZ() + 0.5 + Math.sin(angle) * radius;
-
-            world.spawnParticles(ParticleTypes.END_ROD,
-                    x, pos.getY() + 0.5, z, 2, 0.1, 0.1, 0.1, 0.0);
-            world.spawnParticles(isCardinal ? ParticleTypes.SOUL_FIRE_FLAME : ParticleTypes.FLAME,
-                    x, pos.getY() + 0.5, z, 1, 0.05, 0.05, 0.05, 0.02);
-        }
-
-        // Central orb core
         world.spawnParticles(ParticleTypes.GLOW,
                 pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 10, 0.2, 0.2, 0.2, 0.0);
@@ -437,14 +452,11 @@ public class AncientGroveAltarBlock extends Block {
     private void createOrbToAltarBeams(ServerWorld world, BlockPos altarPos) {
         Vec3d altarCenter = new Vec3d(altarPos.getX() + 0.5, altarPos.getY() + 1, altarPos.getZ() + 0.5);
 
-        // All orb positions
         Vec3d[] orbPositions = {
-                // Cardinals
                 new Vec3d(altarPos.getX() + 0.5, altarPos.getY() + 2, altarPos.getZ() - 10.5),
                 new Vec3d(altarPos.getX() + 0.5, altarPos.getY() + 2, altarPos.getZ() + 11.5),
                 new Vec3d(altarPos.getX() + 11.5, altarPos.getY() + 2, altarPos.getZ() + 0.5),
                 new Vec3d(altarPos.getX() - 10.5, altarPos.getY() + 2, altarPos.getZ() + 0.5),
-                // Diagonals
                 new Vec3d(altarPos.getX() + 11.5, altarPos.getY() + 2, altarPos.getZ() - 7.5),
                 new Vec3d(altarPos.getX() - 7.5, altarPos.getY() + 2, altarPos.getZ() - 7.5),
                 new Vec3d(altarPos.getX() + 11.5, altarPos.getY() + 2, altarPos.getZ() + 11.5),
@@ -456,13 +468,12 @@ public class AncientGroveAltarBlock extends Block {
             double distance = direction.length();
             direction = direction.normalize();
 
-            // Create beam particles
             for (double d = 0; d < distance; d += 0.3) {
                 Vec3d particlePos = orbPos.add(direction.multiply(d));
                 world.spawnParticles(ParticleTypes.ELECTRIC_SPARK,
                         particlePos.x, particlePos.y, particlePos.z, 1, 0.05, 0.05, 0.05, 0.0);
 
-                if (d % 1.2 < 0.3) { // Every few particles
+                if (d % 1.2 < 0.3) {
                     world.spawnParticles(ParticleTypes.ENCHANT,
                             particlePos.x, particlePos.y, particlePos.z, 1, 0.1, 0.1, 0.1, 0.02);
                 }
@@ -472,8 +483,10 @@ public class AncientGroveAltarBlock extends Block {
 
     private void endSpawningCutscene(Set<ServerPlayerEntity> cutscenePlayers,
                                      Map<ServerPlayerEntity, GameMode> originalGameModes,
-                                     Map<ServerPlayerEntity, Vec3d> originalPositions) {
-        // Restore players
+                                     Map<ServerPlayerEntity, Vec3d> originalPositions,
+                                     Map<ServerPlayerEntity, Boolean> originalFlying,
+                                     Map<ServerPlayerEntity, Float> originalYaw,
+                                     Map<ServerPlayerEntity, Float> originalPitch) {
         Set<ServerPlayerEntity> playersToRestore = new HashSet<>(cutscenePlayers);
 
         for (ServerPlayerEntity player : playersToRestore) {
@@ -485,10 +498,23 @@ public class AncientGroveAltarBlock extends Block {
                     }
 
                     Vec3d originalPos = originalPositions.get(player);
-                    if (originalPos != null) {
+                    Float origYaw = originalYaw.get(player);
+                    Float origPitch = originalPitch.get(player);
+                    if (originalPos != null && origYaw != null && origPitch != null) {
                         player.teleport(player.getServerWorld(),
                                 originalPos.x, originalPos.y, originalPos.z,
-                                player.getYaw(), player.getPitch());
+                                origYaw, origPitch);
+                    }
+
+                    Boolean wasFlying = originalFlying.get(player);
+                    if (wasFlying != null) {
+                        player.getAbilities().flying = wasFlying;
+                        if (originalMode == GameMode.CREATIVE || originalMode == GameMode.SPECTATOR) {
+                            player.getAbilities().allowFlying = true;
+                        } else {
+                            player.getAbilities().allowFlying = false;
+                        }
+                        player.sendAbilitiesUpdate();
                     }
 
                     player.sendMessage(Text.literal("§2§l『 §a§lTHE GUARDIAN AWAKENS §2§l』"), true);

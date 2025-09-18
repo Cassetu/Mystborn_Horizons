@@ -19,17 +19,16 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structures": "minecraft:jungle_pyramid"
+                "structure": "minecraft:ice_tower"
               }
             }
           }
         ]
-      },
-      "trigger": "minecraft:location"
-    },
-    "rewards": {
-      "experience": 50
-    },
-    "parent": "minecraft:story/follow_ender_eye"
-  }
+      }
+    }
+  },
+  "rewards": {
+    "experience": 50
+  },
+  "parent": "minecraft:story/follow_ender_eye"
 }
