@@ -7,6 +7,7 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.client.sound.SoundManager;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 
 public class ClientPacketHandler {
     private static SoundInstance currentBossMusic = null;
@@ -27,7 +28,7 @@ public class ClientPacketHandler {
                         backgroundMusicWasStopped = true;
                     }
 
-                    currentBossMusic = PositionedSoundInstance.music(payload.soundEvent());
+                    currentBossMusic = createRepeatingBossMusic(payload.soundEvent());
                     soundManager.play(currentBossMusic);
 
                 } else {
@@ -42,5 +43,22 @@ public class ClientPacketHandler {
                 }
             });
         });
+    }
+
+    private static SoundInstance createRepeatingBossMusic(SoundEvent soundEvent) {
+        return new PositionedSoundInstance(
+                soundEvent.getId(),
+                SoundCategory.MUSIC,
+                1.0f,
+                1.0f,
+                SoundInstance.createRandom(),
+                true,
+                0,
+                SoundInstance.AttenuationType.NONE,
+                0.0,
+                0.0,
+                0.0,
+                true
+        );
     }
 }

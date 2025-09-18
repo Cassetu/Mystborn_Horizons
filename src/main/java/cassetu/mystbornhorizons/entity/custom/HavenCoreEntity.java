@@ -22,9 +22,17 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class HavenCoreEntity extends HostileEntity {
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+    private boolean hasSetPlayerBasedHealth = false;
+
+    // Configuration constants
+    private static final float BASE_HEALTH = 20.0f;
+    private static final float HEALTH_PER_PLAYER = 30.0f;
+    private static final double DETECTION_RADIUS = 50.0; // Radius to check for players
 
     public HavenCoreEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -36,7 +44,7 @@ public class HavenCoreEntity extends HostileEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 40)
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, BASE_HEALTH) // Base health, will be adjusted
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
@@ -50,6 +58,26 @@ public class HavenCoreEntity extends HostileEntity {
             this.idleAnimationState.start(this.age);
         } else {
             --this.idleAnimationTimeout;
+        }
+    }
+
+    private void setHealthBasedOnPlayers() {
+        if (!hasSetPlayerBasedHealth && !this.getWorld().isClient()) {
+            List<PlayerEntity> nearbyPlayers = this.getWorld().getEntitiesByClass(
+                    PlayerEntity.class,
+                    this.getBoundingBox().expand(DETECTION_RADIUS),
+                    player -> !player.isSpectator()
+            );
+
+            int playerCount = nearbyPlayers.size();
+            float newMaxHealth = BASE_HEALTH + (playerCount * HEALTH_PER_PLAYER);
+
+            this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+            this.setHealth(newMaxHealth);
+
+            hasSetPlayerBasedHealth = true;
+
+            System.out.println("HavenCore spawned with " + playerCount + " players nearby. Health set to: " + newMaxHealth);
         }
     }
 
@@ -78,6 +106,8 @@ public class HavenCoreEntity extends HostileEntity {
 
         if (this.getWorld().isClient()) {
             this.setupAnimationStates();
+        } else {
+            setHealthBasedOnPlayers();
         }
     }
 
