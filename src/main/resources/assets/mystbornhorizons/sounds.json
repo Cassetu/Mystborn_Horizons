@@ -1,11 +1,21 @@
 {
+  "havenica_boss_music": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:havenica_boss_music",
+        "stream": true
+      }
+    ],
+    "category": "music"
+  },
   "doomsday": {
     "sounds": [
       {
         "name": "mystbornhorizons:doomsday",
         "stream": true
       }
-    ]
+    ],
+    "category": "record"
   },
   "titan_sands": {
     "sounds": [
@@ -13,7 +23,8 @@
         "name": "mystbornhorizons:titan_sands",
         "stream": true
       }
-    ]
+    ],
+    "category": "record"
   },
   "ender_fury": {
     "sounds": [
@@ -21,7 +32,8 @@
         "name": "mystbornhorizons:ender_fury",
         "stream": true
       }
-    ]
+    ],
+    "category": "record"
   },
   "echoes_of_the_abyss": {
     "sounds": [
@@ -29,7 +41,8 @@
         "name": "mystbornhorizons:echoes_of_the_abyss",
         "stream": true
       }
-    ]
+    ],
+    "category": "record"
   },
   "water_horizons": {
     "sounds": [
@@ -37,14 +50,7 @@
         "name": "mystbornhorizons:water_horizons",
         "stream": true
       }
-    ]
-  },
-  "havenica_boss_music": {
-    "sounds": [
-      {
-        "name": "mystbornhorizons:havenica_boss_music",
-        "stream": true
-      }
-    ]
+    ],
+    "category": "record"
   }
 }

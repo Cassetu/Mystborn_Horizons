@@ -58,7 +58,7 @@ public class HavenicaEntity extends HostileEntity {
     private Map<ServerPlayerEntity, Vec3d> originalPositions = new HashMap<>();
 
     private int shockwaveCooldown = 0;
-    private static final int SHOCKWAVE_COOLDOWN = 500;
+    private static final int BASE_SHOCKWAVE_COOLDOWN = 500;
     private boolean shockwaveActive = false;
     private int shockwaveTimer = 0;
     private List<Double> waveDistances = new ArrayList<>();
@@ -70,25 +70,25 @@ public class HavenicaEntity extends HostileEntity {
     private int rootNetworkCooldown = 0;
     private int boggedSummonCooldown = 0;
     private boolean isGardensWrathActive = false;
-    private static final int LASER_COOLDOWN = 95;
-    private static final int ROOT_COOLDOWN = 260;
-    private static final int BOGGED_SUMMON_COOLDOWN = 570;
+    private static final int BASE_LASER_COOLDOWN = 95;
+    private static final int BASE_ROOT_COOLDOWN = 260;
+    private static final int BASE_BOGGED_SUMMON_COOLDOWN = 570;
 
     private Vec3d[] lockedLaserTargets = new Vec3d[3];
 
     private int teleportCooldown = 0;
-    private static final int TELEPORT_COOLDOWN = 240;
+    private static final int BASE_TELEPORT_COOLDOWN = 240;
     private int teleportDelayTicks = 0;
     private static final int TELEPORT_DELAY = 40;
 
     private boolean toxicLaserCharging = false;
     private int toxicLaserChargeTicks = 0;
     private PlayerEntity toxicLaserTarget = null;
-    private static final int LASER_CHARGE_TIME = 60;
+    private static final int BASE_LASER_CHARGE_TIME = 60;
 
     private int healingTick = 0;
     private static final int HEALING_INTERVAL = 20;
-    private static final float HEALING_AMOUNT = 25f;
+    private static final float BASE_HEALING_AMOUNT = 25f;
 
     private boolean rootNetworkActive = false;
     private int rootNetworkTimer = 0;
@@ -110,6 +110,43 @@ public class HavenicaEntity extends HostileEntity {
             );
             this.setHealth(this.getMaxHealth());
         }
+    }
+
+    private int countNearbyPlayers() {
+        if (this.getWorld().isClient()) return 1;
+
+        Box searchArea = this.getBoundingBox().expand(25.0);
+        return (int) this.getWorld().getNonSpectatingEntities(PlayerEntity.class, searchArea).size();
+    }
+
+    private float getDifficultyMultiplier() {
+        int playerCount = countNearbyPlayers();
+        return Math.max(1.0f, 1.0f + (playerCount - 1) * 0.4f);
+    }
+
+    private int getScaledCooldown(int baseCooldown) {
+        float multiplier = getDifficultyMultiplier();
+        return Math.max(20, (int)(baseCooldown / multiplier));
+    }
+
+    private int getScaledDuration(int baseDuration) {
+        float multiplier = getDifficultyMultiplier();
+        return Math.max(10, (int)(baseDuration / multiplier));
+    }
+
+    private float getScaledDamage(float baseDamage) {
+        float multiplier = getDifficultyMultiplier();
+        return baseDamage * Math.min(multiplier, 2.5f);
+    }
+
+    private float getScaledHealing(float baseHealing) {
+        float multiplier = getDifficultyMultiplier();
+        return baseHealing * multiplier * 0.7f;
+    }
+
+    private int getScaledMinionCount() {
+        int playerCount = countNearbyPlayers();
+        return Math.min(6, 2 + playerCount);
     }
 
     @Override
@@ -609,8 +646,8 @@ public class HavenicaEntity extends HostileEntity {
                         }
                     }
 
-                    player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S POWER GROWS §c§l⚠"), false);
-                    player.sendMessage(Text.literal("§6§lWitness the awakening of the Garden's Wrath!"), false);
+                    player.sendMessage(Text.literal("Â§cÂ§lâš  Â§4Â§lHAVENICA'S POWER GROWS Â§cÂ§lâš "), false);
+                    player.sendMessage(Text.literal("Â§6Â§lWitness the awakening of the Garden's Wrath!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to initialize cutscene for player " + player.getName().getString() + ": " + e.getMessage());
                     cutscenePlayers.remove(player);
@@ -730,9 +767,9 @@ public class HavenicaEntity extends HostileEntity {
                         player.teleport(player.getServerWorld(), fallbackPos.x, fallbackPos.y, fallbackPos.z, player.getYaw(), player.getPitch());
                     }
 
-                    player.sendMessage(Text.literal("§2§l『 §a§lGARDEN'S WRATH AWAKENED §2§l』"), true);
-                    player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
-                    player.sendMessage(Text.literal("§c§lPrepare for battle!"), false);
+                    player.sendMessage(Text.literal("Â§2Â§lã€Ž Â§aÂ§lGARDEN'S WRATH AWAKENED Â§2Â§lã€"), true);
+                    player.sendMessage(Text.literal("Â§6The ancient forest spirit has been enraged!"), false);
+                    player.sendMessage(Text.literal("Â§cÂ§lPrepare for battle!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to restore player " + player.getName().getString() + ": " + e.getMessage());
                     try {
@@ -936,7 +973,7 @@ public class HavenicaEntity extends HostileEntity {
                     rootNetworkActive = false;
                     rootNetworkTimer = 0;
                     rootPillars.clear();
-                    rootNetworkCooldown = ROOT_COOLDOWN;
+                    rootNetworkCooldown = getScaledCooldown(BASE_ROOT_COOLDOWN);
                 }
             }
 
@@ -946,7 +983,8 @@ public class HavenicaEntity extends HostileEntity {
                 if (hasValidLaserTargets()) {
                     createTripleLaserChargingEffect();
 
-                    if (toxicLaserChargeTicks >= LASER_CHARGE_TIME) {
+                    int scaledChargeTime = getScaledDuration(BASE_LASER_CHARGE_TIME);
+                    if (toxicLaserChargeTicks >= scaledChargeTime) {
                         fireTripleToxicLaser();
                         toxicLaserCharging = false;
                         toxicLaserChargeTicks = 0;
@@ -974,10 +1012,10 @@ public class HavenicaEntity extends HostileEntity {
             if (healingTick >= healingInterval) {
                 if (this.getHealth() < this.getMaxHealth()) {
                     int havenCoreCount = countNearbyHavenCores(50.0);
+                    float baseDynamicHealingAmount = Math.max(5.0f, havenCoreCount * 5.0f);
+                    float scaledHealingAmount = getScaledHealing(baseDynamicHealingAmount);
 
-                    float dynamicHealingAmount = Math.max(5.0f, havenCoreCount * 5.0f);
-
-                    this.heal(dynamicHealingAmount);
+                    this.heal(scaledHealingAmount);
 
                     int particleCount = Math.min(3 + (havenCoreCount * 2), 15);
 
@@ -1010,8 +1048,7 @@ public class HavenicaEntity extends HostileEntity {
                                 this.getSoundCategory(), 0.5f, 1.5f);
                     }
 
-                    // Debug message (remove in production)
-                    System.out.println("DEBUG: Healed " + dynamicHealingAmount + " HP with " + havenCoreCount + " Haven Cores nearby");
+                    System.out.println("DEBUG: Healed " + scaledHealingAmount + " HP with " + havenCoreCount + " Haven Cores nearby");
                 }
                 healingTick = 0;
             }
@@ -1066,10 +1103,13 @@ public class HavenicaEntity extends HostileEntity {
 
         return coreCount;
     }
+
     private void summonBoggedMinions() {
-        for (int i = 0; i < 2; i++) {
-            double angle = i * (Math.PI / 2);
-            double distance = 3.0;
+        int minionCount = getScaledMinionCount();
+
+        for (int i = 0; i < minionCount; i++) {
+            double angle = i * (Math.PI * 2 / minionCount);
+            double distance = 3.0 + (i % 2) * 1.5;
             double x = this.getX() + Math.cos(angle) * distance;
             double z = this.getZ() + Math.sin(angle) * distance;
 
@@ -1128,13 +1168,13 @@ public class HavenicaEntity extends HostileEntity {
 
         Box messageRange = this.getBoundingBox().expand(20.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                player -> player.sendMessage(Text.literal("§2§l⚘ §a§lHavenica §r§2summons §6§lBogged Guardians§r§2! §2⚘"), true)
+                player -> player.sendMessage(Text.literal("Â§2Â§lâš˜ Â§aÂ§lHavenica Â§rÂ§2summons Â§6Â§l" + minionCount + " Bogged GuardiansÂ§rÂ§2! Â§2âš˜"), true)
         );
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BOGGED_AMBIENT,
                 this.getSoundCategory(), 1.0f, 0.8f);
 
-        boggedSummonCooldown = BOGGED_SUMMON_COOLDOWN;
+        boggedSummonCooldown = getScaledCooldown(BASE_BOGGED_SUMMON_COOLDOWN);
     }
 
     private void useToxicLaser(PlayerEntity target) {
@@ -1153,9 +1193,29 @@ public class HavenicaEntity extends HostileEntity {
 
         Vec3d perpendicular = new Vec3d(-directionToPlayer.z, 0, directionToPlayer.x).normalize();
 
+        int playerCount = countNearbyPlayers();
+
         lockedLaserTargets[0] = extendedTarget;
-        lockedLaserTargets[1] = extendedTarget.add(perpendicular.multiply(1.2));
-        lockedLaserTargets[2] = extendedTarget.subtract(perpendicular.multiply(1.2));
+        if (playerCount >= 2) {
+            lockedLaserTargets[1] = extendedTarget.add(perpendicular.multiply(1.2));
+        } else {
+            lockedLaserTargets[1] = null;
+        }
+        if (playerCount >= 3) {
+            lockedLaserTargets[2] = extendedTarget.subtract(perpendicular.multiply(1.2));
+
+            if (playerCount >= 4) {
+                Vec3d diagonalLeft = perpendicular.multiply(0.8).add(directionToPlayer.multiply(0.6));
+                Vec3d diagonalRight = perpendicular.multiply(-0.8).add(directionToPlayer.multiply(0.6));
+
+                if (this.random.nextBoolean()) {
+                    lockedLaserTargets[1] = extendedTarget.add(diagonalLeft.multiply(1.5));
+                    lockedLaserTargets[2] = extendedTarget.add(diagonalRight.multiply(1.5));
+                }
+            }
+        } else {
+            lockedLaserTargets[2] = null;
+        }
 
         Box messageRange = this.getBoundingBox().expand(20.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
@@ -1179,7 +1239,7 @@ public class HavenicaEntity extends HostileEntity {
     }
 
     private boolean hasValidLaserTargets() {
-        return lockedLaserTargets[0] != null && lockedLaserTargets[1] != null && lockedLaserTargets[2] != null;
+        return lockedLaserTargets[0] != null;
     }
 
     private void clearLaserTargets() {
@@ -1192,10 +1252,13 @@ public class HavenicaEntity extends HostileEntity {
         if (!hasValidLaserTargets() || this.getWorld().isClient()) return;
 
         Vec3d start = new Vec3d(this.getX(), this.getY() + 1.5, this.getZ());
-        double intensity = (double) toxicLaserChargeTicks / LASER_CHARGE_TIME;
+        int scaledChargeTime = getScaledDuration(BASE_LASER_CHARGE_TIME);
+        double intensity = (double) toxicLaserChargeTicks / scaledChargeTime;
         int particleCount = (int)(3 + intensity * 7);
 
         for (int laserIndex = 0; laserIndex < 3; laserIndex++) {
+            if (lockedLaserTargets[laserIndex] == null) continue;
+
             Vec3d end = lockedLaserTargets[laserIndex];
             Vec3d direction = end.subtract(start);
             double distance = direction.length();
@@ -1247,8 +1310,11 @@ public class HavenicaEntity extends HostileEntity {
         if (!hasValidLaserTargets() || this.getWorld().isClient()) return;
 
         Vec3d start = new Vec3d(this.getX(), this.getY() + 1.5, this.getZ());
+        float scaledDamage = getScaledDamage(8.0f);
 
         for (int laserIndex = 0; laserIndex < 3; laserIndex++) {
+            if (lockedLaserTargets[laserIndex] == null) continue;
+
             Vec3d end = lockedLaserTargets[laserIndex];
             Vec3d direction = end.subtract(start);
             double distance = direction.length();
@@ -1289,10 +1355,11 @@ public class HavenicaEntity extends HostileEntity {
                 List<PlayerEntity> playersInRange = this.getWorld().getNonSpectatingEntities(PlayerEntity.class, damageBox);
 
                 for (PlayerEntity player : playersInRange) {
+                    int poisonDuration = 160 + (countNearbyPlayers() - 1) * 40;
                     if (!player.hasStatusEffect(StatusEffects.POISON) || player.getStatusEffect(StatusEffects.POISON).getDuration() < 40) {
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, 160, 1));
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 160, 2));
-                        player.damage(this.getDamageSources().magic(), 8.0f);
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, poisonDuration, 1));
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, poisonDuration, 2));
+                        player.damage(this.getDamageSources().magic(), scaledDamage);
 
                         ((ServerWorld)this.getWorld()).spawnParticles(
                                 ParticleTypes.DAMAGE_INDICATOR,
@@ -1303,9 +1370,9 @@ public class HavenicaEntity extends HostileEntity {
                         );
 
                         for (double angle = 0; angle < Math.PI * 2; angle += Math.PI/6) {
-                            double radius = 1.5;
-                            double x = player.getX() + Math.cos(angle) * radius;
-                            double z = player.getZ() + Math.sin(angle) * radius;
+                            double flameRadius = 1.5;
+                            double x = player.getX() + Math.cos(angle) * flameRadius;
+                            double z = player.getZ() + Math.sin(angle) * flameRadius;
 
                             ((ServerWorld)this.getWorld()).spawnParticles(
                                     ParticleTypes.FLAME,
@@ -1330,7 +1397,7 @@ public class HavenicaEntity extends HostileEntity {
                 player -> player.sendMessage(Text.translatable("entity.mystbornhorizons.havenica.toxic_laser_fire"), true)
         );
 
-        toxicLaserCooldown = LASER_COOLDOWN;
+        toxicLaserCooldown = getScaledCooldown(BASE_LASER_COOLDOWN);
         clearLaserTargets();
 
         if (this.random.nextFloat() < 0.30f && teleportCooldown <= 0) {
@@ -1345,6 +1412,9 @@ public class HavenicaEntity extends HostileEntity {
 
     private void damagePlayersInLines() {
         if (this.getWorld().isClient()) return;
+
+        float scaledDamage = getScaledDamage(6.0f);
+        int effectDuration = 60 + (countNearbyPlayers() - 1) * 20;
 
         for (int i = 0; i < rootPillars.size(); i++) {
             Vec3d start = rootPillars.get(i);
@@ -1364,15 +1434,16 @@ public class HavenicaEntity extends HostileEntity {
 
                 this.getWorld().getNonSpectatingEntities(PlayerEntity.class, damageBox).forEach(player -> {
                     if (!player.hasStatusEffect(StatusEffects.SLOWNESS) || player.getStatusEffect(StatusEffects.SLOWNESS).getDuration() < 20) {
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 2));
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 80, 1));
-                        player.damage(this.getDamageSources().magic(), 6.0f);
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, effectDuration, 2));
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, effectDuration + 20, 1));
+                        player.damage(this.getDamageSources().magic(), scaledDamage);
 
+                        int armorDamage = 15 + (countNearbyPlayers() - 1) * 5;
                         player.getInventory().armor.forEach(itemStack -> {
                             if (!itemStack.isEmpty() && itemStack.isDamageable()) {
                                 int currentDamage = itemStack.getDamage();
                                 int maxDamage = itemStack.getMaxDamage();
-                                int newDamage = Math.min(maxDamage - 1, currentDamage + 15);
+                                int newDamage = Math.min(maxDamage - 1, currentDamage + armorDamage);
                                 itemStack.setDamage(newDamage);
                             }
                         });
@@ -1407,13 +1478,13 @@ public class HavenicaEntity extends HostileEntity {
         waveDistances.clear();
         waveDelays.clear();
 
-        waveDistances.add(0.0);
-        waveDistances.add(0.0);
-        waveDistances.add(0.0);
+        int playerCount = countNearbyPlayers();
+        int waveCount = Math.min(2 + playerCount, 5);
 
-        waveDelays.add(0);
-        waveDelays.add(20);
-        waveDelays.add(40);
+        for (int i = 0; i < waveCount; i++) {
+            waveDistances.add(0.0);
+            waveDelays.add(i * 20);
+        }
 
         Box messageRange = this.getBoundingBox().expand(20.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
@@ -1423,7 +1494,7 @@ public class HavenicaEntity extends HostileEntity {
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_WARDEN_SONIC_BOOM,
                 this.getSoundCategory(), 1.0f, 0.8f);
 
-        shockwaveCooldown = SHOCKWAVE_COOLDOWN;
+        shockwaveCooldown = getScaledCooldown(BASE_SHOCKWAVE_COOLDOWN);
     }
 
     private void tickShockwaveBlast() {
@@ -1495,6 +1566,7 @@ public class HavenicaEntity extends HostileEntity {
 
     private void damagePlayersInWave(double waveRadius) {
         double waveThickness = 0.8;
+        float scaledDamage = getScaledDamage(6.0f);
 
         Box searchBox = new Box(
                 this.getX() - waveRadius - waveThickness, this.getY() - 0.5, this.getZ() - waveRadius - waveThickness,
@@ -1510,8 +1582,9 @@ public class HavenicaEntity extends HostileEntity {
             if (Math.abs(distanceToPlayer - waveRadius) <= waveThickness &&
                     player.getY() <= this.getY() + 1.2) {
 
-                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 1));
-                player.damage(this.getDamageSources().magic(), 6.0f);
+                int slownessDuration = 60 + (countNearbyPlayers() - 1) * 15;
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, slownessDuration, 1));
+                player.damage(this.getDamageSources().magic(), scaledDamage);
 
                 Vec3d knockbackDir = new Vec3d(
                         player.getX() - this.getX(),
@@ -1545,9 +1618,11 @@ public class HavenicaEntity extends HostileEntity {
         System.out.println("DEBUG: Gardens Wrath activated!");
 
         Box freezeArea = this.getBoundingBox().expand(25.0);
+        int freezeDuration = 60 + (countNearbyPlayers() - 1) * 20;
+
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
-            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 60, 4, true, false));
-            player.sendMessage(Text.literal("§c§l⚠ §4§lHAVENICA'S RAGE AWAKENS §c§l⚠"), true);
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, freezeDuration, 4, true, false));
+            player.sendMessage(Text.literal("Â§cÂ§lâš  Â§4Â§lHAVENICA'S RAGE AWAKENS Â§cÂ§lâš "), true);
         });
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
@@ -1571,27 +1646,22 @@ public class HavenicaEntity extends HostileEntity {
 
         List<Vec3d> validHavenCorePositions = new ArrayList<>();
 
-        // Search for Haven Core entities in a 30 block radius
         Box searchArea = new Box(
                 this.getX() - 30, this.getY() - 15, this.getZ() - 30,
                 this.getX() + 30, this.getY() + 15, this.getZ() + 30
         );
 
-        // Get all entities in the search area and filter for Haven Cores
         List<Entity> nearbyEntities = this.getWorld().getOtherEntities(this, searchArea);
 
         for (Entity entity : nearbyEntities) {
-            // Check if the entity is a Haven Core (adjust the class name as needed)
             if (entity.getClass().getSimpleName().contains("HavenCore") ||
                     entity.getType().toString().contains("haven_core")) {
 
-                // Check if there's enough space around the Haven Core for teleportation
                 Vec3d corePos = entity.getPos();
 
-                // Teleport directly onto the Haven Core entity
                 double x = corePos.x;
                 double z = corePos.z;
-                double y = corePos.y + 0.5; // Slightly above the Haven Core to avoid clipping
+                double y = corePos.y + 0.5;
 
                 validHavenCorePositions.add(new Vec3d(x, y, z));
             }
@@ -1600,7 +1670,6 @@ public class HavenicaEntity extends HostileEntity {
         if (!validHavenCorePositions.isEmpty()) {
             Vec3d teleportPos = validHavenCorePositions.get(this.random.nextInt(validHavenCorePositions.size()));
 
-            // Spawn departure particles
             ((ServerWorld)this.getWorld()).spawnParticles(
                     ParticleTypes.PORTAL,
                     this.getX(), this.getY() + 1.0, this.getZ(),
@@ -1612,10 +1681,8 @@ public class HavenicaEntity extends HostileEntity {
             this.getWorld().playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_ENDERMAN_TELEPORT,
                     this.getSoundCategory(), 1.0f, 1.0f);
 
-            // Teleport to the Haven Core position
             this.refreshPositionAndAngles(teleportPos.x, teleportPos.y, teleportPos.z, this.getYaw(), this.getPitch());
 
-            // Spawn arrival particles
             ((ServerWorld)this.getWorld()).spawnParticles(
                     ParticleTypes.PORTAL,
                     this.getX(), this.getY() + 1.0, this.getZ(),
@@ -1624,7 +1691,6 @@ public class HavenicaEntity extends HostileEntity {
                     0.1
             );
 
-            // Additional Haven Core-themed particles
             ((ServerWorld)this.getWorld()).spawnParticles(
                     ParticleTypes.END_ROD,
                     this.getX(), this.getY() + 1.0, this.getZ(),
@@ -1635,14 +1701,14 @@ public class HavenicaEntity extends HostileEntity {
 
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("§5§lHavenica teleports to a nearby Haven Core!"), true)
+                    player -> player.sendMessage(Text.literal("Â§5Â§lHavenica teleports to a nearby Haven Core!"), true)
             );
 
-            teleportCooldown = TELEPORT_COOLDOWN;
+            teleportCooldown = getScaledCooldown(BASE_TELEPORT_COOLDOWN);
         } else {
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("§6Havenica searches for a Haven Core to teleport to..."), true)
+                    player -> player.sendMessage(Text.literal("Â§6Havenica searches for a Haven Core to teleport to..."), true)
             );
         }
     }
@@ -1657,7 +1723,7 @@ public class HavenicaEntity extends HostileEntity {
 
         rootPillars.add(new Vec3d(centerX, target.getY(), centerZ));
 
-        int pillarCount = isGardensWrathActive ? 8 : 6;
+        int pillarCount = isGardensWrathActive ? 8 + countNearbyPlayers() : 6 + (countNearbyPlayers() / 2);
         for (int i = 0; i < pillarCount; i++) {
             double angle = (i / (double)pillarCount) * Math.PI * 2;
             double radius = 8.0 + this.random.nextDouble() * 4.0;
