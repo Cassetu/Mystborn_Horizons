@@ -646,8 +646,8 @@ public class HavenicaEntity extends HostileEntity {
                         }
                     }
 
-                    player.sendMessage(Text.literal("Â§cÂ§lâš  Â§4Â§lHAVENICA'S POWER GROWS Â§cÂ§lâš "), false);
-                    player.sendMessage(Text.literal("Â§6Â§lWitness the awakening of the Garden's Wrath!"), false);
+                    player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lÃ¢Å¡  Ã‚Â§4Ã‚Â§lHAVENICA'S POWER GROWS Ã‚Â§cÃ‚Â§lÃ¢Å¡ "), false);
+                    player.sendMessage(Text.literal("Ã‚Â§6Ã‚Â§lWitness the awakening of the Garden's Wrath!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to initialize cutscene for player " + player.getName().getString() + ": " + e.getMessage());
                     cutscenePlayers.remove(player);
@@ -767,9 +767,9 @@ public class HavenicaEntity extends HostileEntity {
                         player.teleport(player.getServerWorld(), fallbackPos.x, fallbackPos.y, fallbackPos.z, player.getYaw(), player.getPitch());
                     }
 
-                    player.sendMessage(Text.literal("Â§2Â§lã€Ž Â§aÂ§lGARDEN'S WRATH AWAKENED Â§2Â§lã€"), true);
-                    player.sendMessage(Text.literal("Â§6The ancient forest spirit has been enraged!"), false);
-                    player.sendMessage(Text.literal("Â§cÂ§lPrepare for battle!"), false);
+                    player.sendMessage(Text.literal("Ã‚Â§2Ã‚Â§lÃ£â‚¬Å½ Ã‚Â§aÃ‚Â§lGARDEN'S WRATH AWAKENED Ã‚Â§2Ã‚Â§lÃ£â‚¬"), true);
+                    player.sendMessage(Text.literal("Ã‚Â§6The ancient forest spirit has been enraged!"), false);
+                    player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lPrepare for battle!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to restore player " + player.getName().getString() + ": " + e.getMessage());
                     try {
@@ -980,6 +980,8 @@ public class HavenicaEntity extends HostileEntity {
             if (toxicLaserCharging) {
                 toxicLaserChargeTicks++;
 
+                destroyDungeonRootmassNearPlayers();
+
                 if (hasValidLaserTargets()) {
                     createTripleLaserChargingEffect();
 
@@ -1069,6 +1071,36 @@ public class HavenicaEntity extends HostileEntity {
 
         if (this.getWorld().isClient()) {
             this.setupAnimationStates();
+        }
+    }
+
+    private void destroyDungeonRootmassNearPlayers() {
+        if (this.getWorld().isClient()) return;
+
+        BlockPos havenicaPos = this.getBlockPos().up(1);
+
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
+                    BlockPos checkPos = havenicaPos.add(x, y, z);
+                    Block block = this.getWorld().getBlockState(checkPos).getBlock();
+
+                    if (block.toString().contains("dungeon_rootmass") ||
+                            this.getWorld().getRegistryManager().get(net.minecraft.registry.RegistryKeys.BLOCK)
+                                    .getId(block).toString().equals("mystbornhorizons:dungeon_rootmass")) {
+
+                        this.getWorld().breakBlock(checkPos, true);
+
+                        ((ServerWorld)this.getWorld()).spawnParticles(
+                                ParticleTypes.EGG_CRACK,
+                                checkPos.getX() + 0.5, checkPos.getY() + 0.5, checkPos.getZ() + 0.5,
+                                8,
+                                0.5, 0.5, 0.5,
+                                0.1
+                        );
+                    }
+                }
+            }
         }
     }
 
@@ -1168,7 +1200,7 @@ public class HavenicaEntity extends HostileEntity {
 
         Box messageRange = this.getBoundingBox().expand(20.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                player -> player.sendMessage(Text.literal("Â§2Â§lâš˜ Â§aÂ§lHavenica Â§rÂ§2summons Â§6Â§l" + minionCount + " Bogged GuardiansÂ§rÂ§2! Â§2âš˜"), true)
+                player -> player.sendMessage(Text.literal("Ã‚Â§2Ã‚Â§lÃ¢Å¡Ëœ Ã‚Â§aÃ‚Â§lHavenica Ã‚Â§rÃ‚Â§2summons Ã‚Â§6Ã‚Â§l" + minionCount + " Bogged GuardiansÃ‚Â§rÃ‚Â§2! Ã‚Â§2Ã¢Å¡Ëœ"), true)
         );
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BOGGED_AMBIENT,
@@ -1399,15 +1431,6 @@ public class HavenicaEntity extends HostileEntity {
 
         toxicLaserCooldown = getScaledCooldown(BASE_LASER_COOLDOWN);
         clearLaserTargets();
-
-        if (this.random.nextFloat() < 0.30f && teleportCooldown <= 0) {
-            teleportDelayTicks = TELEPORT_DELAY;
-
-            Box teleportMessageRange = this.getBoundingBox().expand(20.0);
-            this.getWorld().getNonSpectatingEntities(PlayerEntity.class, teleportMessageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Havenica prepares to teleport..."), true)
-            );
-        }
     }
 
     private void damagePlayersInLines() {
@@ -1527,6 +1550,15 @@ public class HavenicaEntity extends HostileEntity {
             shockwaveTimer = 0;
             waveDistances.clear();
             waveDelays.clear();
+
+            if (this.random.nextFloat() < 0.45f && teleportCooldown <= 0) {
+                teleportDelayTicks = TELEPORT_DELAY;
+
+                Box teleportMessageRange = this.getBoundingBox().expand(20.0);
+                this.getWorld().getNonSpectatingEntities(PlayerEntity.class, teleportMessageRange).forEach(
+                        player -> player.sendMessage(Text.literal("Havenica prepares to teleport..."), true)
+                );
+            }
         }
     }
 
@@ -1622,7 +1654,7 @@ public class HavenicaEntity extends HostileEntity {
 
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, freezeDuration, 4, true, false));
-            player.sendMessage(Text.literal("Â§cÂ§lâš  Â§4Â§lHAVENICA'S RAGE AWAKENS Â§cÂ§lâš "), true);
+            player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lÃ¢Å¡  Ã‚Â§4Ã‚Â§lHAVENICA'S RAGE AWAKENS Ã‚Â§cÃ‚Â§lÃ¢Å¡ "), true);
         });
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
@@ -1701,14 +1733,14 @@ public class HavenicaEntity extends HostileEntity {
 
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Â§5Â§lHavenica teleports to a nearby Haven Core!"), true)
+                    player -> player.sendMessage(Text.literal("Ã‚Â§5Ã‚Â§lHavenica teleports to a nearby Haven Core!"), true)
             );
 
             teleportCooldown = getScaledCooldown(BASE_TELEPORT_COOLDOWN);
         } else {
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Â§6Havenica searches for a Haven Core to teleport to..."), true)
+                    player -> player.sendMessage(Text.literal("Ã‚Â§6Havenica searches for a Haven Core to teleport to..."), true)
             );
         }
     }
