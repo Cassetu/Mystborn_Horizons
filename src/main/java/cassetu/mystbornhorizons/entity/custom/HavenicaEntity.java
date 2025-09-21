@@ -646,8 +646,8 @@ public class HavenicaEntity extends HostileEntity {
                         }
                     }
 
-                    player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lÃ¢Å¡  Ã‚Â§4Ã‚Â§lHAVENICA'S POWER GROWS Ã‚Â§cÃ‚Â§lÃ¢Å¡ "), false);
-                    player.sendMessage(Text.literal("Ã‚Â§6Ã‚Â§lWitness the awakening of the Garden's Wrath!"), false);
+                    player.sendMessage(Text.literal("§c§l§4§lHAVENICA'S POWER GROWS §c§l "), false);
+                    player.sendMessage(Text.literal("§6§lWitness the awakening of the Garden's Wrath!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to initialize cutscene for player " + player.getName().getString() + ": " + e.getMessage());
                     cutscenePlayers.remove(player);
@@ -767,9 +767,9 @@ public class HavenicaEntity extends HostileEntity {
                         player.teleport(player.getServerWorld(), fallbackPos.x, fallbackPos.y, fallbackPos.z, player.getYaw(), player.getPitch());
                     }
 
-                    player.sendMessage(Text.literal("Ã‚Â§2Ã‚Â§lÃ£â‚¬Å½ Ã‚Â§aÃ‚Â§lGARDEN'S WRATH AWAKENED Ã‚Â§2Ã‚Â§lÃ£â‚¬"), true);
-                    player.sendMessage(Text.literal("Ã‚Â§6The ancient forest spirit has been enraged!"), false);
-                    player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lPrepare for battle!"), false);
+                    player.sendMessage(Text.literal("§2§l§a§lGARDEN'S WRATH AWAKENED §2§l"), true);
+                    player.sendMessage(Text.literal("§6The ancient forest spirit has been enraged!"), false);
+                    player.sendMessage(Text.literal("§c§lPrepare for battle!"), false);
                 } catch (Exception e) {
                     System.out.println("ERROR: Failed to restore player " + player.getName().getString() + ": " + e.getMessage());
                     try {
@@ -1200,7 +1200,7 @@ public class HavenicaEntity extends HostileEntity {
 
         Box messageRange = this.getBoundingBox().expand(20.0);
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                player -> player.sendMessage(Text.literal("Ã‚Â§2Ã‚Â§lÃ¢Å¡Ëœ Ã‚Â§aÃ‚Â§lHavenica Ã‚Â§rÃ‚Â§2summons Ã‚Â§6Ã‚Â§l" + minionCount + " Bogged GuardiansÃ‚Â§rÃ‚Â§2! Ã‚Â§2Ã¢Å¡Ëœ"), true)
+                player -> player.sendMessage(Text.literal("§2§l§a§lHavenica §r§2summons §6§l" + minionCount + " Bogged Guardians§r§2!§2"), true)
         );
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_BOGGED_AMBIENT,
@@ -1654,7 +1654,7 @@ public class HavenicaEntity extends HostileEntity {
 
         this.getWorld().getNonSpectatingEntities(PlayerEntity.class, freezeArea).forEach(player -> {
             player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, freezeDuration, 4, true, false));
-            player.sendMessage(Text.literal("Ã‚Â§cÃ‚Â§lÃ¢Å¡  Ã‚Â§4Ã‚Â§lHAVENICA'S RAGE AWAKENS Ã‚Â§cÃ‚Â§lÃ¢Å¡ "), true);
+            player.sendMessage(Text.literal("§c§l §4§lHAVENICA'S RAGE AWAKENS §c§l "), true);
         });
 
         this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_ENDER_DRAGON_GROWL,
@@ -1733,14 +1733,14 @@ public class HavenicaEntity extends HostileEntity {
 
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Ã‚Â§5Ã‚Â§lHavenica teleports to a nearby Haven Core!"), true)
+                    player -> player.sendMessage(Text.literal("§5§lHavenica teleports to a nearby Haven Core!"), true)
             );
 
             teleportCooldown = getScaledCooldown(BASE_TELEPORT_COOLDOWN);
         } else {
             Box messageRange = this.getBoundingBox().expand(20.0);
             this.getWorld().getNonSpectatingEntities(PlayerEntity.class, messageRange).forEach(
-                    player -> player.sendMessage(Text.literal("Ã‚Â§6Havenica searches for a Haven Core to teleport to..."), true)
+                    player -> player.sendMessage(Text.literal("§6Havenica searches for a Haven Core to teleport to..."), true)
             );
         }
     }

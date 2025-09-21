@@ -1,4 +1,4 @@
-// 1.21.1	2025-09-20T16:55:34.9388302	Mystborn Horizons/Recipes
+// 1.21.1	2025-09-20T17:40:44.8245561	Mystborn Horizons/Recipes
 43d0c68f42491d09b024a3bad970d45796869cc3 data\mystbornhorizons\advancement\recipes\combat\froststone_helmet.json
 cfd2c4a15a6b0db6c29cf0b3069f57d7c0c7f77c data\mystbornhorizons\advancement\recipes\tools\froststone_hoe.json
 dc3fd7c38d7c7958dbf53718345b2f2e946fe261 data\mystbornhorizons\recipe\froststone_helmet.json
@@ -23,6 +23,7 @@ d0947d8f047651ad0cddb9cc2d26be0db99badfb data\mystbornhorizons\advancement\recip
 5b57f521bb71ab8bd21128a2f230b74e3647d3f2 data\mystbornhorizons\advancement\recipes\tools\froststone_pickaxe.json
 598b949ed65081495ebd4d9e095a63568590ddf2 data\mystbornhorizons\recipe\froststone_sword.json
 b1d0f05af4cbf06cf0adea94154c41dce414d55b data\mystbornhorizons\advancement\recipes\combat\froststone_boots.json
+e98386cfe6ac0a2b170d7ea5c0b334e146f91f55 data\mystbornhorizons\advancement\recipes\misc\forest_haven_music_disc.json
 3e78a1dd7fc33ce795d5215a744d9862085a061b data\mystbornhorizons\advancement\recipes\misc\froststone_from_smelting_froststone_ore.json
 a8c7df5b19a49d29dbd2040e2246529c16a42ddd data\mystbornhorizons\recipe\froststone_from_smelting_raw_froststone.json
 34050d77837132ea54f5c9ccd0d50c3963890909 data\mystbornhorizons\advancement\recipes\misc\stormite_from_smelting_stormite_deepslate_ore.json
@@ -101,3 +102,4 @@ e5b6f5d375c783b10e90d3a0a2709fe162916845 data\mystbornhorizons\advancement\recip
 5966c806bb5bf6c426087432bb351ff93a0cbf0b data\mystbornhorizons\recipe\molten_gold_basalt.json
 c6f522e0a166a619a65e5eba22113c1543d27ee8 data\mystbornhorizons\advancement\recipes\building_blocks\froststone.json
 94dc9513056fd98e1d1b457dfe087eb3036fa0c3 data\mystbornhorizons\recipe\royal_froststone_sword.json
+8ceeec02ed43e2920bc0243cfa6a2c226126f3c1 data\mystbornhorizons\recipe\forest_haven_music_disc.json

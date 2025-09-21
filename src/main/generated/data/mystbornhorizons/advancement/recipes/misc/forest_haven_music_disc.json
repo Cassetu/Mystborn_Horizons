@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_forest_haven_disc_fragment": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:forest_haven_disc_fragment"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_luminite": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:luminite"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mystbornhorizons:forest_haven_music_disc"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_forest_haven_disc_fragment",
+      "has_luminite"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mystbornhorizons:forest_haven_music_disc"
+    ]
+  }
+}

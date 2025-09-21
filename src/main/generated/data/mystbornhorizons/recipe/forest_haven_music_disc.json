@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "mystbornhorizons:forest_haven_disc_fragment"
+    },
+    "L": {
+      "item": "mystbornhorizons:luminite"
+    }
+  },
+  "pattern": [
+    "FFF",
+    "FLF",
+    "FFF"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:forest_haven_music_disc"
+  }
+}
