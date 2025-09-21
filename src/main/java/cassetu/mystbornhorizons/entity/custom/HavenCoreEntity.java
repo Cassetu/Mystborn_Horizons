@@ -3,22 +3,28 @@ package cassetu.mystbornhorizons.entity.custom;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.item.ModItems;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,7 +50,7 @@ public class HavenCoreEntity extends HostileEntity {
 
     public static DefaultAttributeContainer.Builder createAttributes() {
         return MobEntity.createMobAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, BASE_HEALTH) // Base health, will be adjusted
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, BASE_HEALTH)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 0)
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20)
@@ -71,13 +77,44 @@ public class HavenCoreEntity extends HostileEntity {
 
             int playerCount = nearbyPlayers.size();
             float newMaxHealth = BASE_HEALTH + (playerCount * HEALTH_PER_PLAYER);
-
             this.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
-            this.setHealth(newMaxHealth);
+            this
+            .setHealth(newMaxHealth);
 
             hasSetPlayerBasedHealth = true;
 
             System.out.println("HavenCore spawned with " + playerCount + " players nearby. Health set to: " + newMaxHealth);
+        }
+    }
+
+    @Override
+    protected void dropLoot(DamageSource damageSource, boolean causedByPlayer) {
+        super.dropLoot(damageSource, causedByPlayer);
+
+        if (!this.getWorld().isClient()) {
+            ItemStack discFragment = Registries.ITEM.get(Identifier.of("mystbornhorizons", "forest_haven_disc_fragment")).getDefaultStack();
+            this.dropStack(discFragment);
+        }
+    }
+
+    @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+
+        if (!this.getWorld().isClient()) {
+            AreaEffectCloudEntity weaknessCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
+            weaknessCloud.setRadius(8.0f);
+            weaknessCloud.setDuration(1200);
+            weaknessCloud.addEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 1200, 1));
+            weaknessCloud.setOwner(this);
+            this.getWorld().spawnEntity(weaknessCloud);
+
+            AreaEffectCloudEntity slownessCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
+            slownessCloud.setRadius(8.0f);
+            slownessCloud.setDuration(1200);
+            slownessCloud.addEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 1200, 1));
+            slownessCloud.setOwner(this);
+            this.getWorld().spawnEntity(slownessCloud);
         }
     }
 

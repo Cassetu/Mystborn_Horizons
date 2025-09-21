@@ -30,6 +30,10 @@ public class ModSounds {
     public static final RegistryKey<JukeboxSong> WATER_HORIZONS_KEY =
             RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(MystbornHorizons.MOD_ID, "water_horizons"));
 
+    public static final SoundEvent FOREST_HAVEN = registerSoundEvent("forest_haven");
+    public static final RegistryKey<JukeboxSong> FOREST_HAVEN_KEY =
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(MystbornHorizons.MOD_ID, "forest_haven"));
+
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = Identifier.of(MystbornHorizons.MOD_ID, name);
         return Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));

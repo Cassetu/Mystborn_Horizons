@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "item.mystbornhorizons.forest_haven_music_disc.desc"
+  },
+  "length_in_seconds": 200.0,
+  "sound_event": "mystbornhorizons:forest_haven"
+}

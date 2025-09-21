@@ -217,6 +217,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.FOREST_HAVEN_MUSIC_DISC)
+                .pattern("FFF")
+                .pattern("FLF")
+                .pattern("FFF")
+                .input('F', ModItems.FOREST_HAVEN_DISC_FRAGMENT)
+                .input('L', ModItems.LUMINITE)
+                .criterion(hasItem(ModItems.FOREST_HAVEN_DISC_FRAGMENT), conditionsFromItem(ModItems.FOREST_HAVEN_DISC_FRAGMENT))
+                .criterion(hasItem(ModItems.LUMINITE), conditionsFromItem(ModItems.LUMINITE))
+                .offerTo(exporter);
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.FOREST_HEART)
                 .pattern("MEL")
                 .pattern("EVE")

@@ -52,5 +52,14 @@
       }
     ],
     "category": "record"
+  },
+  "forest_haven": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:forest_haven",
+        "stream": true
+      }
+    ],
+    "category": "record"
   }
 }

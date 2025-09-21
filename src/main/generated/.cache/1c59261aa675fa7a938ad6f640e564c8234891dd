@@ -1,4 +1,4 @@
-// 1.21.1	2025-09-15T07:30:23.4009332	Mystborn Horizons/Tags for minecraft:item
+// 1.21.1	2025-09-20T16:55:34.924708	Mystborn Horizons/Tags for minecraft:item
 928860526c4aa23e5e74e3da1eec4a5f6cd13ea7 data\minecraft\tags\item\enchantable\sword.json
 1db995bafb9ca6ef0824e4cdcaa00c9735f6bc19 data\minecraft\tags\item\hoes.json
 fe3887d27538bd32c752931d9f98c6f669b17254 data\minecraft\tags\item\trimmable_armor.json
@@ -14,6 +14,6 @@ cfca170aa4e5b31c44d482bbf02cc7410649a5c6 data\minecraft\tags\item\swords.json
 0d30d43ec52bf1a455cf595b2ed373290411f207 data\minecraft\tags\item\trim_materials.json
 f406dd7b565ec0136161e5be904c53cfb3db2209 data\minecraft\tags\item\shovels.json
 fe4b1d84e979d0055ec075117f769cbf7be9507b data\minecraft\tags\item\enchantable\equippable.json
+4f6a7727a6f7d124ad86e2c48bb4a6b74c7fbd39 data\minecraft\tags\item\enchantable\durability.json
 c5744234fb8d2a8dd4043f457d23ef66c5c390f1 data\minecraft\tags\item\enchantable\chest_armor.json
 35133e95f1c8fdd7a1c21afcc231fc0bffefb9a8 data\minecraft\tags\item\trim_templates.json
-4f6a7727a6f7d124ad86e2c48bb4a6b74c7fbd39 data\minecraft\tags\item\enchantable\durability.json

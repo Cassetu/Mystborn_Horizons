@@ -30,6 +30,7 @@ public class ModItems {
     public static final Item MOONSTONE = registerItem("moonstone", new Item(new Item.Settings()));
     public static final Item AXE_HEAD = registerItem("axe_head", new Item(new Item.Settings()));
     public static final Item LUMINITE = registerItem("luminite", new Item(new Item.Settings()));
+    public static final Item FOREST_HAVEN_DISC_FRAGMENT = registerItem("forest_haven_disc_fragment", new Item(new Item.Settings().maxCount(16)));
 
     public static final Item MYSTBORN_DUST = registerItem("mystborn_dust", new Item(new Item.Settings()));
 
@@ -202,6 +203,8 @@ public class ModItems {
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.ECHOES_OF_THE_ABYSS_KEY).maxCount(1)));
     public static final Item WATER_HORIZONS_MUSIC_DISC = registerItem("water_horizons_music_disc",
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.WATER_HORIZONS_KEY).maxCount(1)));
+    public static final Item FOREST_HAVEN_MUSIC_DISC = registerItem("forest_haven_music_disc",
+            new Item(new Item.Settings().jukeboxPlayable(ModSounds.FOREST_HAVEN_KEY).maxCount(1)));
 
     public static final Item MANTIS_SPAWN_EGG = registerItem("mantis_spawn_egg",
             new SpawnEggItem(ModEntities.MANTIS, 0x9dc783, 0xbfaf5f, new Item.Settings()));
