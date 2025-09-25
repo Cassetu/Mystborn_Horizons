@@ -16,6 +16,8 @@ public class ModEffects {
                     .addAttributeModifier(EntityAttributes.GENERIC_MOVEMENT_SPEED,
                             Identifier.of(MystbornHorizons.MOD_ID, "slimey"), -0.25f,
                             EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+    public static final RegistryEntry<StatusEffect> SPORE_VISION_EFFECT = registerStatusEffect("spore_vision_effect",
+            new SporeVisionEffect(StatusEffectCategory.HARMFUL, 0x7db35b));
 
 
     private static RegistryEntry<StatusEffect> registerStatusEffect(String name, StatusEffect statusEffect) {

@@ -95,6 +95,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.STORMITE_ORE);
                         entries.add(ModBlocks.MYSTBORN_DUST_ORE);
                         entries.add(ModBlocks.STORMITE_DEEPSLATE_ORE);
+                        entries.add(ModBlocks.TECTONITE_DEEPSLATE_ORE);
                         entries.add(ModBlocks.LUMINITE_END_ORE);
                         entries.add(ModItems.LUMINITE);
                         entries.add(ModItems.STORMITE);

@@ -132,14 +132,14 @@ public class HavenicaModel<T extends HavenicaEntity> extends SinglePartEntityMod
 
         ModelPartData part1 = cape.addChild("part1", ModelPartBuilder.create().uv(52, 16).cuboid(-7.0F, -3.0F, -1.0F, 8.0F, 4.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 5.0F, 6.0F));
 
-        ModelPartData head = root.addChild("head", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData head = root.addChild("head", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 4.0F));
 
         ModelPartData skull = head.addChild("skull", ModelPartBuilder.create().uv(0, 33).cuboid(-7.0F, -8.0F, 4.0F, 8.0F, 8.0F, 3.0F, new Dilation(0.0F))
                 .uv(0, 20).cuboid(-7.0F, -7.0F, -2.0F, 8.0F, 7.0F, 6.0F, new Dilation(0.0F))
                 .uv(48, 36).cuboid(-7.0F, -6.0F, -4.0F, 8.0F, 5.0F, 2.0F, new Dilation(0.0F))
-                .uv(54, 43).cuboid(-6.0F, -1.0F, -4.0F, 6.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+                .uv(54, 43).cuboid(-6.0F, -1.0F, -4.0F, 6.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, -4.0F));
 
-        ModelPartData horns = head.addChild("horns", ModelPartBuilder.create(), ModelTransform.of(1.0F, 1.0F, -7.0F, 0.0F, 0.2618F, 0.0F));
+        ModelPartData horns = head.addChild("horns", ModelPartBuilder.create(), ModelTransform.of(1.0F, 1.0F, -11.0F, 0.0F, 0.2618F, 0.0F));
 
         ModelPartData horn1 = horns.addChild("horn1", ModelPartBuilder.create().uv(56, 66).cuboid(-2.0F, -8.0F, -1.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-1.0F, -1.0F, 7.0F));
 
@@ -157,9 +157,9 @@ public class HavenicaModel<T extends HavenicaEntity> extends SinglePartEntityMod
 
         ModelPartData left = arms.addChild("left", ModelPartBuilder.create().uv(22, 43).cuboid(1.0F, 0.0F, 1.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
 
-        ModelPartData right = arms.addChild("right", ModelPartBuilder.create().uv(40, 0).cuboid(-11.0F, 0.0F, 1.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData right = arms.addChild("right", ModelPartBuilder.create().uv(40, 0).cuboid(-11.0F, -1.0F, -2.0F, 4.0F, 12.0F, 4.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 1.0F, 3.0F));
 
-        ModelPartData staff = right.addChild("staff", ModelPartBuilder.create().uv(0, 0).cuboid(-2.0F, -2.0F, -8.0F, 2.0F, 2.0F, 18.0F, new Dilation(0.0F)), ModelTransform.pivot(-8.0F, 12.0F, 2.0F));
+        ModelPartData staff = right.addChild("staff", ModelPartBuilder.create().uv(0, 0).cuboid(-2.0F, -2.0F, -8.0F, 2.0F, 2.0F, 18.0F, new Dilation(0.0F)), ModelTransform.pivot(-8.0F, 11.0F, -1.0F));
 
         ModelPartData cube_r23 = staff.addChild("cube_r23", ModelPartBuilder.create().uv(48, 66).cuboid(-3.0F, -3.0F, 0.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F))
                 .uv(66, 4).cuboid(-3.0F, -3.0F, -12.0F, 2.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, 2.0F, 6.0F, 0.0F, 0.0F, 0.7854F));
@@ -175,9 +175,13 @@ public class HavenicaModel<T extends HavenicaEntity> extends SinglePartEntityMod
     public void setAngles(HavenicaEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.getPart().traverse().forEach(ModelPart::resetTransform);
         this.setHeadAngles(netHeadYaw, headPitch);
-
-//        this.animateMovement(havenicaAnimations.RAWR, limbSwing, limbSwingAmount, 2f, 2.5f);
-//        this.updateAnimation(entity.idleAnimationState, MantisAnimations.ANIM_MANTIS_IDLE, ageInTicks, 1f);
+        if (entity.isDead() || entity.deathAnimationState.isRunning()) {
+            this.updateAnimation(entity.deathAnimationState, HavenicaAnimations.DEATH, ageInTicks, 1f);
+        } else if (entity.castSpellAnimationState.isRunning()) {
+            this.updateAnimation(entity.castSpellAnimationState, HavenicaAnimations.CAST_SPELL, ageInTicks, 1f);
+        } else {
+            this.updateAnimation(entity.idleAnimationState, HavenicaAnimations.IDLE, ageInTicks, 1f);
+        }
     }
 
     private void setHeadAngles(float headYaw, float headPitch) {

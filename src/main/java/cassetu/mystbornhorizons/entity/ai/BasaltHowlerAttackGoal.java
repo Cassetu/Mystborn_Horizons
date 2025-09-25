@@ -5,7 +5,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -16,12 +15,6 @@ import net.minecraft.util.math.Vec3d;
 import java.util.EnumSet;
 import java.util.List;
 
-/**
- * BasaltHowlerAttackGoal - A custom AI goal for the Basalt Howler entity
- * This goal provides a slow but powerful golem with special attack behaviors:
- * - Tremor attack that damages nearby entities when it stomps
- * - Charged howl that slows and weakens enemies within range
- */
 public class BasaltHowlerAttackGoal extends Goal {
     private final PathAwareEntity basaltHowler;
     private final double speed;
@@ -40,11 +33,11 @@ public class BasaltHowlerAttackGoal extends Goal {
     private AttackPhase currentPhase = AttackPhase.APPROACH;
 
     private enum AttackPhase {
-        APPROACH,    // Moving toward target
-        CHARGING,    // Charging up attack
-        HOWL,        // Performing howl attack
-        TREMOR,      // Performing tremor attack
-        COOLDOWN     // Post-attack cooldown
+        APPROACH,
+        CHARGING,
+        HOWL,
+        TREMOR,
+        COOLDOWN
     }
 
     public BasaltHowlerAttackGoal(PathAwareEntity entity, double speed, float attackDistance, int cooldownTicks) {
@@ -52,11 +45,11 @@ public class BasaltHowlerAttackGoal extends Goal {
         this.speed = speed;
         this.attackDistanceSq = attackDistance * attackDistance;
         this.cooldownTicks = cooldownTicks;
-        this.chargeTime = 30; // 1.5 seconds at 20 ticks per second
-        this.trembleDuration = 20; // 1 seconds of trembling
-        this.tremorRadius = 3.5f; // Block radius for tremor attack
-        this.howlRadius = 6.0f; // Block radius for howl attack
-        this.attackDamage = 9.0f; // Base damage for attacks
+        this.chargeTime = 10;
+        this.trembleDuration = 20;
+        this.tremorRadius = 3.5f;
+        this.howlRadius = 6.0f;
+        this.attackDamage = 12.0f;
 
         this.setControls(EnumSet.of(Goal.Control.MOVE, Goal.Control.LOOK));
     }
@@ -93,7 +86,6 @@ public class BasaltHowlerAttackGoal extends Goal {
         LivingEntity target = this.basaltHowler.getTarget();
         if (target == null) return;
 
-        // Handle different attack phases
         switch (currentPhase) {
             case APPROACH:
                 handleApproachPhase(target);
@@ -119,23 +111,18 @@ public class BasaltHowlerAttackGoal extends Goal {
     private void handleApproachPhase(LivingEntity target) {
         double distanceSq = this.basaltHowler.squaredDistanceTo(target);
 
-        // Move toward the target
         this.basaltHowler.getNavigation().startMovingTo(target, this.speed);
         this.basaltHowler.getLookControl().lookAt(target, 30.0F, 30.0F);
 
-        // When close enough, decide attack type and start charging
         if (distanceSq <= this.attackDistanceSq) {
-            // 30% chance of howl attack, 70% chance of tremor attack when in range
             boolean useHowlAttack = this.basaltHowler.getRandom().nextFloat() < 0.3f;
 
             currentPhase = AttackPhase.CHARGING;
             isCharging = true;
             chargeTicksLeft = chargeTime;
 
-            // Stop movement during charge
             this.basaltHowler.getNavigation().stop();
 
-            // Play pre-attack sound
             this.basaltHowler.getWorld().playSound(
                     null,
                     this.basaltHowler.getX(),
@@ -150,7 +137,6 @@ public class BasaltHowlerAttackGoal extends Goal {
     }
 
     private void handleChargingPhase(LivingEntity target) {
-        // Visual charging effects - 1.21.1 approach using ServerWorld
         if (chargeTicksLeft % 5 == 0 && basaltHowler.getWorld() instanceof ServerWorld serverWorld) {
             double offsetX, offsetY, offsetZ;
             for (int i = 0; i < 3; i++) {
@@ -163,9 +149,9 @@ public class BasaltHowlerAttackGoal extends Goal {
                         this.basaltHowler.getX() + offsetX,
                         this.basaltHowler.getY() + 0.5 + offsetY,
                         this.basaltHowler.getZ() + offsetZ,
-                        1, // particle count
-                        0.0, 0.05, 0.0, // velocity
-                        0.0 // speed
+                        1,
+                        0.0, 0.05, 0.0,
+                        0.0
                 );
 
                 serverWorld.spawnParticles(
@@ -173,21 +159,18 @@ public class BasaltHowlerAttackGoal extends Goal {
                         this.basaltHowler.getX() + offsetX,
                         this.basaltHowler.getY() + 0.5 + offsetY,
                         this.basaltHowler.getZ() + offsetZ,
-                        2, // particle count
-                        0.0, 0.2, 0.0, // velocity
-                        0.02 // speed
+                        2,
+                        0.0, 0.2, 0.0,
+                        0.02
                 );
             }
         }
 
-        // Decrease charge timer
         chargeTicksLeft--;
 
-        // When charge complete, execute attack
         if (chargeTicksLeft <= 0) {
             isCharging = false;
 
-            // Decide attack type (same chance as when starting charging)
             boolean useHowlAttack = this.basaltHowler.getRandom().nextFloat() < 0.3f;
 
             if (useHowlAttack) {
@@ -202,7 +185,6 @@ public class BasaltHowlerAttackGoal extends Goal {
     private void handleTremorPhase() {
         trembleTicksLeft--;
 
-        // Visual effects for trembling - updated for 1.21.1
         if (basaltHowler.getWorld() instanceof ServerWorld serverWorld) {
             for (int i = 0; i < 4; i++) {
                 double offsetX = this.basaltHowler.getRandom().nextFloat() * 2.0 - 1.0;
@@ -213,14 +195,13 @@ public class BasaltHowlerAttackGoal extends Goal {
                         this.basaltHowler.getX() + offsetX,
                         this.basaltHowler.getY(),
                         this.basaltHowler.getZ() + offsetZ,
-                        1, // particle count
-                        0.0, 0.2, 0.0, // velocity
-                        0.02 // speed
+                        1,
+                        0.0, 0.2, 0.0,
+                        0.02
                 );
             }
         }
 
-        // When trembling is complete, perform the tremor attack
         if (trembleTicksLeft <= 0) {
             performTremorAttack();
             currentPhase = AttackPhase.COOLDOWN;
@@ -229,7 +210,6 @@ public class BasaltHowlerAttackGoal extends Goal {
     }
 
     private void performTremorAttack() {
-        // Play tremor sound
         this.basaltHowler.getWorld().playSound(
                 null,
                 this.basaltHowler.getX(),
@@ -241,9 +221,7 @@ public class BasaltHowlerAttackGoal extends Goal {
                 0.5F
         );
 
-        // Create a visual effect of dust and rocks - updated for 1.21.1
         if (basaltHowler.getWorld() instanceof ServerWorld serverWorld) {
-            // Spawn particles in a circular pattern for tremor effect
             for (int i = 0; i < 80; i++) {
                 double angle = i * (Math.PI * 2) / 80;
                 double distance = tremorRadius * (0.3 + 0.7 * this.basaltHowler.getRandom().nextFloat());
@@ -255,27 +233,25 @@ public class BasaltHowlerAttackGoal extends Goal {
                         this.basaltHowler.getX() + offsetX,
                         this.basaltHowler.getY() + 0.1,
                         this.basaltHowler.getZ() + offsetZ,
-                        1, // particle count
-                        0.0, 0.05, 0.0, // velocity
-                        0.0 // speed
+                        1,
+                        0.0, 0.05, 0.0,
+                        0.0
                 );
 
-                // Add falling dust particles for better effect
                 if (i % 4 == 0) {
                     serverWorld.spawnParticles(
                             ParticleTypes.WHITE_ASH,
                             this.basaltHowler.getX() + offsetX,
                             this.basaltHowler.getY() + 0.3,
                             this.basaltHowler.getZ() + offsetZ,
-                            1, // particle count
-                            0.0, 0.0, 0.0, // velocity
-                            0.0 // speed
+                            1,
+                            0.0, 0.0, 0.0,
+                            0.0
                     );
                 }
             }
         }
 
-        // Damage and knock back entities caught in tremor
         Box attackBox = new Box(
                 this.basaltHowler.getX() - tremorRadius, this.basaltHowler.getY(), this.basaltHowler.getZ() - tremorRadius,
                 this.basaltHowler.getX() + tremorRadius, this.basaltHowler.getY() + 2.0, this.basaltHowler.getZ() + tremorRadius
@@ -288,29 +264,25 @@ public class BasaltHowlerAttackGoal extends Goal {
         for (LivingEntity entity : affectedEntities) {
             float damage = attackDamage;
 
-            // Deal reduced damage based on distance
             double distSq = entity.squaredDistanceTo(this.basaltHowler);
             float distanceFactor = (float) (1.0 - Math.sqrt(distSq) / (tremorRadius + 0.5));
             damage *= Math.max(0.5, distanceFactor);
 
             entity.damage(this.basaltHowler.getWorld().getDamageSources().mobAttack(this.basaltHowler), damage);
 
-            // Calculate knockback direction and power
             Vec3d knockbackVec = entity.getPos().subtract(this.basaltHowler.getPos()).normalize();
             double knockbackStrength = 0.7 * (1.0 - Math.sqrt(distSq) / tremorRadius);
 
-            // Apply knockback - 1.21.1 method with velocity
             entity.addVelocity(
                     knockbackVec.x * knockbackStrength,
                     0.2 * knockbackStrength,
                     knockbackVec.z * knockbackStrength
             );
-            entity.velocityModified = true; // Important flag to update velocity
+            entity.velocityModified = true;
         }
     }
 
     private void performHowlAttack(LivingEntity target) {
-        // Play howl sound
         this.basaltHowler.getWorld().playSound(
                 null,
                 this.basaltHowler.getX(),
@@ -322,7 +294,6 @@ public class BasaltHowlerAttackGoal extends Goal {
                 0.8F
         );
 
-        // Visual effects for the howl - updated for 1.21.1
         if (basaltHowler.getWorld() instanceof ServerWorld serverWorld) {
             for (int i = 0; i < 60; i++) {
                 double angle = i * (Math.PI * 2) / 60;
@@ -335,27 +306,25 @@ public class BasaltHowlerAttackGoal extends Goal {
                         this.basaltHowler.getX() + offsetX,
                         this.basaltHowler.getY() + 0.5,
                         this.basaltHowler.getZ() + offsetZ,
-                        1, // particle count
-                        0.0, 0.05, 0.0, // velocity
-                        0.01 // speed
+                        1,
+                        0.0, 0.05, 0.0,
+                        0.01
                 );
 
-                // Add additional wave effect particles
                 if (i % 6 == 0) {
                     serverWorld.spawnParticles(
                             ParticleTypes.SCULK_CHARGE_POP,
                             this.basaltHowler.getX() + offsetX * 0.8,
                             this.basaltHowler.getY() + 0.7,
                             this.basaltHowler.getZ() + offsetZ * 0.8,
-                            1, // particle count
-                            0.0, 0.02, 0.0, // velocity
-                            0.01 // speed
+                            1,
+                            0.0, 0.02, 0.0,
+                            0.01
                     );
                 }
             }
         }
 
-        // Affect entities caught in howl radius
         Box attackBox = new Box(
                 this.basaltHowler.getX() - howlRadius, this.basaltHowler.getY(), this.basaltHowler.getZ() - howlRadius,
                 this.basaltHowler.getX() + howlRadius, this.basaltHowler.getY() + 3.0, this.basaltHowler.getZ() + howlRadius
@@ -366,25 +335,21 @@ public class BasaltHowlerAttackGoal extends Goal {
         );
 
         for (LivingEntity entity : affectedEntities) {
-            // Deal sonic damage
             float damage = attackDamage * 0.7f;
 
-            // Deal reduced damage based on distance
             double distSq = entity.squaredDistanceTo(this.basaltHowler);
             float distanceFactor = (float) (1.0 - Math.sqrt(distSq) / howlRadius);
             damage *= Math.max(0.5, distanceFactor);
 
             entity.damage(this.basaltHowler.getWorld().getDamageSources().sonicBoom(this.basaltHowler), damage);
 
-            // Apply slowness and weakness effects (longer duration if closer)
-            int baseDuration = 100; // 5 seconds
+            int baseDuration = 100;
             int scaledDuration = (int) (baseDuration * Math.max(0.5, distanceFactor));
 
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, scaledDuration, 1));
             entity.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, scaledDuration, 0));
         }
 
-        // Move to cooldown phase
         currentPhase = AttackPhase.COOLDOWN;
         attackCooldown = cooldownTicks;
     }

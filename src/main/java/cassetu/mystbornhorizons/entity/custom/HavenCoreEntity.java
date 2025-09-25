@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.entity.custom;
 
+import cassetu.mystbornhorizons.effect.ModEffects;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.item.ModItems;
 import net.minecraft.entity.AnimationState;
@@ -25,6 +26,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ModStatus;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,19 +104,26 @@ public class HavenCoreEntity extends HostileEntity {
         super.onDeath(damageSource);
 
         if (!this.getWorld().isClient()) {
-            AreaEffectCloudEntity weaknessCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
-            weaknessCloud.setRadius(8.0f);
-            weaknessCloud.setDuration(1200);
-            weaknessCloud.addEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 1200, 1));
-            weaknessCloud.setOwner(this);
-            this.getWorld().spawnEntity(weaknessCloud);
+            AreaEffectCloudEntity instantdamageCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
+            instantdamageCloud.setRadius(2.0f);
+            instantdamageCloud.setDuration(150);
+            instantdamageCloud.addEffect(new StatusEffectInstance(StatusEffects.INSTANT_DAMAGE, 20, 0));
+            instantdamageCloud.setOwner(this);
+            this.getWorld().spawnEntity(instantdamageCloud);
 
             AreaEffectCloudEntity slownessCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
             slownessCloud.setRadius(8.0f);
-            slownessCloud.setDuration(1200);
-            slownessCloud.addEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 1200, 1));
+            slownessCloud.setDuration(300);
+            slownessCloud.addEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20, 1));
             slownessCloud.setOwner(this);
             this.getWorld().spawnEntity(slownessCloud);
+
+            AreaEffectCloudEntity sporeCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
+            sporeCloud.setRadius(5.0f);
+            sporeCloud.setDuration(430);
+            sporeCloud.addEffect(new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, 120, 1));
+            sporeCloud.setOwner(this);
+            this.getWorld().spawnEntity(sporeCloud);
         }
     }
 

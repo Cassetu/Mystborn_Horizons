@@ -49,7 +49,7 @@ public class ModPlacedFeatures {
                         HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(80))));
         register(context, MOLTEN_GOLD_BASALT_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.MOLTEN_GOLD_BASALT_KEY),
                 ModOrePlacement.modifiersWithCount(38,
-                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(80))));
+                        HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(160))));
         register(context, SALONDITE_ORE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SALONDITE_ORE_KEY),
                 ModOrePlacement.modifiersWithCount(14,
                         HeightRangePlacementModifier.uniform(YOffset.fixed(-80), YOffset.fixed(200))));

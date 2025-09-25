@@ -1,5 +1,7 @@
 package cassetu.mystbornhorizons.entity.custom;
 
+import cassetu.mystbornhorizons.effect.ModEffects;
+import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
@@ -50,12 +52,15 @@ import java.util.stream.Collectors;
 public class HavenicaEntity extends HostileEntity {
     private ServerBossBar bossBar;
     private Set<ServerPlayerEntity> playersHearingMusic = new HashSet<>();
+    private int deathAnimationTimer = 0;
+    private static final int DEATH_ANIMATION_LENGTH = 30;
 
     private boolean cutsceneActive = false;
     private int cutsceneTick = 0;
     private Set<ServerPlayerEntity> cutscenePlayers = new HashSet<>();
     private Map<ServerPlayerEntity, GameMode> originalGameModes = new HashMap<>();
     private Map<ServerPlayerEntity, Vec3d> originalPositions = new HashMap<>();
+    private boolean isDying = false;
 
     private int shockwaveCooldown = 0;
     private static final int BASE_SHOCKWAVE_COOLDOWN = 500;
@@ -65,6 +70,10 @@ public class HavenicaEntity extends HostileEntity {
     private List<Integer> waveDelays = new ArrayList<>();
     private static final double WAVE_SPEED = 1.4;
     private static final double MAX_WAVE_DISTANCE = 15.0;
+
+    public final AnimationState deathAnimationState = new AnimationState();
+    public final AnimationState castSpellAnimationState = new AnimationState();
+    private int castSpellAnimationTimeout = 0;
 
     private int toxicLaserCooldown = 0;
     private int rootNetworkCooldown = 0;
@@ -99,6 +108,9 @@ public class HavenicaEntity extends HostileEntity {
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
+    public boolean isDying() {
+        return this.isDying;
+    }
     public HavenicaEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
         this.setCustomNameVisible(true);
@@ -238,11 +250,19 @@ public class HavenicaEntity extends HostileEntity {
     }
 
     private void setupAnimationStates() {
+        if (isDying || castSpellAnimationTimeout > 0) {
+            return;
+        }
+
         if (this.idleAnimationTimeout <= 0) {
-            this.idleAnimationTimeout = 40;
+            this.idleAnimationTimeout = 80;
             this.idleAnimationState.start(this.age);
         } else {
             --this.idleAnimationTimeout;
+        }
+
+        if (castSpellAnimationTimeout > 0) {
+            castSpellAnimationTimeout--;
         }
     }
 
@@ -918,9 +938,37 @@ public class HavenicaEntity extends HostileEntity {
     }
 
     @Override
-    public void onDeath(DamageSource damageSource) {
-        super.onDeath(damageSource);
+    public boolean damage(DamageSource source, float amount) {
+        if (isDying) {
+            return false;
+        }
 
+        boolean result = super.damage(source, amount);
+
+        if (this.getHealth() <= 0 && !isDying) {
+            this.setHealth(1.0f);
+            isDying = true;
+            deathAnimationTimer = 0;
+
+            if (!this.getWorld().isClient()) {
+
+                for (ServerPlayerEntity player : playersHearingMusic) {
+                    ModPackets.sendToPlayer(
+                            new BossMusicPacket(false, null),
+                            player
+                    );
+                }
+                playersHearingMusic.clear();
+            }
+            this.deathAnimationState.start(this.age);
+
+            return false;
+        }
+
+        return result;
+    }
+
+    public void handleActualDeath() {
         if (!this.getWorld().isClient()) {
             for (ServerPlayerEntity player : playersHearingMusic) {
                 ModPackets.sendToPlayer(
@@ -929,8 +977,53 @@ public class HavenicaEntity extends HostileEntity {
                 );
             }
             playersHearingMusic.clear();
+
+            ServerWorld serverWorld = (ServerWorld) this.getWorld();
+            HavenicaDefeatState defeatState = HavenicaDefeatState.getOrCreate(serverWorld);
+
+            if (!defeatState.isHavenicaDefeated()) {
+                defeatState.setHavenicaDefeated(serverWorld);
+
+                Box notificationRange = this.getBoundingBox().expand(50.0);
+                this.getWorld().getNonSpectatingEntities(PlayerEntity.class, notificationRange).forEach(player -> {
+                    player.sendMessage(Text.literal("§4§l⚡ HAVENICA HAS FALLEN! ⚡"), false);
+                    player.sendMessage(Text.literal("§c§lThe Garden's corruption spreads across the world..."), false);
+                    player.sendMessage(Text.literal("§6§lMobs will now spawn with enhanced armor and abilities!"), false);
+                });
+
+                cassetu.mystbornhorizons.world.ForestsCurseState curseState = cassetu.mystbornhorizons.world.ForestsCurseState.getOrCreate(serverWorld);
+                curseState.activateCurse(serverWorld);
+
+                this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_WITHER_SPAWN,
+                        this.getSoundCategory(), 2.0f, 0.5f);
+
+                for (int i = 0; i < 50; i++) {
+                    double x = this.getX() + (this.random.nextDouble() - 0.5) * 40;
+                    double y = this.getY() + this.random.nextDouble() * 10;
+                    double z = this.getZ() + (this.random.nextDouble() - 0.5) * 40;
+
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.LARGE_SMOKE,
+                            x, y, z,
+                            5,
+                            1.0, 1.0, 1.0,
+                            0.1
+                    );
+
+                    ((ServerWorld)this.getWorld()).spawnParticles(
+                            ParticleTypes.SOUL_FIRE_FLAME,
+                            x, y, z,
+                            3,
+                            0.5, 0.5, 0.5,
+                            0.05
+                    );
+                }
+            }
         }
+
+        super.onDeath(this.getDamageSources().generic());
     }
+
 
     @Override
     public void tick() {
@@ -942,6 +1035,19 @@ public class HavenicaEntity extends HostileEntity {
 
         if (cutsceneActive) {
             handleCutscene();
+        }
+
+        if (isDying) {
+            deathAnimationTimer++;
+            if (deathAnimationTimer >= DEATH_ANIMATION_LENGTH) {
+                this.setHealth(0.0f);
+                this.handleActualDeath();
+                return;
+            }
+            if (this.getWorld().isClient()) {
+                this.setupAnimationStates();
+            }
+            return;
         }
 
         if (!this.getWorld().isClient()) {
@@ -1390,7 +1496,7 @@ public class HavenicaEntity extends HostileEntity {
                     int poisonDuration = 160 + (countNearbyPlayers() - 1) * 40;
                     if (!player.hasStatusEffect(StatusEffects.POISON) || player.getStatusEffect(StatusEffects.POISON).getDuration() < 40) {
                         player.addStatusEffect(new StatusEffectInstance(StatusEffects.POISON, poisonDuration, 1));
-                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, poisonDuration, 2));
+                        player.addStatusEffect(new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, poisonDuration, 2));
                         player.damage(this.getDamageSources().magic(), scaledDamage);
 
                         ((ServerWorld)this.getWorld()).spawnParticles(
@@ -1762,6 +1868,11 @@ public class HavenicaEntity extends HostileEntity {
             double x = centerX + Math.cos(angle) * radius;
             double z = centerZ + Math.sin(angle) * radius;
             rootPillars.add(new Vec3d(x, target.getY(), z));
+        }
+
+        if (!this.getWorld().isClient()) {
+            this.castSpellAnimationTimeout = 60;
+            this.castSpellAnimationState.start(this.age);
         }
 
         Box messageRange = this.getBoundingBox().expand(20.0);

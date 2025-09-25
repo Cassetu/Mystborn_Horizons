@@ -197,4 +197,48 @@ public class HavenicaAnimations {
                                     Transformation.Interpolations.LINEAR),
                             new Keyframe(0.5f, AnimationHelper.createRotationalVector(0f, -17.5f, 0f),
                                     Transformation.Interpolations.LINEAR))).build();
+    public static final Animation IDLE = Animation.Builder.create(4f).looping()
+            .addBoneAnimation("part1",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2f, AnimationHelper.createRotationalVector(2.5f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(4f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC)))
+            .addBoneAnimation("part2",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2f, AnimationHelper.createRotationalVector(1.5f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(4f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC)))
+            .addBoneAnimation("part3",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2f, AnimationHelper.createRotationalVector(1f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(4f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC)))
+            .addBoneAnimation("head",
+                    new Transformation(Transformation.Targets.ROTATE,
+                            new Keyframe(0f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(1f, AnimationHelper.createRotationalVector(0f, 2.5f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(3f, AnimationHelper.createRotationalVector(0f, -2.5f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(4f, AnimationHelper.createRotationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC)))
+            .addBoneAnimation("body",
+                    new Transformation(Transformation.Targets.TRANSLATE,
+                            new Keyframe(0f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(2f, AnimationHelper.createTranslationalVector(0f, 0.2f, 0f),
+                                    Transformation.Interpolations.CUBIC),
+                            new Keyframe(4f, AnimationHelper.createTranslationalVector(0f, 0f, 0f),
+                                    Transformation.Interpolations.CUBIC)))
+            .build();
 }
