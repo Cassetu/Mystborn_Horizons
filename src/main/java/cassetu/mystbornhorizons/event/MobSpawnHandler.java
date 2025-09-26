@@ -67,8 +67,9 @@ public class MobSpawnHandler {
 
                 if (isValidSpawnLocation(world, spawnPos)) {
                     EntityType<?>[] mobTypes = {
-                            EntityType.ZOMBIE, EntityType.SKELETON, EntityType.CREEPER,
-                            EntityType.SPIDER, EntityType.ENDERMAN
+                            EntityType.ZOMBIE, EntityType.WITCH, EntityType.BOGGED,
+                            EntityType.SPIDER, EntityType.ENDERMAN, EntityType.VINDICATOR,
+                            EntityType.SKELETON
                     };
 
                     EntityType<?> chosenType = mobTypes[world.getRandom().nextInt(mobTypes.length)];

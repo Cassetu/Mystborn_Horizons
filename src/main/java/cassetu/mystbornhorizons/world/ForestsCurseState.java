@@ -220,7 +220,7 @@ public class ForestsCurseState extends PersistentState {
 
         StatusEffectInstance effect = new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, 300, 0, false, true);
         cloud.addEffect(effect);
-        cloud.setParticleType(ParticleTypes.ITEM_COBWEB);
+        cloud.setParticleType(ParticleTypes.SCRAPE);
 
         world.spawnEntity(cloud);
     }

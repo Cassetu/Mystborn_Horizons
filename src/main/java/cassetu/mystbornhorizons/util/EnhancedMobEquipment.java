@@ -32,13 +32,11 @@ public class EnhancedMobEquipment {
             equipEnhancedArmor(mob, world, random);
             applyPostDefeatBuffs(mob, random);
 
-            // Set all equipment slots to never drop
             preventEquipmentDrops(mob);
         }
     }
 
     private static void preventEquipmentDrops(MobEntity mob) {
-        // Set drop chance to 0% for all equipment slots
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             mob.setEquipmentDropChance(slot, 0.0f);
         }

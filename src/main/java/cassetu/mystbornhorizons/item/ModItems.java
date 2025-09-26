@@ -31,6 +31,7 @@ public class ModItems {
     public static final Item AXE_HEAD = registerItem("axe_head", new Item(new Item.Settings()));
     public static final Item LUMINITE = registerItem("luminite", new Item(new Item.Settings()));
     public static final Item FOREST_HAVEN_DISC_FRAGMENT = registerItem("forest_haven_disc_fragment", new Item(new Item.Settings().maxCount(16)));
+    public static final Item CURSE_ESSENCE = registerItem("curse_essence", new Item(new Item.Settings()));
 
     public static final Item MYSTBORN_DUST = registerItem("mystborn_dust", new Item(new Item.Settings()));
 

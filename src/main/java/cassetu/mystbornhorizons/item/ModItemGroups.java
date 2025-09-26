@@ -26,6 +26,7 @@ public class ModItemGroups {
                         entries.add(ModItems.VANQUISHER_SWORD);
                         entries.add(ModItems.MOONSTONE_RAPIER);
                         entries.add(ModItems.FOREST_HEART);
+                        entries.add(ModItems.CURSE_ESSENCE);
 
                         entries.add(ModItems.MANTIS_SPAWN_EGG);
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
