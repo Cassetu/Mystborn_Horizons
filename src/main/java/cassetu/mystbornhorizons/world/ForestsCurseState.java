@@ -62,7 +62,7 @@ public class ForestsCurseState extends PersistentState {
                     curseBossBar.addPlayer(player);
                 }
                 player.sendMessage(Text.literal("§4§lThe Forest's Curse has begun!"), false);
-                player.sendMessage(Text.literal("§6Kill infected mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
+                player.sendMessage(Text.literal("§6Kill cursed mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
             }
         }
     }
@@ -74,7 +74,7 @@ public class ForestsCurseState extends PersistentState {
             this.markDirty();
 
             for (ServerPlayerEntity player : world.getPlayers()) {
-                player.sendMessage(Text.literal("§6Curse Progress: " + mobsKilled + "/" + MOBS_NEEDED + " infected mobs killed"), true);
+                player.sendMessage(Text.literal("§6Curse Progress: " + mobsKilled + "/" + MOBS_NEEDED + " cursed mobs killed"), true);
             }
 
             if (mobsKilled >= MOBS_NEEDED) {
@@ -100,7 +100,7 @@ public class ForestsCurseState extends PersistentState {
             world.iterateEntities().forEach(entity -> {
                 if (entity instanceof HostileEntity && entity.hasCustomName() &&
                         entity.getCustomName() != null &&
-                        entity.getCustomName().getString().contains("Infected")) {
+                        entity.getCustomName().getString().contains("Cursed")) {
                     entity.discard();
                 }
             });
@@ -151,7 +151,7 @@ public class ForestsCurseState extends PersistentState {
         if (curseBossBar != null) {
             float progress = (float) mobsKilled / MOBS_NEEDED;
             curseBossBar.setPercent(progress);
-            curseBossBar.setName(Text.literal("§4Forest's Curse §r- Kill Infected Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
+            curseBossBar.setName(Text.literal("§4Forest's Curse §r- Kill Cursed Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
         }
     }
 

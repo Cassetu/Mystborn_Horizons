@@ -30,11 +30,17 @@ public class EnhancedMobEquipment {
         float enhancementChance = calculateEnhancementChance(world, state.getDefeatTime());
 
         if (random.nextFloat() < enhancementChance) {
-            equipEnhancedArmor(mob, world, random);
+            equipEnhancedArmor(mob, world, random, false);
             applyPostDefeatBuffs(mob, random);
-
             preventEquipmentDrops(mob);
         }
+    }
+
+    public static void equipCursedMob(MobEntity mob, ServerWorld world) {
+        Random random = mob.getRandom();
+        equipEnhancedArmor(mob, world, random, true);
+        applyCursedBuffs(mob, random);
+        preventEquipmentDrops(mob);
     }
 
     private static void preventEquipmentDrops(MobEntity mob) {
@@ -50,9 +56,14 @@ public class EnhancedMobEquipment {
         return Math.min(0.8f, 0.3f + (daysPassedTicks * 0.05f));
     }
 
-    private static void equipEnhancedArmor(MobEntity mob, ServerWorld world, Random random) {
+    private static void equipEnhancedArmor(MobEntity mob, ServerWorld world, Random random, boolean isCursed) {
         equipSpecificWeapon(mob, world, random);
-        setInfectedName(mob);
+
+        if (isCursed) {
+            setCursedName(mob);
+        } else {
+            setInfectedName(mob);
+        }
 
         if (random.nextFloat() < 0.8f) {
             ItemStack helmet = createEnhancedHelmet(random, world);
@@ -84,6 +95,13 @@ public class EnhancedMobEquipment {
         String mobTypeName = mob.getType().getName().getString();
         String infectedName = "§2Infected §r" + mobTypeName;
         mob.setCustomName(net.minecraft.text.Text.literal(infectedName));
+        mob.setCustomNameVisible(true);
+    }
+
+    private static void setCursedName(MobEntity mob) {
+        String mobTypeName = mob.getType().getName().getString();
+        String cursedName = "§4Cursed §r" + mobTypeName;
+        mob.setCustomName(net.minecraft.text.Text.literal(cursedName));
         mob.setCustomNameVisible(true);
     }
 
@@ -368,6 +386,25 @@ public class EnhancedMobEquipment {
         }
     }
 
+    private static void applyCursedBuffs(MobEntity mob, Random random) {
+        if (random.nextFloat() < 0.8f) {
+            float healthMultiplier = 2.0f + (random.nextFloat() * 1.5f);
+            if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH) != null) {
+                mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH)
+                        .setBaseValue(mob.getMaxHealth() * healthMultiplier);
+                mob.setHealth(mob.getMaxHealth());
+            }
+        }
+
+        if (random.nextFloat() < 0.7f) {
+            float damageMultiplier = 1.5f + (random.nextFloat() * 1.0f);
+            if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
+                mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE)
+                        .setBaseValue(mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue() * damageMultiplier);
+            }
+        }
+    }
+
     public static void applyCorruptionEffects(MobEntity mob, ServerWorld world) {
         if (world.getRandom().nextFloat() < 0.25f) {
             mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
@@ -426,6 +463,59 @@ public class EnhancedMobEquipment {
                         8,
                         0.3, 0.3, 0.3,
                         0.02
+                );
+            }
+        }
+    }
+
+    public static void applyCurseEffects(MobEntity mob, ServerWorld world) {
+        if (world.getRandom().nextFloat() < 0.4f) {
+            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+                    StatusEffects.RESISTANCE,
+                    3600,
+                    3,
+                    false,
+                    true
+            ));
+        }
+
+        if (world.getRandom().nextFloat() < 0.3f) {
+            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+                    StatusEffects.REGENERATION,
+                    3600,
+                    2,
+                    false,
+                    true
+            ));
+        }
+
+        if (world.getTime() % 15 == 0) {
+            int particleCount = 3 + world.getRandom().nextInt(4);
+            for (int i = 0; i < particleCount; i++) {
+                double offsetX = (world.getRandom().nextDouble() - 0.5) * 1.5;
+                double offsetY = world.getRandom().nextDouble() * 2.0 + 0.3;
+                double offsetZ = (world.getRandom().nextDouble() - 0.5) * 1.5;
+
+                world.spawnParticles(
+                        net.minecraft.particle.ParticleTypes.SOUL_FIRE_FLAME,
+                        mob.getX() + offsetX,
+                        mob.getY() + offsetY,
+                        mob.getZ() + offsetZ,
+                        1,
+                        0.15, 0.15, 0.15,
+                        0.02
+                );
+            }
+
+            if (world.getRandom().nextFloat() < 0.4f) {
+                world.spawnParticles(
+                        ParticleTypes.CRIMSON_SPORE,
+                        mob.getX(),
+                        mob.getY() + 1.5,
+                        mob.getZ(),
+                        10,
+                        0.4, 0.4, 0.4,
+                        0.03
                 );
             }
         }

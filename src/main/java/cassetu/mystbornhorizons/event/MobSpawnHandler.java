@@ -79,8 +79,8 @@ public class MobSpawnHandler {
                         mob.initialize(world, world.getLocalDifficulty(spawnPos), SpawnReason.EVENT, null);
 
                         if (shouldEnhanceMob(mob)) {
-                            EnhancedMobEquipment.equipPostHavenicaMob(mob, world);
-                            EnhancedMobEquipment.applyCorruptionEffects(mob, world);
+                            EnhancedMobEquipment.equipCursedMob(mob, world);
+                            EnhancedMobEquipment.applyCurseEffects(mob, world);
 
                             world.spawnParticles(
                                     net.minecraft.particle.ParticleTypes.SOUL_FIRE_FLAME,

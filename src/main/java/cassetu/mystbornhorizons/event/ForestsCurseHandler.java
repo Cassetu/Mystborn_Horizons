@@ -14,12 +14,13 @@ public class ForestsCurseHandler {
     public static void register() {
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
             if (entity instanceof HostileEntity hostileEntity && entity.getWorld() instanceof ServerWorld serverWorld) {
-                if (entity.hasCustomName() && entity.getCustomName() != null &&
-                        entity.getCustomName().getString().contains("Infected")) {
-
-                    ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
-                    if (curseState.isCurseActive()) {
-                        curseState.addMobKill(serverWorld);
+                if (entity.hasCustomName() && entity.getCustomName() != null) {
+                    String name = entity.getCustomName().getString();
+                    if (name.contains("Cursed")) {
+                        ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
+                        if (curseState.isCurseActive()) {
+                            curseState.addMobKill(serverWorld);
+                        }
                     }
                 }
             }

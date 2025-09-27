@@ -88,7 +88,7 @@ public class MystbornCommands {
                                     if (curseState.isCurseActive()) {
                                         int mobsKilled = curseState.getMobsKilled();
                                         context.getSource().sendFeedback(() ->
-                                                        Text.literal("§4Forest's Curse is ACTIVE. Progress: " + mobsKilled + "/10 infected mobs killed."),
+                                                        Text.literal("§4Forest's Curse is ACTIVE. Progress: " + mobsKilled + "/10 cursed mobs killed."),
                                                 false);
                                     } else {
                                         context.getSource().sendFeedback(() ->
@@ -154,7 +154,42 @@ public class MystbornCommands {
                                         EnhancedMobEquipment.equipPostHavenicaMob(mob, world);
                                         EnhancedMobEquipment.applyCorruptionEffects(mob, world);
 
-                                        ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+                                        world.spawnParticles(
+                                                net.minecraft.particle.ParticleTypes.SPORE_BLOSSOM_AIR,
+                                                mob.getX(), mob.getY() + 1, mob.getZ(),
+                                                10,
+                                                1.0, 1.0, 1.0,
+                                                0.1
+                                        );
+
+                                        world.spawnEntity(mob);
+
+                                        context.getSource().sendFeedback(() ->
+                                                        Text.literal("§2Infected " + mob.getType().getName().getString() + " summoned!"),
+                                                false);
+                                    }
+
+                                    return 1;
+                                }))
+                        .then(CommandManager.literal("cursed")
+                                .executes(context -> {
+                                    ServerWorld world = context.getSource().getWorld();
+                                    BlockPos pos = BlockPos.ofFloored(context.getSource().getPosition());
+
+                                    EntityType<?>[] mobTypes = {
+                                            EntityType.ZOMBIE, EntityType.WITCH, EntityType.BOGGED,
+                                            EntityType.SPIDER, EntityType.ENDERMAN, EntityType.VINDICATOR,
+                                            EntityType.SKELETON
+                                    };
+
+                                    EntityType<?> chosenType = mobTypes[world.getRandom().nextInt(mobTypes.length)];
+
+                                    if (chosenType.create(world) instanceof HostileEntity mob) {
+                                        mob.refreshPositionAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
+                                        mob.initialize(world, world.getLocalDifficulty(pos), SpawnReason.COMMAND, null);
+
+                                        EnhancedMobEquipment.equipCursedMob(mob, world);
+                                        EnhancedMobEquipment.applyCurseEffects(mob, world);
 
                                         world.spawnParticles(
                                                 net.minecraft.particle.ParticleTypes.SOUL_FIRE_FLAME,
@@ -167,7 +202,7 @@ public class MystbornCommands {
                                         world.spawnEntity(mob);
 
                                         context.getSource().sendFeedback(() ->
-                                                        Text.literal("§4Infected " + mob.getType().getName().getString() + " summoned!"),
+                                                        Text.literal("§4Cursed " + mob.getType().getName().getString() + " summoned!"),
                                                 false);
                                     }
 

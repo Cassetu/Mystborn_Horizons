@@ -37,236 +37,138 @@ public class FirstSpawnBookHandler {
     private static void giveWelcomeBook(ServerPlayerEntity player) {
         ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
 
-        String page1 = "§0§lWelcome to Mystborn Horizons§r\n\n" +
-                "You have awakened in a world forever changed by ancient magics.\n\n" +
-                "§4Beware the Forest's Curse§r - when darkness falls, infected creatures roam seeking to spread corruption.\n\n" +
-                "Only by slaying the infected can the curse be lifted.";
+        String page1 = "§0§lMystborn Horizons§r\n\n" +
+                "§8Adds ores, mobs, bosses, weapons, armor, structures, foods, discs, effects, enchants & terrain.\n\n" +
+                "§8Created: 2025-03-16  §4Status: STILL IN DEVELOPMENT";
 
-        String page2 = "§0§lThe Ancient Prophecy§r\n\n" +
-                "When §4Havenica the Destroyer§r falls, reality will tear.\n\n" +
-                "Mobs will grow stronger, wearing enchanted armor and wielding cursed weapons.\n\n" +
-                "The infected will be marked by §2emerald trimmed armor§r and otherworldly glow.";
+        String page2 = "§0§lFeatures§r\n\n" +
+                "§8- New ores, tools & armor\n" +
+                "§8- Bosses, mobs & structures\n" +
+                "§8- Music discs & custom food\n" +
+                "§8- Effects, enchantments & events";
 
-        String page3 = "§0§lOres§r\n\n" +
-                "§8Froststone§r - Cold biomes\n" +
-                "§8Stormite§r - Nether\n" +
-                "§4Salondite§r - Badlands (rare)\n" +
-                "§8Tectonite Geode§r - Deep underground\n" +
-                "§8Moonstone§r - Deepslate\n" +
-                "§8Luminite§r - End dimension\n" +
-                "§5Mystborn Dust§r - Rarest material, glows";
+        String page3 = "§0§lMisc§r\n\n" +
+                "§8Shard Block: damages like magma; ignores Frost Walker.\n" +
+                "§8Slimy (command): wall-climb ability.\n" +
+                "§8Spore Vision: nausea, blindness, phantom visuals.";
 
-        String page4 = "§0§lWeapons§r\n\n" +
-                "§8Froststone Tools§r - Basic tier\n" +
-                "§8Moonstone Rapier§r - Fast attacks\n" +
-                "§8Royal Froststone Sword§r - Enhanced with gold\n" +
-                "§4Royal Tectonite Sword§r - Very powerful\n" +
-                "§8Peacekeeper Sword§r - Combines both royal swords\n" +
-                "§4Vanquisher Sword§r - Ultimate weapon";
+        String page4 = "§0§lMusic Discs§r\n\n" +
+                "§8Titan Sands, Doomsday, Water Horizons,\n" +
+                "§8Ender Fury, Echoes of the Abyss, Forest Haven.";
 
-        String page5 = "§0§lArmor & Tools§r\n\n" +
-                "§8Froststone Armor Set§r:\n" +
-                "- Helmet (75 durability)\n" +
-                "- Chestplate (75 durability)\n" +
-                "- Leggings (75 durability)\n" +
-                "- Boots (75 durability)\n\n" +
-                "§4Tomahawk§r - Throwing weapon, returns to you";
+        String page5 = "§0§lMobs§r\n\n" +
+                "§8Mantis: passive; plains/flower/cherry; breed w/ cauliflower.\n" +
+                "§8Copper Bulb: hostile; lush/dripstone caves; drops copper/Power Cores.\n" +
+                "§8Ice Spider: hostile; cold biomes & caves; drops Froststone.";
 
-        String page6 = "§0§lBuilding Blocks§r\n\n" +
-                "§8Froststone Block§r - Made from 9 froststone\n" +
-                "§8Myst Bricks§r - Deepslate + mystborn dust\n" +
-                "§8Molten Gold Blackstone§r - Decorative\n" +
-                "§8Molten Gold Basalt§r - Decorative\n" +
-                "§8Packed Ice Bricks§r - Never melts";
+        String page6 = "§0§lBasalt Howler§r\n\n" +
+                "§8Hostile, fire & poison immune.\n" +
+                "§8Charged AoE knockback (lava particles while charging).\n" +
+                "§8Howl: applies slowness & weakness.\n" +
+                "§8Drops: molten gold blocks, gold, rare netherite scrap.";
 
-        String page7 = "§0§lSpecial Blocks§r\n\n" +
-                "§2Dungeon Rootmass§r - Very strong, drops 3-5 roots\n\n" +
-                "§8Dungeon Cobble§r - Unbreakable\n\n" +
-                "§8Shard Block§r - Damages when stepped on, creates bubble columns\n\n" +
-                "§2Ancient Grove Altar§r - Ritual site for Forest Heart";
+        String page7 = "§0§lHavenica (Boss)§r\n\n" +
+                "§8Summon: right-click Forest Heart on Ancient Grove Altar (Moss Arena).\n" +
+                "§8Multi-phase. Scales with players. Heals from Haven Orbs unless glowing.";
 
-        String page8 = "§0§lFood Items§r\n\n" +
-                "§8Cauliflower§r - Mantis food\n" +
-                "§4Power Core§r - Temporary strength\n" +
-                "§2Honey Berries§r - From bushes\n" +
-                "§8Root§r - Basic food\n" +
-                "§8Salmon/Cod Nigiri§r\n" +
-                "§8Waffle§r\n" +
-                "§8Chicken Nuggets§r\n" +
-                "§8Veggie Sandwich§r\n\n" +
-                "§2Forest Heart§r - Key item";
+        String page8 = "§0§lHavenica Attacks§r\n\n" +
+                "§8Root Network: pillars + wither/slowness; damages armor.\n" +
+                "§8Shockwave: 3 waves, knockback & damage.\n" +
+                "§8Teleport: moves to Haven Cores.\n" +
+                "§8Toxic Laser: charged poison beams; dodge when charging.";
 
-        String page9 = "§0§lMantis§r\n\n" +
-                "Peaceful creature\n" +
-                "Health: 18 HP\n" +
-                "Speed: 0.35\n" +
-                "Loves cauliflower\n" +
-                "Can be bred\n" +
-                "Spawns: plains, cherry groves, flower forests\n" +
-                "Makes parrot sounds";
+        String page9 = "§0§lOres (1)§r\n\n" +
+                "§8Froststone: cold biomes (Y -80 to 80).\n" +
+                "§8Tectonite: overworld (Y -80 to 80).\n" +
+                "§8Mystborn Dust: overworld, very rare (Y -80 to 80).";
 
-        String page10 = "§0§lCopper Bulb§r\n\n" +
-                "Hostile cave dweller\n" +
-                "Health: 60 HP\n" +
-                "Damage: 2.5\n" +
-                "Speed: 0.24\n" +
-                "Attack Speed: 20\n" +
-                "Immune to poison\n" +
-                "Spawns: lush caves, dripstone caves";
+        String page10 = "§0§lOres (2)§r\n\n" +
+                "§8Moonstone: overworld low Y (-80 to -15).\n" +
+                "§8Stormite: Nether high Y (80 to 127).\n" +
+                "§8Luminite: End (Y -80 to 80).\n" +
+                "§8Salondite: Badlands variants (Y -80 to 160).";
 
-        String page11 = "§0§lIce Spider§r\n\n" +
-                "Cold biome predator\n" +
-                "Health: 20 HP\n" +
-                "Damage: 2\n" +
-                "Speed: 0.28\n" +
-                "Attack Speed: 22\n" +
-                "Immune to poison\n" +
-                "Spawns: cold biomes\n" +
-                "Makes spider sounds";
+        String page11 = "§0§lWeapons§r\n\n" +
+                "§8PeaceKeeper Sword: 10,000 durability; enchantable; above netherite.\n" +
+                "§8Vanquisher Sword: 10,000 durability; stronger; not enchantable.\n" +
+                "§8Tomahawk: throwable; pierces; retrievable; damage only when thrown.";
 
-        String page12 = "§0§lBasalt Howler§r\n\n" +
-                "Extremely dangerous\n" +
-                "Health: 90 HP\n" +
-                "Damage: 2.5\n" +
-                "Speed: 0.28\n" +
-                "Attack Speed: 34\n" +
-                "Fire immune\n" +
-                "Poison immune\n" +
-                "Special attack: 3 block range\n" +
-                "Makes blaze sounds";
+        String page12 = "§0§lArmor & Tools§r\n\n" +
+                "§8Froststone Tools/Armor: early tier.\n" +
+                "§8Moonstone Rapier: fast attacks.\n" +
+                "§8Royal Froststone/Tectonite: upgraded sword variants.";
 
-        String page13 = "§0§lHavenica Boss§r\n\n" +
-                "§2Guardian of the Grove§r\n" +
-                "Health: 1220 HP (scales with players)\n" +
-                "Cannot be moved\n" +
-                "Fire immune\n" +
-                "Has boss bar\n" +
-                "Heals every 20 ticks\n\n" +
-                "§4WARNING§r: Defeating activates world curse!";
+        String page13 = "§0§lStructures§r\n\n" +
+                "§8Jungle Pyramid, Enhanced Witch Hut, Ice Tower,\n" +
+                "§8Myst Chamber (spawns Copper Bulb), Mushroom Tower,\n" +
+                "§8Moss Arena (Havenica).";
 
-        String page14 = "§0§lHavenica Attacks§r\n\n" +
-                "§4Toxic Laser§r - Charges 60 ticks, fires poison beams\n\n" +
-                "§2Root Network§r - Root pillars then damage lines\n\n" +
-                "§8Shockwave Blast§r - Ground waves, damage and slow\n\n" +
-                "§8Bogged Summoning§r - Skeleton archers with emerald armor";
+        String page14 = "§0§lChest Loot (examples)§r\n\n" +
+                "§8Butcher Village: Chicken Nuggets, Veggie Sandwich.\n" +
+                "§8Shipwrecks: Nigiri.\n" +
+                "§8Desert Pyramid/Village: Titan Sands disc.";
 
-        String page15 = "§0§lHavenica Phase 2§r\n\n" +
-                "At 50% health:\n" +
-                "§2Garden's Wrath§r activates\n" +
-                "All attacks more frequent\n" +
-                "Can teleport to Haven Cores\n" +
-                "Summons more minions\n" +
-                "Becomes much deadlier\n\n" +
-                "Defeat triggers permanent curse";
+        String page15 = "§0§lChest Loot (cont.)§r\n\n" +
+                "§8Bastion: Doomsday disc, Stormite.\n" +
+                "§8Bastion Bridge: Molten Gold Blackstone/Basalt.\n" +
+                "§8Stronghold: Waffles; Crossing: Royal Tectonite Sword.";
 
-        String page16 = "§0§lHaven Core§r\n\n" +
-                "Support entity\n" +
-                "Health: 20 + 30 per player\n" +
-                "Cannot move\n" +
-                "Fire immune\n" +
-                "Heals Havenica\n" +
-                "Explodes when killed\n" +
-                "Drops: Forest Haven Disc Fragment\n" +
-                "Appears during summoning";
+        String page16 = "§0§lMob Drops§r\n\n" +
+                "§8Ender Dragon: Ender Fury disc.\n" +
+                "§8Creepers: drop Cauliflower.";
 
-        String page17 = "§0§lMagical Effects§r\n\n" +
-                "§2Slimey Effect§r:\n" +
-                "Climb walls when touching\n" +
-                "Speed reduces over time\n\n" +
-                "§5Spore Vision Effect§r:\n" +
-                "Dense particle clouds\n" +
-                "Causes nausea, blindness\n" +
-                "Shows phantom creatures\n" +
-                "Higher levels: darkness, slowness\n" +
-                "Very dangerous";
+        String page17 = "§0§lFoods§r\n\n" +
+                "§8Veggie Sandwich: Regeneration.\n" +
+                "§8Chicken Nugget: small chance Slowness.\n" +
+                "§8Cauliflower: chance Health Boost (from Creepers).\n" +
+                "§8Waffle: chance Resistance.\n" +
+                "§8Nigiri: chance Dolphin's Grace or Conduit Power.\n" +
+                "§8Honey Berries: small chance Instant Health.\n" +
+                "§8Power Core: strong buffs but risky.";
 
-        String page18 = "§0§lForest's Curse§r\n\n" +
-                "When active:\n" +
-                "Dark stormy sky\n" +
-                "Spore clouds everywhere\n" +
-                "All mobs get emerald armor\n" +
-                "Infected mobs stronger\n" +
-                "No equipment drops\n" +
-                "Curse strengthens daily\n\n" +
-                "Activates when Havenica dies";
+        String page18 = "§0§lBlocks§r\n\n" +
+                "§8Froststone Block, Myst Bricks, Molten Gold Blackstone/Basalt, Packed Ice Bricks.\n" +
+                "§8Dungeon Rootmass (strong), Dungeon Cobble (unbreakable), Shard Block (damages), Ancient Grove Altar.";
 
-        String page19 = "§0§lMusic Discs§r\n\n" +
-                "§4Doomsday§r\n" +
-                "§8Titan Sands§r - Craftable\n" +
-                "§5Ender Fury§r\n" +
-                "§1Echoes of the Abyss§r - Craftable\n" +
-                "§3Water Horizons§r\n" +
-                "§2Forest Haven§r - Craftable\n\n" +
-                "All max stack: 1";
+        String page19 = "§0§lWorld Gen Notes§r\n\n" +
+                "§8Froststone in cold biomes; Stormite in Nether high Y; Luminite in End; Salondite in Badlands.\n" +
+                "§8Molten gold basalt appears in basalt deltas & soul sand valleys.";
 
-        String page20 = "§0§lTomahawk Details§r\n\n" +
-                "Throwing weapon:\n" +
-                "Base damage: 12\n" +
-                "Returns to thrower\n" +
-                "Rotates while flying\n" +
-                "Can be retrieved\n\n" +
-                "Boss versions:\n" +
-                "Custom damage\n" +
-                "Particle trails\n" +
-                "Cannot be picked up";
+        String page20 = "§0§lCrafting Notes§r\n\n" +
+                "§8Froststone tools: standard recipes.\n" +
+                "§8Royal swords: base + gold.\n" +
+                "§8Peacekeeper: combines royal swords + materials.\n" +
+                "§8Vanquisher: upgraded from Peacekeeper.\n" +
+                "§8Forest Heart: emerald blocks + luminite.";
 
-        String page21 = "§0§lWorld Generation§r\n\n" +
-                "§8Froststone§r: cold biomes only\n" +
-                "§8Stormite§r: Nether only\n" +
-                "§4Salondite§r: badlands, dripstone\n" +
-                "§8Tectonite§r: overworld\n" +
-                "§8Moonstone§r: overworld\n" +
-                "§8Luminite§r: End only\n" +
-                "§5Mystborn Dust§r: overworld\n\n" +
-                "Molten gold basalt: basalt deltas, soul sand valleys";
+        String page21 = "§0§lSurvival Tips§r\n\n" +
+                "§8Make Froststone gear early.\n" +
+                "§8Tame Mantis with Cauliflower.\n" +
+                "§8Use Shard Blocks defensively.\n" +
+                "§8Stock Power Cores for fights.";
 
-        String page22 = "§0§lCrafting Notes§r\n\n" +
-                "Froststone tools: normal recipes\n" +
-                "Royal swords: base + gold\n" +
-                "Peacekeeper: both royals + materials\n" +
-                "Vanquisher: peacekeeper + more\n" +
-                "Forest Heart: emerald blocks + luminite\n" +
-                "Power Core: mystborn dust + materials\n\n" +
-                "Check recipe book for exact patterns";
+        String page22 = "§0§lFighting Havenica§r\n\n" +
+                "§8Destroy Haven Cores first.\n" +
+                "§8Avoid Root Network areas.\n" +
+                "§8Dodge Toxic Laser when charged.\n" +
+                "§8Stay mobile vs Shockwaves. Multi-player recommended.";
 
-        String page23 = "§0§lSurvival Tips§r\n\n" +
-                "Make froststone gear early\n" +
-                "Tame mantis with cauliflower\n" +
-                "Use shard blocks for defense\n" +
-                "Stock power cores for fights\n" +
-                "Avoid fighting Havenica unless ready for curse\n" +
-                "Honey berries good early food\n" +
-                "Keep tomahawks ready\n" +
-                "Build underground during curse";
+        String page23 = "§0§lWarnings§r\n\n" +
+                "§4Defeating Havenica triggers a permanent World Curse.\n\n" +
+                "§8Shard Blocks deal damage; Spore Vision is dangerous; Basalt Howlers are lethal.";
 
-        String page24 = "§0§lFighting Havenica§r\n\n" +
-                "If you must fight:\n" +
-                "Best gear (Vanquisher)\n" +
-                "Multiple players help\n" +
-                "Destroy Haven Cores first\n" +
-                "Watch laser charge particles\n" +
-                "Stay mobile for shockwaves\n" +
-                "Kill summoned bogged\n\n" +
-                "Remember: winning = permanent world curse";
+        String page24 = "§0§lUsage§r\n\n" +
+                "§8Requires Fabric API.\n" +
+                "§8Tested on Minecraft 1.21.1. May not work on other versions.\n" +
+                "§8Report issues to @Cassetu.";
 
-        String page25 = "§0§lWarnings§r\n\n" +
-                "§4Defeating Havenica permanently changes world§r\n\n" +
-                "Shard blocks damage you\n" +
-                "Spore vision very dangerous\n" +
-                "Basalt howlers extremely deadly\n" +
-                "Some weapons break but leave materials\n" +
-                "Dungeon cobble unbreakable\n" +
-                "World curse cannot be lifted";
+        String page25 = "§0§lSupport & License§r\n\n" +
+                "§8Find me: @Cassetu\n" +
+                "§8All Rights Reserved 2025 © Cassetu";
 
         String page26 = "§0§lFinal Notes§r\n\n" +
-                "This guide covers Mystborn Horizons mechanics.\n\n" +
-                "Remember:\n" +
-                "Explore carefully\n" +
-                "Craft better gear progressively\n" +
-                "Think before boss fights\n" +
-                "World curse is permanent\n" +
-                "Work with others\n\n" +
-                "§8- Cassetu§r";
+                "§8Most content is obtainable in survival.\n" +
+                "§8Check mod pages for updates and full details.";
 
         List<RawFilteredPair<Text>> pages = List.of(
                 new RawFilteredPair<>(Text.literal(page1), Optional.of(Text.literal(page1))),
