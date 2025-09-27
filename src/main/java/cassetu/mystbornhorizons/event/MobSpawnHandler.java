@@ -58,7 +58,7 @@ public class MobSpawnHandler {
         for (ServerPlayerEntity player : world.getPlayers()) {
             if (world.getRandom().nextFloat() < 0.7f) {
                 double angle = world.getRandom().nextDouble() * Math.PI * 2;
-                double distance = 16 + world.getRandom().nextDouble() * 16;
+                double distance = 18 + world.getRandom().nextDouble() * 16;
 
                 double x = player.getX() + Math.cos(angle) * distance;
                 double z = player.getZ() + Math.sin(angle) * distance;

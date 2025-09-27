@@ -5,6 +5,7 @@ import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
@@ -109,7 +110,7 @@ public class EnhancedMobEquipment {
         ItemStack helmet;
 
         float armorRoll = random.nextFloat();
-        if (armorRoll < 0.5f) {
+        if (armorRoll < 0.2f) {
             helmet = new ItemStack(Items.DIAMOND_HELMET);
         } else {
             helmet = new ItemStack(Items.IRON_HELMET);
@@ -120,19 +121,19 @@ public class EnhancedMobEquipment {
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
 
-            if (random.nextFloat() < 0.8f) {
+            if (random.nextFloat() < 0.4f) {
                 RegistryEntry<Enchantment> protection = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.PROTECTION).orElse(null);
                 if (protection != null) {
                     enchantments.add(protection, 1 + random.nextInt(2));
                 }
             }
-            if (random.nextFloat() < 0.4f) {
+            if (random.nextFloat() < 0.2f) {
                 RegistryEntry<Enchantment> unbreaking = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).orElse(null);
                 if (unbreaking != null) {
                     enchantments.add(unbreaking, 1 + random.nextInt(2));
                 }
             }
-            if (random.nextFloat() < 0.3f) {
+            if (random.nextFloat() < 0.1f) {
                 RegistryEntry<Enchantment> respiration = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.RESPIRATION).orElse(null);
                 if (respiration != null) {
                     enchantments.add(respiration, 1 + random.nextInt(2));
@@ -162,13 +163,13 @@ public class EnhancedMobEquipment {
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
 
-            if (random.nextFloat() < 0.9f) {
+            if (random.nextFloat() < 0.4f) {
                 RegistryEntry<Enchantment> protection = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.PROTECTION).orElse(null);
                 if (protection != null) {
                     enchantments.add(protection, 1 + random.nextInt(2));
                 }
             }
-            if (random.nextFloat() < 0.5f) {
+            if (random.nextFloat() < 0.2f) {
                 RegistryEntry<Enchantment> unbreaking = world.getRegistryManager().get(RegistryKeys.ENCHANTMENT).getEntry(Enchantments.UNBREAKING).orElse(null);
                 if (unbreaking != null) {
                     enchantments.add(unbreaking, 1 + random.nextInt(2));
@@ -187,7 +188,7 @@ public class EnhancedMobEquipment {
         ItemStack leggings;
 
         float armorRoll = random.nextFloat();
-        if (armorRoll < 0.5f) {
+        if (armorRoll < 0.2f) {
             leggings = new ItemStack(Items.DIAMOND_LEGGINGS);
         } else {
             leggings = new ItemStack(Items.IRON_LEGGINGS);
@@ -369,7 +370,7 @@ public class EnhancedMobEquipment {
 
     private static void applyPostDefeatBuffs(MobEntity mob, Random random) {
         if (random.nextFloat() < 0.6f) {
-            float healthMultiplier = 1.5f + (random.nextFloat() * 1.0f);
+            float healthMultiplier = 1.2f + (random.nextFloat() * 1.0f);
             if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH) != null) {
                 mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH)
                         .setBaseValue(mob.getMaxHealth() * healthMultiplier);
@@ -395,42 +396,14 @@ public class EnhancedMobEquipment {
                 mob.setHealth(mob.getMaxHealth());
             }
         }
-
-        if (random.nextFloat() < 0.7f) {
-            float damageMultiplier = 1.5f + (random.nextFloat() * 1.0f);
-            if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE) != null) {
-                mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE)
-                        .setBaseValue(mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_ATTACK_DAMAGE).getBaseValue() * damageMultiplier);
-            }
-        }
     }
 
     public static void applyCorruptionEffects(MobEntity mob, ServerWorld world) {
         if (world.getRandom().nextFloat() < 0.25f) {
-            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+            mob.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.RESISTANCE,
                     2400,
                     2,
-                    false,
-                    true
-            ));
-        }
-
-        if (world.getRandom().nextFloat() < 0.2f) {
-            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
-                    StatusEffects.REGENERATION,
-                    2400,
-                    1,
-                    false,
-                    true
-            ));
-        }
-
-        if (world.getRandom().nextFloat() < 0.2f) {
-            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
-                    StatusEffects.GLOWING,
-                    400,
-                    1,
                     false,
                     true
             ));
@@ -470,7 +443,7 @@ public class EnhancedMobEquipment {
 
     public static void applyCurseEffects(MobEntity mob, ServerWorld world) {
         if (world.getRandom().nextFloat() < 0.4f) {
-            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+            mob.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.RESISTANCE,
                     3600,
                     3,
@@ -480,10 +453,20 @@ public class EnhancedMobEquipment {
         }
 
         if (world.getRandom().nextFloat() < 0.3f) {
-            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+            mob.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.REGENERATION,
                     3600,
                     2,
+                    false,
+                    true
+            ));
+        }
+
+        if (world.getRandom().nextFloat() < 0.3f) {
+            mob.addStatusEffect(new StatusEffectInstance(
+                    StatusEffects.WITHER,
+                    3600,
+                    1,
                     false,
                     true
             ));
@@ -497,7 +480,7 @@ public class EnhancedMobEquipment {
                 double offsetZ = (world.getRandom().nextDouble() - 0.5) * 1.5;
 
                 world.spawnParticles(
-                        net.minecraft.particle.ParticleTypes.SOUL_FIRE_FLAME,
+                        ParticleTypes.FALLING_OBSIDIAN_TEAR,
                         mob.getX() + offsetX,
                         mob.getY() + offsetY,
                         mob.getZ() + offsetZ,

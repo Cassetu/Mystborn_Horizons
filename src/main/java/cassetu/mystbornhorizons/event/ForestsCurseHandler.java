@@ -56,7 +56,7 @@ public class ForestsCurseHandler {
     }
 
     private static void dropCursedEssence(HostileEntity mob, ServerWorld world) {
-        int dropCount = 1 + world.getRandom().nextInt(3);
+        int dropCount = 1;
         if (world.getRandom().nextFloat() < 0.15f) {
             dropCount += 1 + world.getRandom().nextInt(2);
         }
@@ -66,7 +66,7 @@ public class ForestsCurseHandler {
         Team team = scoreboard.getTeam(teamName);
         if (team == null) {
             team = scoreboard.addTeam(teamName);
-            team.setColor(Formatting.BLUE);
+            team.setColor(Formatting.RED);
             team.setShowFriendlyInvisibles(false);
         }
 
