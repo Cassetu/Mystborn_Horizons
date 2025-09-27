@@ -85,6 +85,8 @@ public class ModItemGroups {
                         entries.add(ModBlocks.MOLTEN_GOLD_BASALT);
                         entries.add(ModBlocks.DUNGEON_ROOTMASS);
                         entries.add(ModBlocks.DUNGEON_COBBLE);
+                        entries.add(ModBlocks.ASTRAL_CRYSTAL);
+                        entries.add(ModBlocks.CONSTELLATION_FRAGMENT);
 
                     }).build());
 

@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.util;
 
+import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -8,11 +9,11 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.Identifier;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 
@@ -81,7 +82,7 @@ public class EnhancedMobEquipment {
 
     private static void setInfectedName(MobEntity mob) {
         String mobTypeName = mob.getType().getName().getString();
-        String infectedName = "Â§2Infected Â§r" + mobTypeName;
+        String infectedName = "§2Infected §r" + mobTypeName;
         mob.setCustomName(net.minecraft.text.Text.literal(infectedName));
         mob.setCustomNameVisible(true);
     }
@@ -342,7 +343,7 @@ public class EnhancedMobEquipment {
         } else if (roll < 0.6f) {
             return new ItemStack(Items.TOTEM_OF_UNDYING);
         } else if (roll < 0.8f) {
-            return new ItemStack(Items.CROSSBOW);
+            return new ItemStack(ModItems.ROOT);
         } else {
             return new ItemStack(Items.POISONOUS_POTATO);
         }
@@ -371,20 +372,30 @@ public class EnhancedMobEquipment {
         if (world.getRandom().nextFloat() < 0.25f) {
             mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
                     StatusEffects.RESISTANCE,
-                    Integer.MAX_VALUE,
+                    2400,
                     2,
                     false,
-                    false
+                    true
             ));
         }
 
         if (world.getRandom().nextFloat() < 0.2f) {
             mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
                     StatusEffects.REGENERATION,
-                    Integer.MAX_VALUE,
+                    2400,
                     1,
                     false,
-                    false
+                    true
+            ));
+        }
+
+        if (world.getRandom().nextFloat() < 0.2f) {
+            mob.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
+                    StatusEffects.GLOWING,
+                    400,
+                    1,
+                    false,
+                    true
             ));
         }
 
@@ -408,11 +419,11 @@ public class EnhancedMobEquipment {
 
             if (world.getRandom().nextFloat() < 0.3f) {
                 world.spawnParticles(
-                        net.minecraft.particle.ParticleTypes.WITCH,
+                        ParticleTypes.TRIAL_SPAWNER_DETECTION_OMINOUS,
                         mob.getX(),
                         mob.getY() + 1.2,
                         mob.getZ(),
-                        1,
+                        8,
                         0.3, 0.3, 0.3,
                         0.02
                 );

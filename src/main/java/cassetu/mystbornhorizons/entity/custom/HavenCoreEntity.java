@@ -120,7 +120,7 @@ public class HavenCoreEntity extends HostileEntity {
 
             AreaEffectCloudEntity sporeCloud = new AreaEffectCloudEntity(this.getWorld(), this.getX(), this.getY(), this.getZ());
             sporeCloud.setRadius(5.0f);
-            sporeCloud.setDuration(430);
+            sporeCloud.setDuration(230);
             sporeCloud.addEffect(new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, 120, 1));
             sporeCloud.setOwner(this);
             this.getWorld().spawnEntity(sporeCloud);

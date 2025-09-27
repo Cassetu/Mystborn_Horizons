@@ -40,6 +40,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SHARD_BLOCK);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_ROOTMASS);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ANCIENT_GROVE_ALTAR);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ASTRAL_CRYSTAL);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.CONSTELLATION_FRAGMENT);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_COBBLE);
 

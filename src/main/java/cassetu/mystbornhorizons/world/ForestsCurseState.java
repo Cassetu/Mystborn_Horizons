@@ -5,6 +5,7 @@ import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import cassetu.mystbornhorizons.effect.ModEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -16,6 +17,7 @@ import net.minecraft.world.PersistentState;
 
 public class ForestsCurseState extends PersistentState {
     private boolean curseActive = false;
+    private boolean cursePaused = false;
     private int mobsKilled = 0;
     private static final int MOBS_NEEDED = 10;
     private ServerBossBar curseBossBar;
@@ -34,6 +36,7 @@ public class ForestsCurseState extends PersistentState {
     public static ForestsCurseState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         ForestsCurseState state = new ForestsCurseState();
         state.curseActive = nbt.getBoolean("curse_active");
+        state.cursePaused = nbt.getBoolean("curse_paused");
         state.mobsKilled = nbt.getInt("mobs_killed");
         return state;
     }
@@ -41,6 +44,7 @@ public class ForestsCurseState extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putBoolean("curse_active", curseActive);
+        nbt.putBoolean("curse_paused", cursePaused);
         nbt.putInt("mobs_killed", mobsKilled);
         return nbt;
     }
@@ -48,6 +52,7 @@ public class ForestsCurseState extends PersistentState {
     public void activateCurse(ServerWorld world) {
         if (!curseActive) {
             curseActive = true;
+            cursePaused = false;
             mobsKilled = 0;
             createBossBar();
             this.markDirty();
@@ -56,8 +61,8 @@ public class ForestsCurseState extends PersistentState {
                 if (curseBossBar != null) {
                     curseBossBar.addPlayer(player);
                 }
-                player.sendMessage(Text.literal("Â§4Â§lThe Forest's Curse has begun!"), false);
-                player.sendMessage(Text.literal("Â§6Kill infected mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
+                player.sendMessage(Text.literal("§4§lThe Forest's Curse has begun!"), false);
+                player.sendMessage(Text.literal("§6Kill infected mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
             }
         }
     }
@@ -69,7 +74,7 @@ public class ForestsCurseState extends PersistentState {
             this.markDirty();
 
             for (ServerPlayerEntity player : world.getPlayers()) {
-                player.sendMessage(Text.literal("Â§6Curse Progress: " + mobsKilled + "/" + MOBS_NEEDED + " infected mobs killed"), true);
+                player.sendMessage(Text.literal("§6Curse Progress: " + mobsKilled + "/" + MOBS_NEEDED + " infected mobs killed"), true);
             }
 
             if (mobsKilled >= MOBS_NEEDED) {
@@ -81,6 +86,7 @@ public class ForestsCurseState extends PersistentState {
     public void endCurse(ServerWorld world) {
         if (curseActive) {
             curseActive = false;
+            cursePaused = false;
             mobsKilled = 0;
 
             if (curseBossBar != null) {
@@ -102,15 +108,20 @@ public class ForestsCurseState extends PersistentState {
             this.markDirty();
 
             for (ServerPlayerEntity player : world.getPlayers()) {
-                player.sendMessage(Text.literal("Â§2Â§lThe Forest's Curse has been lifted!"), false);
-                player.sendMessage(Text.literal("Â§aThe forest returns to its natural state."), false);
+                player.sendMessage(Text.literal("§2§lThe Forest's Curse has been lifted!"), false);
+                player.sendMessage(Text.literal("§aThe forest returns to its natural state."), false);
             }
         }
     }
 
     public void onPlayerJoin(ServerPlayerEntity player) {
-        if (curseActive && curseBossBar != null) {
-            curseBossBar.addPlayer(player);
+        if (curseActive) {
+            if (curseBossBar != null) {
+                curseBossBar.addPlayer(player);
+            }
+
+            cursePaused = false;
+            this.markDirty();
         }
     }
 
@@ -120,9 +131,16 @@ public class ForestsCurseState extends PersistentState {
         }
     }
 
+    public void checkPauseState(ServerWorld world) {
+        if (curseActive && world.getPlayers().size() == 0) {
+            cursePaused = true;
+            this.markDirty();
+        }
+    }
+
     private void createBossBar() {
         curseBossBar = new ServerBossBar(
-                Text.literal("Â§4Forest's Curse"),
+                Text.literal("§4 Forest Curse"),
                 BossBar.Color.RED,
                 BossBar.Style.NOTCHED_10
         );
@@ -133,7 +151,7 @@ public class ForestsCurseState extends PersistentState {
         if (curseBossBar != null) {
             float progress = (float) mobsKilled / MOBS_NEEDED;
             curseBossBar.setPercent(progress);
-            curseBossBar.setName(Text.literal("Â§4Forest's Curse Â§r- Kill Infected Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
+            curseBossBar.setName(Text.literal("§4Forest's Curse §r- Kill Infected Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
         }
     }
 
@@ -141,14 +159,18 @@ public class ForestsCurseState extends PersistentState {
         return curseActive;
     }
 
+    public boolean isCursePaused() {
+        return cursePaused;
+    }
+
     public int getMobsKilled() {
         return mobsKilled;
     }
 
     public void tick(ServerWorld world) {
-        if (curseActive) {
+        if (curseActive && !cursePaused) {
             world.setTimeOfDay(18000);
-            world.setWeather(0, 6000, true, false);
+            world.setWeather(6000, 0, false, true);
 
             if (world.getTime() % 20 == 0) {
                 for (ServerPlayerEntity player : world.getPlayers()) {
@@ -163,7 +185,7 @@ public class ForestsCurseState extends PersistentState {
                         world.spawnParticles(
                                 net.minecraft.particle.ParticleTypes.MYCELIUM,
                                 x, y + 20, z,
-                                1,
+                                12,
                                 0.5, 0.0, 0.5,
                                 0.0
                         );
@@ -171,7 +193,7 @@ public class ForestsCurseState extends PersistentState {
                         world.spawnParticles(
                                 net.minecraft.particle.ParticleTypes.SMOKE,
                                 x, y + 1, z,
-                                2,
+                                8,
                                 1.0, 0.5, 1.0,
                                 0.05
                         );
@@ -179,7 +201,7 @@ public class ForestsCurseState extends PersistentState {
                         world.spawnParticles(
                                 net.minecraft.particle.ParticleTypes.SOUL,
                                 x, y + 1, z,
-                                1,
+                                4,
                                 2.0, 1.0, 2.0,
                                 0.02
                         );
@@ -188,7 +210,7 @@ public class ForestsCurseState extends PersistentState {
                     world.spawnParticles(
                             net.minecraft.particle.ParticleTypes.CRIMSON_SPORE,
                             playerX, player.getY() + 2, playerZ,
-                            8,
+                            9,
                             3.0, 1.0, 3.0,
                             0.1
                     );
@@ -206,20 +228,25 @@ public class ForestsCurseState extends PersistentState {
     }
 
     private void spawnSporeVisionCloud(ServerWorld world, ServerPlayerEntity player) {
-        double offsetX = (world.getRandom().nextDouble() - 0.5) * 6;
-        double offsetZ = (world.getRandom().nextDouble() - 0.5) * 6;
+        double distance = 6.0 + world.getRandom().nextDouble() * 2.0;
+        double angle = world.getRandom().nextDouble() * 2 * Math.PI;
+
+        double offsetX = Math.cos(angle) * distance;
+        double offsetZ = Math.sin(angle) * distance;
+
         double x = player.getX() + offsetX;
         double z = player.getZ() + offsetZ;
         double y = player.getY() + world.getRandom().nextDouble() * 2;
 
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, x, y, z);
-        cloud.setRadius(3.0f);
-        cloud.setDuration(200);
-        cloud.setWaitTime(20);
+        cloud.setRadius(4.0f);
+        cloud.setDuration(300);
+        cloud.setWaitTime(10);
         cloud.setRadiusGrowth(-0.005f);
 
-        StatusEffectInstance effect = new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, 300, 0, false, true);
+        StatusEffectInstance effect = new StatusEffectInstance(ModEffects.SPORE_VISION_EFFECT, 280, 0, false, true);
         cloud.addEffect(effect);
+
         cloud.setParticleType(ParticleTypes.SCRAPE);
 
         world.spawnEntity(cloud);

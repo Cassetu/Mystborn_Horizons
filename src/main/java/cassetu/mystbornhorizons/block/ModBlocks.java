@@ -5,6 +5,7 @@ import cassetu.mystbornhorizons.block.custom.AncientGroveAltarBlock;
 import cassetu.mystbornhorizons.block.custom.HoneyBerryBushBlock;
 import cassetu.mystbornhorizons.block.custom.ShardBlock;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -19,6 +20,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
 public class ModBlocks {
+
+    public static final Block ASTRAL_CRYSTAL = registerBlock("astral_crystal",
+            new Block(AbstractBlock.Settings.copy(Blocks.AMETHYST_BLOCK)
+                    .sounds(BlockSoundGroup.AMETHYST_BLOCK)
+                    .luminance(state -> 8)));
+
+    public static final Block CONSTELLATION_FRAGMENT = registerBlock("constellation_fragment",
+            new Block(AbstractBlock.Settings.copy(Blocks.END_STONE)
+                    .sounds(BlockSoundGroup.STONE)
+                    .luminance(state -> 12)));
 
     public static final Block FROSTSTONE_BLOCK = registerBlock("froststone_block",
             new Block(AbstractBlock.Settings.create().strength(2.7f).requiresTool()

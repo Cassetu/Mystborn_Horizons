@@ -1,15 +1,20 @@
 package cassetu.mystbornhorizons.command;
 
+import cassetu.mystbornhorizons.util.EnhancedMobEquipment;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import cassetu.mystbornhorizons.world.ForestsCurseState;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 public class MystbornCommands {
 
@@ -124,6 +129,48 @@ public class MystbornCommands {
                                                         Text.literal("§aThe Forest's Curse is not currently active."),
                                                 false);
                                     }
+                                    return 1;
+                                })))
+                .then(CommandManager.literal("summon")
+                        .then(CommandManager.literal("infected")
+                                .executes(context -> {
+                                    ServerWorld world = context.getSource().getWorld();
+                                    BlockPos pos = BlockPos.ofFloored(context.getSource().getPosition());
+
+                                    EntityType<?>[] mobTypes = {
+                                            EntityType.ZOMBIE, EntityType.WITCH, EntityType.BOGGED,
+                                            EntityType.SPIDER, EntityType.ENDERMAN, EntityType.VINDICATOR,
+                                            EntityType.SKELETON
+                                    };
+
+                                    EntityType<?> chosenType = mobTypes[world.getRandom().nextInt(mobTypes.length)];
+
+                                    if (chosenType.create(world) instanceof HostileEntity mob) {
+                                        mob.refreshPositionAndAngles(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
+                                        mob.initialize(world, world.getLocalDifficulty(pos), SpawnReason.COMMAND, null);
+                                        HavenicaDefeatState state = HavenicaDefeatState.getOrCreate(world);
+
+                                        state.setHavenicaDefeated(world);
+                                        EnhancedMobEquipment.equipPostHavenicaMob(mob, world);
+                                        EnhancedMobEquipment.applyCorruptionEffects(mob, world);
+
+                                        ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+
+                                        world.spawnParticles(
+                                                net.minecraft.particle.ParticleTypes.SOUL_FIRE_FLAME,
+                                                mob.getX(), mob.getY() + 1, mob.getZ(),
+                                                10,
+                                                1.0, 1.0, 1.0,
+                                                0.1
+                                        );
+
+                                        world.spawnEntity(mob);
+
+                                        context.getSource().sendFeedback(() ->
+                                                        Text.literal("§4Infected " + mob.getType().getName().getString() + " summoned!"),
+                                                false);
+                                    }
+
                                     return 1;
                                 })))
         );
