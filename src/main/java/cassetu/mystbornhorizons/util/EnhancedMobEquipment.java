@@ -54,7 +54,13 @@ public class EnhancedMobEquipment {
         long timeSinceDefeat = world.getTime() - defeatTime;
         long daysPassedTicks = timeSinceDefeat / 24000;
 
-        return Math.min(0.8f, 0.3f + (daysPassedTicks * 0.05f));
+        long cycle = daysPassedTicks % 20;
+
+        if (cycle <= 10) {
+            return 0.3f + (cycle * 0.05f);
+        } else {
+            return 0.8f - ((cycle - 10) * 0.05f);
+        }
     }
 
     private static void equipEnhancedArmor(MobEntity mob, ServerWorld world, Random random, boolean isCursed) {
@@ -369,14 +375,6 @@ public class EnhancedMobEquipment {
     }
 
     private static void applyPostDefeatBuffs(MobEntity mob, Random random) {
-        if (random.nextFloat() < 0.6f) {
-            float healthMultiplier = 1.2f + (random.nextFloat() * 1.0f);
-            if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH) != null) {
-                mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH)
-                        .setBaseValue(mob.getMaxHealth() * healthMultiplier);
-                mob.setHealth(mob.getMaxHealth());
-            }
-        }
 
         if (random.nextFloat() < 0.5f) {
             float damageMultiplier = 1.2f + (random.nextFloat() * 0.5f);
@@ -388,8 +386,8 @@ public class EnhancedMobEquipment {
     }
 
     private static void applyCursedBuffs(MobEntity mob, Random random) {
-        if (random.nextFloat() < 0.8f) {
-            float healthMultiplier = 2.0f + (random.nextFloat() * 1.5f);
+        if (random.nextFloat() < 0.4f) {
+            float healthMultiplier = 1.2f + (random.nextFloat() * 0.9f);
             if (mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH) != null) {
                 mob.getAttributeInstance(net.minecraft.entity.attribute.EntityAttributes.GENERIC_MAX_HEALTH)
                         .setBaseValue(mob.getMaxHealth() * healthMultiplier);
@@ -465,7 +463,7 @@ public class EnhancedMobEquipment {
         if (world.getRandom().nextFloat() < 0.3f) {
             mob.addStatusEffect(new StatusEffectInstance(
                     StatusEffects.WITHER,
-                    3600,
+                    120,
                     1,
                     false,
                     true

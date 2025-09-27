@@ -71,7 +71,7 @@ public class ForestsCurseHandler {
         }
 
         for (int i = 0; i < dropCount; i++) {
-            ItemStack essence = new ItemStack(ModItems.CURSE_ESSENCE);
+            ItemStack essence = new ItemStack(ModItems.CURSED_ESSENCE);
             ItemEntity itemEntity = new ItemEntity(world, mob.getX(), mob.getY() + 0.5, mob.getZ(), essence);
 
             double velocityX = (world.getRandom().nextDouble() - 0.5) * 0.3;

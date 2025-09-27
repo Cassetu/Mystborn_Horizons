@@ -1,18 +1,23 @@
 package cassetu.mystbornhorizons.event;
 
+import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.util.EnhancedMobEquipment;
 import cassetu.mystbornhorizons.world.ForestsCurseState;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.mob.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.scoreboard.Team;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.world.SpawnHelper;
 
 public class MobSpawnHandler {
 
@@ -31,6 +36,17 @@ public class MobSpawnHandler {
             }
         });
 
+        ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
+            if (entity instanceof HostileEntity hostileEntity && entity.getWorld() instanceof ServerWorld serverWorld) {
+                if (entity.hasCustomName() && entity.getCustomName() != null) {
+                    String name = entity.getCustomName().getString();
+                    if (name.contains("Infected")) {
+                        dropInfectedEssence(hostileEntity, serverWorld);
+                    }
+                }
+            }
+        });
+
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             if (world instanceof ServerWorld serverWorld) {
                 ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
@@ -42,6 +58,37 @@ public class MobSpawnHandler {
         });
     }
 
+    private static void dropInfectedEssence(HostileEntity mob, ServerWorld world) {
+        var scoreboard = world.getScoreboard();
+        String teamName = "infectedEssenceGlow";
+        Team team = scoreboard.getTeam(teamName);
+        if (team == null) {
+            team = scoreboard.addTeam(teamName);
+            team.setColor(Formatting.GREEN);
+            team.setShowFriendlyInvisibles(false);
+        }
+
+        ItemStack essence = new ItemStack(ModItems.INFECTED_ESSENCE);
+        ItemEntity itemEntity = new ItemEntity(world, mob.getX(), mob.getY() + 0.5, mob.getZ(), essence);
+
+        double velocityX = (world.getRandom().nextDouble() - 0.5) * 0.3;
+        double velocityY = world.getRandom().nextDouble() * 0.2 + 0.1;
+        double velocityZ = (world.getRandom().nextDouble() - 0.5) * 0.3;
+        itemEntity.setVelocity(velocityX, velocityY, velocityZ);
+
+        world.spawnEntity(itemEntity);
+        scoreboard.addScoreHolderToTeam(itemEntity.getUuidAsString(), team);
+        itemEntity.setGlowing(true);
+
+        world.spawnParticles(
+                ParticleTypes.HAPPY_VILLAGER,
+                mob.getX(), mob.getY() + 1, mob.getZ(),
+                8,
+                0.5, 0.5, 0.5,
+                0.05
+        );
+    }
+
     private static boolean isValidSpawnLocation(ServerWorld world, BlockPos pos) {
         if (!world.getBlockState(pos).isAir() || !world.getBlockState(pos.up()).isAir()) {
             return false;
@@ -51,12 +98,12 @@ public class MobSpawnHandler {
             return false;
         }
 
-        return world.getLightLevel(pos) < 8;
+        return world.getLightLevel(pos) < 6;
     }
 
     private static void spawnCursedMobs(ServerWorld world) {
         for (ServerPlayerEntity player : world.getPlayers()) {
-            if (world.getRandom().nextFloat() < 0.7f) {
+            if (world.getRandom().nextFloat() < 0.4f) {
                 double angle = world.getRandom().nextDouble() * Math.PI * 2;
                 double distance = 18 + world.getRandom().nextDouble() * 16;
 
@@ -67,8 +114,8 @@ public class MobSpawnHandler {
 
                 if (isValidSpawnLocation(world, spawnPos)) {
                     EntityType<?>[] mobTypes = {
-                            EntityType.ZOMBIE, EntityType.WITCH, EntityType.BOGGED,
-                            EntityType.SPIDER, EntityType.ENDERMAN, EntityType.VINDICATOR,
+                            EntityType.ZOMBIE, EntityType.BOGGED,
+                            EntityType.SPIDER, EntityType.ENDERMAN,
                             EntityType.SKELETON
                     };
 

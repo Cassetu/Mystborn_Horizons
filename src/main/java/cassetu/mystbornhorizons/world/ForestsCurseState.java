@@ -61,7 +61,7 @@ public class ForestsCurseState extends PersistentState {
                 if (curseBossBar != null) {
                     curseBossBar.addPlayer(player);
                 }
-                player.sendMessage(Text.literal("§4§lThe Forest's Curse has begun!"), false);
+                player.sendMessage(Text.literal("§4§lThe Curse has begun!"), false);
                 player.sendMessage(Text.literal("§6Kill cursed mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
             }
         }
@@ -108,8 +108,8 @@ public class ForestsCurseState extends PersistentState {
             this.markDirty();
 
             for (ServerPlayerEntity player : world.getPlayers()) {
-                player.sendMessage(Text.literal("§2§lThe Forest's Curse has been lifted!"), false);
-                player.sendMessage(Text.literal("§aThe forest returns to its natural state."), false);
+                player.sendMessage(Text.literal("§2§lThe Curse has been lifted!"), false);
+                player.sendMessage(Text.literal("§aThe world returns to its natural state."), false);
             }
         }
     }
@@ -140,7 +140,7 @@ public class ForestsCurseState extends PersistentState {
 
     private void createBossBar() {
         curseBossBar = new ServerBossBar(
-                Text.literal("§4 Forest Curse"),
+                Text.literal("§4 Curse"),
                 BossBar.Color.RED,
                 BossBar.Style.NOTCHED_10
         );
@@ -151,7 +151,7 @@ public class ForestsCurseState extends PersistentState {
         if (curseBossBar != null) {
             float progress = (float) mobsKilled / MOBS_NEEDED;
             curseBossBar.setPercent(progress);
-            curseBossBar.setName(Text.literal("§4Forest's Curse §r- Kill Cursed Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
+            curseBossBar.setName(Text.literal("§4Curse §r- Kill Cursed Mobs: " + mobsKilled + "/" + MOBS_NEEDED));
         }
     }
 
@@ -239,7 +239,7 @@ public class ForestsCurseState extends PersistentState {
         double y = player.getY() + world.getRandom().nextDouble() * 2;
 
         AreaEffectCloudEntity cloud = new AreaEffectCloudEntity(world, x, y, z);
-        cloud.setRadius(4.0f);
+        cloud.setRadius(3.5f);
         cloud.setDuration(300);
         cloud.setWaitTime(10);
         cloud.setRadiusGrowth(-0.005f);

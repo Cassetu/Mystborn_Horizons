@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "mystbornhorizons:item/curse_essence"
+    "layer0": "mystbornhorizons:item/infected_essence"
   }
 }

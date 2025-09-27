@@ -25,7 +25,15 @@ public class ModArmorMaterials {
                 map.put(ArmorItem.Type.BODY, 4);
             }), 20, SoundEvents.ITEM_ARMOR_EQUIP_DIAMOND, () -> Ingredient.ofItems(ModItems.FROSTSTONE),
                     List.of(new ArmorMaterial.Layer(Identifier.of(MystbornHorizons.MOD_ID, "froststone"))), 0,0));
-
+    public static final RegistryEntry<ArmorMaterial> RADIANT_ARMOR_MATERIAL = registerArmorMaterial("radiant_armor",
+            () -> new ArmorMaterial(Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                map.put(ArmorItem.Type.BOOTS, 2);
+                map.put(ArmorItem.Type.LEGGINGS, 5);
+                map.put(ArmorItem.Type.CHESTPLATE, 8);
+                map.put(ArmorItem.Type.HELMET, 3);
+                map.put(ArmorItem.Type.BODY, 6);
+            }), 25, SoundEvents.ITEM_ARMOR_EQUIP_ELYTRA, () -> Ingredient.ofItems(ModItems.LUMINITE),
+                    List.of(new ArmorMaterial.Layer(Identifier.of(MystbornHorizons.MOD_ID, "radiant_armor"))), 2, 0.1f));
 
 
 

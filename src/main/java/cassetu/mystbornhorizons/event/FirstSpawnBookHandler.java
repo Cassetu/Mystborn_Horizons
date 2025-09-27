@@ -77,47 +77,57 @@ public class FirstSpawnBookHandler {
                 "§8Teleport: moves to Haven Cores.\n" +
                 "§8Toxic Laser: charged poison beams; dodge when charging.";
 
-        String page9 = "§0§lOres (1)§r\n\n" +
+        String page9 = "§0§lInfected Mobs§r\n\n" +
+                "§8After defeating Havenica, random mobs become infected with enhanced equipment and stats.\n" +
+                "§8Drop Infected Essence (green glow) when killed.";
+
+        String page10 = "§0§lInfection Wave Rates§r\n\n" +
+                "§8Infection follows 20-day cycles:\n" +
+                "§8Days 0-10: 30% to 80% (rising)\n" +
+                "§8Days 11-20: 80% to 30% (falling)\n" +
+                "§8Then repeats.";
+
+        String page11 = "§0§lOres (1)§r\n\n" +
                 "§8Froststone: cold biomes (Y -80 to 80).\n" +
                 "§8Tectonite: overworld (Y -80 to 80).\n" +
                 "§8Mystborn Dust: overworld, very rare (Y -80 to 80).";
 
-        String page10 = "§0§lOres (2)§r\n\n" +
+        String page12 = "§0§lOres (2)§r\n\n" +
                 "§8Moonstone: overworld low Y (-80 to -15).\n" +
                 "§8Stormite: Nether high Y (80 to 127).\n" +
                 "§8Luminite: End (Y -80 to 80).\n" +
                 "§8Salondite: Badlands variants (Y -80 to 160).";
 
-        String page11 = "§0§lWeapons§r\n\n" +
+        String page13 = "§0§lWeapons§r\n\n" +
                 "§8PeaceKeeper Sword: 10,000 durability; enchantable; above netherite.\n" +
                 "§8Vanquisher Sword: 10,000 durability; stronger; not enchantable.\n" +
                 "§8Tomahawk: throwable; pierces; retrievable; damage only when thrown.";
 
-        String page12 = "§0§lArmor & Tools§r\n\n" +
+        String page14 = "§0§lArmor & Tools§r\n\n" +
                 "§8Froststone Tools/Armor: early tier.\n" +
                 "§8Moonstone Rapier: fast attacks.\n" +
                 "§8Royal Froststone/Tectonite: upgraded sword variants.";
 
-        String page13 = "§0§lStructures§r\n\n" +
+        String page15 = "§0§lStructures§r\n\n" +
                 "§8Jungle Pyramid, Enhanced Witch Hut, Ice Tower,\n" +
                 "§8Myst Chamber (spawns Copper Bulb), Mushroom Tower,\n" +
                 "§8Moss Arena (Havenica).";
 
-        String page14 = "§0§lChest Loot (examples)§r\n\n" +
+        String page16 = "§0§lChest Loot (examples)§r\n\n" +
                 "§8Butcher Village: Chicken Nuggets, Veggie Sandwich.\n" +
                 "§8Shipwrecks: Nigiri.\n" +
                 "§8Desert Pyramid/Village: Titan Sands disc.";
 
-        String page15 = "§0§lChest Loot (cont.)§r\n\n" +
+        String page17 = "§0§lChest Loot (cont.)§r\n\n" +
                 "§8Bastion: Doomsday disc, Stormite.\n" +
                 "§8Bastion Bridge: Molten Gold Blackstone/Basalt.\n" +
                 "§8Stronghold: Waffles; Crossing: Royal Tectonite Sword.";
 
-        String page16 = "§0§lMob Drops§r\n\n" +
+        String page18 = "§0§lMob Drops§r\n\n" +
                 "§8Ender Dragon: Ender Fury disc.\n" +
                 "§8Creepers: drop Cauliflower.";
 
-        String page17 = "§0§lFoods§r\n\n" +
+        String page19 = "§0§lFoods§r\n\n" +
                 "§8Veggie Sandwich: Regeneration.\n" +
                 "§8Chicken Nugget: small chance Slowness.\n" +
                 "§8Cauliflower: chance Health Boost (from Creepers).\n" +
@@ -126,47 +136,47 @@ public class FirstSpawnBookHandler {
                 "§8Honey Berries: small chance Instant Health.\n" +
                 "§8Power Core: strong buffs but risky.";
 
-        String page18 = "§0§lBlocks§r\n\n" +
+        String page20 = "§0§lBlocks§r\n\n" +
                 "§8Froststone Block, Myst Bricks, Molten Gold Blackstone/Basalt, Packed Ice Bricks.\n" +
                 "§8Dungeon Rootmass (strong), Dungeon Cobble (unbreakable), Shard Block (damages), Ancient Grove Altar.";
 
-        String page19 = "§0§lWorld Gen Notes§r\n\n" +
+        String page21 = "§0§lWorld Gen Notes§r\n\n" +
                 "§8Froststone in cold biomes; Stormite in Nether high Y; Luminite in End; Salondite in Badlands.\n" +
                 "§8Molten gold basalt appears in basalt deltas & soul sand valleys.";
 
-        String page20 = "§0§lCrafting Notes§r\n\n" +
+        String page22 = "§0§lCrafting Notes§r\n\n" +
                 "§8Froststone tools: standard recipes.\n" +
                 "§8Royal swords: base + gold.\n" +
                 "§8Peacekeeper: combines royal swords + materials.\n" +
                 "§8Vanquisher: upgraded from Peacekeeper.\n" +
                 "§8Forest Heart: emerald blocks + luminite.";
 
-        String page21 = "§0§lSurvival Tips§r\n\n" +
+        String page23 = "§0§lSurvival Tips§r\n\n" +
                 "§8Make Froststone gear early.\n" +
                 "§8Tame Mantis with Cauliflower.\n" +
                 "§8Use Shard Blocks defensively.\n" +
                 "§8Stock Power Cores for fights.";
 
-        String page22 = "§0§lFighting Havenica§r\n\n" +
+        String page24 = "§0§lFighting Havenica§r\n\n" +
                 "§8Destroy Haven Cores first.\n" +
                 "§8Avoid Root Network areas.\n" +
                 "§8Dodge Toxic Laser when charged.\n" +
                 "§8Stay mobile vs Shockwaves. Multi-player recommended.";
 
-        String page23 = "§0§lWarnings§r\n\n" +
+        String page25 = "§0§lWarnings§r\n\n" +
                 "§4Defeating Havenica triggers a permanent World Curse.\n\n" +
                 "§8Shard Blocks deal damage; Spore Vision is dangerous; Basalt Howlers are lethal.";
 
-        String page24 = "§0§lUsage§r\n\n" +
+        String page26 = "§0§lUsage§r\n\n" +
                 "§8Requires Fabric API.\n" +
                 "§8Tested on Minecraft 1.21.1. May not work on other versions.\n" +
                 "§8Report issues to @Cassetu.";
 
-        String page25 = "§0§lSupport & License§r\n\n" +
+        String page27 = "§0§lSupport & License§r\n\n" +
                 "§8Find me: @Cassetu\n" +
                 "§8All Rights Reserved 2025 © Cassetu";
 
-        String page26 = "§0§lFinal Notes§r\n\n" +
+        String page28 = "§0§lFinal Notes§r\n\n" +
                 "§8Most content is obtainable in survival.\n" +
                 "§8Check mod pages for updates and full details.";
 
@@ -196,7 +206,9 @@ public class FirstSpawnBookHandler {
                 new RawFilteredPair<>(Text.literal(page23), Optional.of(Text.literal(page23))),
                 new RawFilteredPair<>(Text.literal(page24), Optional.of(Text.literal(page24))),
                 new RawFilteredPair<>(Text.literal(page25), Optional.of(Text.literal(page25))),
-                new RawFilteredPair<>(Text.literal(page26), Optional.of(Text.literal(page26)))
+                new RawFilteredPair<>(Text.literal(page26), Optional.of(Text.literal(page26))),
+                new RawFilteredPair<>(Text.literal(page27), Optional.of(Text.literal(page27))),
+                new RawFilteredPair<>(Text.literal(page28), Optional.of(Text.literal(page28)))
         );
 
         WrittenBookContentComponent bookContent = new WrittenBookContentComponent(
