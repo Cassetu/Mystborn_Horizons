@@ -1,10 +1,14 @@
 {
 	"required": true,
+	"minVersion": "0.8",
 	"package": "cassetu.mystbornhorizons.mixin",
 	"compatibilityLevel": "JAVA_21",
+	"refmap": "mystbornhorizons.refmap.json",
 	"mixins": [
-		"ExampleMixin"
+		"ShardBlockPathfindingMixin"
 	],
+	"client": [],
+	"server": [],
 	"injectors": {
 		"defaultRequire": 1
 	}
