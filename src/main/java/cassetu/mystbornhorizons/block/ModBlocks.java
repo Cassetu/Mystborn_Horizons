@@ -2,6 +2,7 @@ package cassetu.mystbornhorizons.block;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
 import cassetu.mystbornhorizons.block.custom.AncientGroveAltarBlock;
+import cassetu.mystbornhorizons.block.custom.BasaltSpawnerBlock;
 import cassetu.mystbornhorizons.block.custom.HoneyBerryBushBlock;
 import cassetu.mystbornhorizons.block.custom.ShardBlock;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -68,6 +69,20 @@ public class ModBlocks {
                     .dropsNothing()
                     .allowsSpawning(Blocks::never)
                     .sounds(BlockSoundGroup.STONE)));
+
+    public static final Block BASALT_SPAWNER = registerBlock("basalt_spawner",
+            new BasaltSpawnerBlock(AbstractBlock.Settings.create()
+                    .strength(60f, 50.0f)
+                    .dropsNothing()
+                    .allowsSpawning(Blocks::never)
+                    .sounds(BlockSoundGroup.BASALT)
+                    .luminance(state -> {
+                        if (state.get(BasaltSpawnerBlock.ACTIVE)) {
+                            int wave = state.get(BasaltSpawnerBlock.WAVE);
+                            return Math.min(0, 3 + wave);
+                        }
+                        return 2;
+                    })));
 
     public static final Block FROSTSTONE_ORE = registerBlock("froststone_ore",
             new ExperienceDroppingBlock(UniformIntProvider.create(2, 5),

@@ -88,6 +88,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.DUNGEON_COBBLE);
                         entries.add(ModBlocks.ASTRAL_CRYSTAL);
                         entries.add(ModBlocks.CONSTELLATION_FRAGMENT);
+                        entries.add(ModBlocks.BASALT_SPAWNER);
 
                     }).build());
 

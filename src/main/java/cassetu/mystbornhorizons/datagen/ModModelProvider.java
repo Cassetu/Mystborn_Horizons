@@ -44,6 +44,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.CONSTELLATION_FRAGMENT);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_COBBLE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.BASALT_SPAWNER);
 
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.MYSTBORN_DUST_ORE);
         blockStateModelGenerator.registerTintableCrossBlockStateWithStages(ModBlocks.HONEY_BERRY_BUSH, BlockStateModelGenerator.TintType.NOT_TINTED,
