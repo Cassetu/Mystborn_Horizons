@@ -9,12 +9,12 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
     public static final MapCodec<BasaltSpawnerBlock> CODEC = createCodec(BasaltSpawnerBlock::new);
 
     public static final BooleanProperty ACTIVE = BooleanProperty.of("active");
-    public static final IntProperty WAVE = IntProperty.of("wave", 1, 5);
+    public static final IntProperty WAVE = IntProperty.of("wave", 1, 3);
 
     public BasaltSpawnerBlock(Settings settings) {
         super(settings);
@@ -61,7 +61,9 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
         if (!world.isClient) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof BasaltSpawnerBlockEntity spawnerEntity) {
-                if (!state.get(ACTIVE)) {
+                if (spawnerEntity.isOnCooldown()) {
+                    player.sendMessage(Text.literal("Spawner on cooldown"), true);
+                } else if (!state.get(ACTIVE)) {
                     spawnerEntity.startTrial(player);
                     world.setBlockState(pos, state.with(ACTIVE, true).with(WAVE, 1));
                     world.playSound(null, pos, SoundEvents.BLOCK_TRIAL_SPAWNER_SPAWN_MOB,
@@ -132,7 +134,7 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
     public void updateWave(World world, BlockPos pos, int newWave) {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() == this && state.get(ACTIVE)) {
-            world.setBlockState(pos, state.with(WAVE, Math.min(5, newWave)));
+            world.setBlockState(pos, state.with(WAVE, Math.min(3, newWave)));
             world.playSound(null, pos, SoundEvents.BLOCK_TRIAL_SPAWNER_SPAWN_MOB,
                     SoundCategory.BLOCKS, 1.0F, 0.8F + (newWave * 0.1F));
         }

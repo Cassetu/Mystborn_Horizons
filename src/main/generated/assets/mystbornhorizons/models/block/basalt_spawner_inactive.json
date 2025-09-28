@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "mystbornhorizons:block/basalt_spawner_bottom",
+    "east": "mystbornhorizons:block/basalt_spawner_side_inactive",
+    "north": "mystbornhorizons:block/basalt_spawner_side_inactive",
+    "particle": "mystbornhorizons:block/basalt_spawner_side_inactive",
+    "south": "mystbornhorizons:block/basalt_spawner_side_inactive",
+    "up": "mystbornhorizons:block/basalt_spawner_top_inactive",
+    "west": "mystbornhorizons:block/basalt_spawner_side_inactive"
+  }
+}

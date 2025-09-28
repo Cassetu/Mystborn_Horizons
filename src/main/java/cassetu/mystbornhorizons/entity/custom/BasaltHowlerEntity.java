@@ -4,6 +4,7 @@ import cassetu.mystbornhorizons.entity.ai.BasaltHowlerAttackGoal;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -12,6 +13,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
@@ -25,7 +27,12 @@ public class BasaltHowlerEntity extends HostileEntity {
 
     public BasaltHowlerEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
+        this.setPathfindingPenalty(PathNodeType.LAVA, -1.0F);
+        this.setPathfindingPenalty(PathNodeType.WATER, 20.0F);
+        this.setPathfindingPenalty(PathNodeType.LEAVES, 10.0F);
+        this.setPathfindingPenalty(PathNodeType.FENCE, 5.0F);
     }
+
 
     @Override
     protected void initGoals() {

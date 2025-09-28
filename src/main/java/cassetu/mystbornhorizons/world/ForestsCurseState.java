@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.world;
 
+import cassetu.mystbornhorizons.sound.ModSounds;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.mob.HostileEntity;
@@ -12,8 +13,28 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.PersistentState;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.GrassBlock;
+import net.minecraft.block.LeavesBlock;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
+import net.minecraft.world.biome.ColorResolver;
+import net.minecraft.world.biome.Biome;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
 
 public class ForestsCurseState extends PersistentState {
     private boolean curseActive = false;
@@ -21,6 +42,11 @@ public class ForestsCurseState extends PersistentState {
     private int mobsKilled = 0;
     private static final int MOBS_NEEDED = 10;
     private ServerBossBar curseBossBar;
+    private long musicStartTime = 0;
+    private static final long MUSIC_DURATION = 2820;
+
+    private Map<UUID, Long> playerMusicStartTimes = new HashMap<>();
+    private Map<UUID, Boolean> playerMusicPlaying = new HashMap<>();
 
     public static ForestsCurseState getOrCreate(ServerWorld world) {
         return world.getPersistentStateManager().getOrCreate(
@@ -38,6 +64,12 @@ public class ForestsCurseState extends PersistentState {
         state.curseActive = nbt.getBoolean("curse_active");
         state.cursePaused = nbt.getBoolean("curse_paused");
         state.mobsKilled = nbt.getInt("mobs_killed");
+        state.musicStartTime = nbt.getLong("music_start_time");
+
+        if (state.curseActive) {
+            state.createBossBar();
+        }
+
         return state;
     }
 
@@ -46,6 +78,7 @@ public class ForestsCurseState extends PersistentState {
         nbt.putBoolean("curse_active", curseActive);
         nbt.putBoolean("curse_paused", cursePaused);
         nbt.putInt("mobs_killed", mobsKilled);
+        nbt.putLong("music_start_time", musicStartTime);
         return nbt;
     }
 
@@ -54,8 +87,12 @@ public class ForestsCurseState extends PersistentState {
             curseActive = true;
             cursePaused = false;
             mobsKilled = 0;
+            musicStartTime = world.getTime();
             createBossBar();
             this.markDirty();
+
+            stopBackgroundMusic(world);
+            startCurseMusicForAllPlayers(world);
 
             for (ServerPlayerEntity player : world.getPlayers()) {
                 if (curseBossBar != null) {
@@ -67,6 +104,63 @@ public class ForestsCurseState extends PersistentState {
         }
     }
 
+    private void startCurseMusicForAllPlayers(ServerWorld world) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            startCurseMusicForPlayer(world, player);
+        }
+    }
+
+    private void startCurseMusicForPlayer(ServerWorld world, ServerPlayerEntity player) {
+        UUID playerId = player.getUuid();
+
+        stopBackgroundMusicForPlayer(player);
+        player.playSoundToPlayer(ModSounds.NIGHT_SHACKLES, SoundCategory.MUSIC, 0.8f, 1.0f);
+
+        playerMusicStartTimes.put(playerId, world.getTime());
+        playerMusicPlaying.put(playerId, true);
+    }
+
+    private void stopBackgroundMusic(ServerWorld world) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            stopBackgroundMusicForPlayer(player);
+        }
+    }
+
+    private void stopBackgroundMusicForPlayer(ServerPlayerEntity player) {
+        player.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.AMBIENT));
+        player.networkHandler.sendPacket(new StopSoundS2CPacket(null, SoundCategory.RECORDS));
+    }
+
+    private void stopCurseMusic(ServerWorld world) {
+        for (ServerPlayerEntity player : world.getPlayers()) {
+            stopCurseMusicForPlayer(player);
+        }
+    }
+
+    private void stopCurseMusicForPlayer(ServerPlayerEntity player) {
+        UUID playerId = player.getUuid();
+
+        player.networkHandler.sendPacket(new StopSoundS2CPacket(
+                null,
+                SoundCategory.MUSIC
+        ));
+
+        playerMusicPlaying.put(playerId, false);
+        playerMusicStartTimes.remove(playerId);
+    }
+
+    private static final String[] CREEPY_MESSAGES = {
+            "<Cassetu> whispers: \"Something ancient stirs beneath our feet\"",
+            "<Cassetu> whispers: \"We've poisoned this place just by being here\"",
+            "<Cassetu> whispers: \"The earth itself rejects us now\"",
+            "<Cassetu> whispers: \"The world grows darker with each breath...\"",
+            "<Cassetu> says: \"Can you feel it spreading? The taint seeps into everything...\"",
+            "<Cassetu> says: \"The curse feeds on our fear\"",
+            "<Cassetu> says: \"The forest remembers what we've done\"",
+            "<Cassetu> whispers: \"It knows we're here\"",
+            "<Cassetu> says: \"Do you hear them too? The voices in the wind?\""
+    };
+
     public void addMobKill(ServerWorld world) {
         if (curseActive) {
             mobsKilled++;
@@ -75,6 +169,14 @@ public class ForestsCurseState extends PersistentState {
 
             for (ServerPlayerEntity player : world.getPlayers()) {
                 player.sendMessage(Text.literal("§6Curse Progress: " + mobsKilled + "/" + MOBS_NEEDED + " cursed mobs killed"), true);
+            }
+
+            if (world.getRandom().nextFloat() < 0.7f) {
+                String creepyMessage = CREEPY_MESSAGES[world.getRandom().nextInt(CREEPY_MESSAGES.length)];
+                for (ServerPlayerEntity player : world.getPlayers()) {
+                    player.sendMessage(Text.literal(creepyMessage), false);
+                    player.addStatusEffect(new StatusEffectInstance(ModEffects.DIRT_OVERLAY_EFFECT, 120, 0, false, false, false));
+                }
             }
 
             if (mobsKilled >= MOBS_NEEDED) {
@@ -88,6 +190,10 @@ public class ForestsCurseState extends PersistentState {
             curseActive = false;
             cursePaused = false;
             mobsKilled = 0;
+
+            stopCurseMusic(world);
+            playerMusicStartTimes.clear();
+            playerMusicPlaying.clear();
 
             if (curseBossBar != null) {
                 curseBossBar.clearPlayers();
@@ -120,15 +226,23 @@ public class ForestsCurseState extends PersistentState {
                 curseBossBar.addPlayer(player);
             }
 
+            ServerWorld world = (ServerWorld) player.getWorld();
+            startCurseMusicForPlayer(world, player);
+
             cursePaused = false;
             this.markDirty();
         }
     }
 
     public void onPlayerLeave(ServerPlayerEntity player) {
+        UUID playerId = player.getUuid();
+
         if (curseBossBar != null) {
             curseBossBar.removePlayer(player);
         }
+
+        playerMusicStartTimes.remove(playerId);
+        playerMusicPlaying.remove(playerId);
     }
 
     public void checkPauseState(ServerWorld world) {
@@ -167,10 +281,33 @@ public class ForestsCurseState extends PersistentState {
         return mobsKilled;
     }
 
+    public boolean isCurseMusicPlayingForPlayer(UUID playerId) {
+        return curseActive && playerMusicPlaying.getOrDefault(playerId, false);
+    }
+
     public void tick(ServerWorld world) {
         if (curseActive && !cursePaused) {
             world.setTimeOfDay(18000);
             world.setWeather(6000, 0, false, true);
+
+            for (ServerPlayerEntity player : world.getPlayers()) {
+                UUID playerId = player.getUuid();
+                Long playerMusicStart = playerMusicStartTimes.get(playerId);
+
+                if (playerMusicStart != null) {
+                    long timeSinceStart = world.getTime() - playerMusicStart;
+
+                    if (timeSinceStart >= MUSIC_DURATION - 90) {
+                        startCurseMusicForPlayer(world, player);
+                    }
+                }
+            }
+
+            if (world.getTime() % 40 == 0) {
+                for (ServerPlayerEntity player : world.getPlayers()) {
+                    stopBackgroundMusicForPlayer(player);
+                }
+            }
 
             if (world.getTime() % 20 == 0) {
                 for (ServerPlayerEntity player : world.getPlayers()) {

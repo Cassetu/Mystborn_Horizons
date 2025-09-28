@@ -5,6 +5,7 @@ import cassetu.mystbornhorizons.item.ModItems;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.ai.pathing.PathNodeType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -26,8 +27,11 @@ public class MantisEntity extends AnimalEntity {
 
     public MantisEntity(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
+        this.setPathfindingPenalty(PathNodeType.DANGER_FIRE, 16.0F);
+        this.setPathfindingPenalty(PathNodeType.LAVA, 32.0F);
+        this.setPathfindingPenalty(PathNodeType.WATER, 0.0F);
+        this.setPathfindingPenalty(PathNodeType.LEAVES, -1.0F);
     }
-
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));

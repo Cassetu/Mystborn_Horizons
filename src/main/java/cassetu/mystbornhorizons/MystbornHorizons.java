@@ -1,7 +1,6 @@
 package cassetu.mystbornhorizons;
 
 import cassetu.mystbornhorizons.block.ModBlocks;
-import cassetu.mystbornhorizons.block.custom.ShardBlock;
 import cassetu.mystbornhorizons.block.entity.ModBlockEntities;
 import cassetu.mystbornhorizons.command.MystbornCommands;
 import cassetu.mystbornhorizons.effect.ModEffects;
@@ -21,8 +20,6 @@ import cassetu.mystbornhorizons.world.gen.ModWorldGeneration;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
-import net.fabricmc.fabric.api.registry.LandPathNodeTypesRegistry;
-import net.minecraft.entity.ai.pathing.PathNodeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

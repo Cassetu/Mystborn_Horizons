@@ -79,7 +79,7 @@ public class ModBlocks {
                     .luminance(state -> {
                         if (state.get(BasaltSpawnerBlock.ACTIVE)) {
                             int wave = state.get(BasaltSpawnerBlock.WAVE);
-                            return Math.min(0, 3 + wave);
+                            return Math.min(15, 3 + wave);
                         }
                         return 2;
                     })));

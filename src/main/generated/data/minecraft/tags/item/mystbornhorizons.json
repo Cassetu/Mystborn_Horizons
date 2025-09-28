@@ -29,8 +29,6 @@
     "minecraft:sugar_cane",
     "minecraft:cocoa_beans",
     "minecraft:apple",
-    "mystbornhorizons:root",
-    "mystbornhorizons:cursed_essence",
-    "mystbornhorizons:infected_essence"
+    "mystbornhorizons:root"
   ]
 }

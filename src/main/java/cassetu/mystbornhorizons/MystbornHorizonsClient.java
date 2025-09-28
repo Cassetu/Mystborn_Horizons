@@ -1,9 +1,11 @@
 package cassetu.mystbornhorizons;
 
 import cassetu.mystbornhorizons.block.ModBlocks;
+import cassetu.mystbornhorizons.client.DirtOverlayRenderer;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.entity.client.*;
 import cassetu.mystbornhorizons.entity.custom.HavenCoreEntity;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import cassetu.mystbornhorizons.network.ClientPacketHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -14,6 +16,11 @@ import net.minecraft.client.render.RenderLayer;
 public class MystbornHorizonsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+
+        HudRenderCallback.EVENT.register((context, tickDelta) -> {
+            DirtOverlayRenderer.renderOverlay(context);
+        });
+
         EntityModelLayerRegistry.registerModelLayer(MantisModel.MANTIS, MantisModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.MANTIS, MantisRenderer::new);
 

@@ -22,6 +22,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
@@ -47,7 +48,16 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
 
     private static final int SPAWN_RADIUS = 10;
     private static final int DETECTION_RADIUS = 15;
-    private static final long COOLDOWN_DURATION = 72000; // 3 days * 24000 ticks
+    private static final long COOLDOWN_DURATION = 72000;
+
+    public boolean isOnCooldown() {
+        return onCooldown;
+    }
+
+    public long getCooldownTicksRemaining(long currentTime) {
+        if (!onCooldown) return 0;
+        return Math.max(0, cooldownEndTime - currentTime);
+    }
 
     public BasaltSpawnerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.BASALT_SPAWNER, pos, state);
