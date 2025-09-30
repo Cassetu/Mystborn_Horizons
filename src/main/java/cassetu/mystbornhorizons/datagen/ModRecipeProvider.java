@@ -217,6 +217,34 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.MYSTBORN_DUST), conditionsFromItem(ModItems.MYSTBORN_DUST))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.NIGHT_SHACKLES_MUSIC_DISC)
+                .pattern("CBI")
+                .pattern("BRB")
+                .pattern("IBC")
+                .input('C', ModItems.CURSED_ESSENCE)
+                .input('I', ModItems.INFECTED_ESSENCE)
+                .input('B', Items.BLACKSTONE)
+                .input('R', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CURSED_ESSENCE), conditionsFromItem(ModItems.CURSED_ESSENCE))
+                .criterion(hasItem(ModItems.INFECTED_ESSENCE), conditionsFromItem(ModItems.INFECTED_ESSENCE))
+                .criterion(hasItem(Items.BLACKSTONE), conditionsFromItem(Items.BLACKSTONE))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.NETHER_KEY)
+                .pattern(" GC")
+                .pattern("SGG")
+                .pattern("RS ")
+                .input('C', ModItems.CURSED_ESSENCE)
+                .input('S', ModItems.SALONDITE)
+                .input('G', Items.GOLD_BLOCK)
+                .input('R', Items.REDSTONE)
+                .criterion(hasItem(ModItems.CURSED_ESSENCE), conditionsFromItem(ModItems.CURSED_ESSENCE))
+                .criterion(hasItem(ModItems.SALONDITE), conditionsFromItem(ModItems.SALONDITE))
+                .criterion(hasItem(Items.GOLD_BLOCK), conditionsFromItem(Items.GOLD_BLOCK))
+                .criterion(hasItem(Items.REDSTONE), conditionsFromItem(Items.REDSTONE))
+                .offerTo(exporter);
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.FOREST_HAVEN_MUSIC_DISC)
                 .pattern("FFF")
                 .pattern("FLF")

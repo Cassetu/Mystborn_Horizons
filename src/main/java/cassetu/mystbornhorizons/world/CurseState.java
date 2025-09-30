@@ -1,12 +1,12 @@
 package cassetu.mystbornhorizons.world;
 
 import cassetu.mystbornhorizons.sound.ModSounds;
+import cassetu.mystbornhorizons.event.LoreHandler;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import cassetu.mystbornhorizons.effect.ModEffects;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
@@ -14,29 +14,17 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.world.PersistentState;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.network.packet.s2c.play.StopSoundS2CPacket;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.GrassBlock;
-import net.minecraft.block.LeavesBlock;
-import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
-import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
-import net.minecraft.world.biome.ColorResolver;
-import net.minecraft.world.biome.Biome;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Set;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ForestsCurseState extends PersistentState {
+public class CurseState extends PersistentState {
     private boolean curseActive = false;
     private boolean cursePaused = false;
     private int mobsKilled = 0;
@@ -48,19 +36,19 @@ public class ForestsCurseState extends PersistentState {
     private Map<UUID, Long> playerMusicStartTimes = new HashMap<>();
     private Map<UUID, Boolean> playerMusicPlaying = new HashMap<>();
 
-    public static ForestsCurseState getOrCreate(ServerWorld world) {
+    public static CurseState getOrCreate(ServerWorld world) {
         return world.getPersistentStateManager().getOrCreate(
                 new Type<>(
-                        ForestsCurseState::new,
-                        ForestsCurseState::fromNbt,
+                        CurseState::new,
+                        CurseState::fromNbt,
                         null
                 ),
                 "forests_curse_state"
         );
     }
 
-    public static ForestsCurseState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        ForestsCurseState state = new ForestsCurseState();
+    public static CurseState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        CurseState state = new CurseState();
         state.curseActive = nbt.getBoolean("curse_active");
         state.cursePaused = nbt.getBoolean("curse_paused");
         state.mobsKilled = nbt.getInt("mobs_killed");
@@ -114,7 +102,7 @@ public class ForestsCurseState extends PersistentState {
         UUID playerId = player.getUuid();
 
         stopBackgroundMusicForPlayer(player);
-        player.playSoundToPlayer(ModSounds.NIGHT_SHACKLES, SoundCategory.MUSIC, 0.8f, 1.0f);
+        player.playSoundToPlayer(ModSounds.NIGHT_SHACKLES_BG, SoundCategory.MUSIC, 0.8f, 1.0f);
 
         playerMusicStartTimes.put(playerId, world.getTime());
         playerMusicPlaying.put(playerId, true);
@@ -150,15 +138,15 @@ public class ForestsCurseState extends PersistentState {
     }
 
     private static final String[] CREEPY_MESSAGES = {
-            "<Cassetu> whispers: \"Something ancient stirs beneath our feet\"",
-            "<Cassetu> whispers: \"We've poisoned this place just by being here\"",
-            "<Cassetu> whispers: \"The earth itself rejects us now\"",
-            "<Cassetu> whispers: \"The world grows darker with each breath...\"",
-            "<Cassetu> says: \"Can you feel it spreading? The taint seeps into everything...\"",
-            "<Cassetu> says: \"The curse feeds on our fear\"",
-            "<Cassetu> says: \"The forest remembers what we've done\"",
-            "<Cassetu> whispers: \"It knows we're here\"",
-            "<Cassetu> says: \"Do you hear them too? The voices in the wind?\""
+            "<???> Something ancient stirs beneath our feet",
+            "<???> We've poisoned this place just by being here",
+            "<???> The earth itself rejects us now",
+            "<???> The world grows darker with each breath...",
+            "<???> Can you feel it spreading? The taint seeps into everything...",
+            "<???> The curse feeds on our fear",
+            "<???> The forest remembers what we've done",
+            "<???> It knows we're here",
+            "<???> Do you hear them too? The voices in the wind?"
     };
 
     public void addMobKill(ServerWorld world) {
@@ -175,7 +163,7 @@ public class ForestsCurseState extends PersistentState {
                 String creepyMessage = CREEPY_MESSAGES[world.getRandom().nextInt(CREEPY_MESSAGES.length)];
                 for (ServerPlayerEntity player : world.getPlayers()) {
                     player.sendMessage(Text.literal(creepyMessage), false);
-                    player.addStatusEffect(new StatusEffectInstance(ModEffects.DIRT_OVERLAY_EFFECT, 120, 0, false, false, false));
+                    //player.addStatusEffect(new StatusEffectInstance(ModEffects.DIRT_OVERLAY_EFFECT, 160, 0, false, false));
                 }
             }
 
@@ -214,9 +202,27 @@ public class ForestsCurseState extends PersistentState {
             this.markDirty();
 
             for (ServerPlayerEntity player : world.getPlayers()) {
+                clearHostileEffects(player);
+
                 player.sendMessage(Text.literal("§2§lThe Curse has been lifted!"), false);
                 player.sendMessage(Text.literal("§aThe world returns to its natural state."), false);
+
+                LoreHandler.showChapter2Title(player);
             }
+        }
+    }
+
+    private void clearHostileEffects(ServerPlayerEntity player) {
+        List<StatusEffectInstance> effectsToRemove = new ArrayList<>();
+
+        for (StatusEffectInstance effect : player.getStatusEffects()) {
+            if (!effect.getEffectType().value().isBeneficial()) {
+                effectsToRemove.add(effect);
+            }
+        }
+
+        for (StatusEffectInstance effect : effectsToRemove) {
+            player.removeStatusEffect(effect.getEffectType());
         }
     }
 

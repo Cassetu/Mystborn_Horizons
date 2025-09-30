@@ -22,6 +22,8 @@ public class ModItemGroups {
                         entries.add(ModItems.ENDER_FURY_MUSIC_DISC);
                         entries.add(ModItems.WATER_HORIZONS_MUSIC_DISC);
                         entries.add(ModItems.FOREST_HAVEN_MUSIC_DISC);
+                        entries.add(ModItems.NIGHT_SHACKLES_MUSIC_DISC);
+
                         entries.add(ModItems.PEACEKEEPER_SWORD);
                         entries.add(ModItems.VANQUISHER_SWORD);
                         entries.add(ModItems.MOONSTONE_RAPIER);

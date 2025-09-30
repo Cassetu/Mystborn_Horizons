@@ -7,9 +7,10 @@ import cassetu.mystbornhorizons.effect.ModEffects;
 import cassetu.mystbornhorizons.enchantment.ModEnchantmentEffects;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.entity.custom.*;
-import cassetu.mystbornhorizons.event.FirstSpawnBookHandler;
+import cassetu.mystbornhorizons.event.CurseHandler;
+import cassetu.mystbornhorizons.event.LoreHandler;
 import cassetu.mystbornhorizons.event.MobSpawnHandler;
-import cassetu.mystbornhorizons.event.ForestsCurseHandler;
+import cassetu.mystbornhorizons.event.NetherPortalHandler;
 import cassetu.mystbornhorizons.item.ModItemGroups;
 import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.network.ModPackets;
@@ -41,10 +42,11 @@ public class MystbornHorizons implements ModInitializer {
 		ModPackets.registerPackets();
 		CutsceneManager.initialize();
 		MobSpawnHandler.register();
-		ForestsCurseHandler.register();
+		CurseHandler.register();
 		MystbornCommands.registerCommands();
-		FirstSpawnBookHandler.register();
+		LoreHandler.register();
 		ModBlockEntities.registerBlockEntities();
+		NetherPortalHandler.register();
 
 		FabricDefaultAttributeRegistry.register(ModEntities.MANTIS, MantisEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.COPPERBULB, CopperBulbEntity.createAttributes());

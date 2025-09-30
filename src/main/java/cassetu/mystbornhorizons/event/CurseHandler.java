@@ -1,12 +1,11 @@
 package cassetu.mystbornhorizons.event;
 
-import cassetu.mystbornhorizons.world.ForestsCurseState;
+import cassetu.mystbornhorizons.world.CurseState;
 import cassetu.mystbornhorizons.item.ModItems;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
@@ -15,7 +14,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Formatting;
 
-public class ForestsCurseHandler {
+public class CurseHandler {
 
     public static void register() {
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, damageSource) -> {
@@ -23,7 +22,7 @@ public class ForestsCurseHandler {
                 if (entity.hasCustomName() && entity.getCustomName() != null) {
                     String name = entity.getCustomName().getString();
                     if (name.contains("Cursed")) {
-                        ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
+                        CurseState curseState = CurseState.getOrCreate(serverWorld);
                         if (curseState.isCurseActive()) {
                             curseState.addMobKill(serverWorld);
                             dropCursedEssence(hostileEntity, serverWorld);
@@ -35,7 +34,7 @@ public class ForestsCurseHandler {
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             if (world instanceof ServerWorld serverWorld) {
-                ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
+                CurseState curseState = CurseState.getOrCreate(serverWorld);
                 curseState.tick(serverWorld);
             }
         });
@@ -43,14 +42,14 @@ public class ForestsCurseHandler {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             ServerWorld world = player.getServerWorld();
-            ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+            CurseState curseState = CurseState.getOrCreate(world);
             curseState.onPlayerJoin(player);
         });
 
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
             ServerWorld world = player.getServerWorld();
-            ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+            CurseState curseState = CurseState.getOrCreate(world);
             curseState.onPlayerLeave(player);
         });
     }

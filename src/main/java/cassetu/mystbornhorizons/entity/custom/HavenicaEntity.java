@@ -1,11 +1,10 @@
 package cassetu.mystbornhorizons.entity.custom;
 
 import cassetu.mystbornhorizons.effect.ModEffects;
+import cassetu.mystbornhorizons.world.CurseState;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -41,7 +40,6 @@ import net.minecraft.world.GameMode;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.sound.ModSounds;
 import cassetu.mystbornhorizons.network.ModPackets;
 import cassetu.mystbornhorizons.network.BossMusicPacket;
@@ -991,7 +989,7 @@ public class HavenicaEntity extends HostileEntity {
                     player.sendMessage(Text.literal("§6§lMobs will now spawn with enhanced armor and abilities!"), false);
                 });
 
-                cassetu.mystbornhorizons.world.ForestsCurseState curseState = cassetu.mystbornhorizons.world.ForestsCurseState.getOrCreate(serverWorld);
+                CurseState curseState = CurseState.getOrCreate(serverWorld);
                 curseState.activateCurse(serverWorld);
 
                 this.getWorld().playSound(null, this.getBlockPos(), SoundEvents.ENTITY_WITHER_SPAWN,

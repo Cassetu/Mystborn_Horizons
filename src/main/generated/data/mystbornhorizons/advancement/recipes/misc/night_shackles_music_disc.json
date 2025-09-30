@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_blackstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:blackstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_cursed_essence": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:cursed_essence"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_infected_essence": {
+      "conditions": {
+        "items": [
+          {
+            "items": "mystbornhorizons:infected_essence"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_redstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:redstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "mystbornhorizons:night_shackles_music_disc"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cursed_essence",
+      "has_infected_essence",
+      "has_blackstone",
+      "has_redstone"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "mystbornhorizons:night_shackles_music_disc"
+    ]
+  }
+}

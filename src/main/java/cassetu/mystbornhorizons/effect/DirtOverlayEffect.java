@@ -16,6 +16,6 @@ public class DirtOverlayEffect extends StatusEffect {
 
     @Override
     public boolean applyUpdateEffect(LivingEntity entity, int amplifier) {
-        return false;
+        return true;
     }
 }

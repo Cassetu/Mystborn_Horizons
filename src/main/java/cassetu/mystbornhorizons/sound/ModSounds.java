@@ -34,6 +34,10 @@ public class ModSounds {
     public static final RegistryKey<JukeboxSong> FOREST_HAVEN_KEY =
             RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(MystbornHorizons.MOD_ID, "forest_haven"));
 
+    public static final SoundEvent NIGHT_SHACKLES_BG = registerSoundEvent("night_shackles_bg");
+    public static final RegistryKey<JukeboxSong> NIGHT_SHACKLES_BG_KEY =
+            RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(MystbornHorizons.MOD_ID, "night_shackles_bg"));
+
     public static final SoundEvent NIGHT_SHACKLES = registerSoundEvent("night_shackles");
     public static final RegistryKey<JukeboxSong> NIGHT_SHACKLES_KEY =
             RegistryKey.of(RegistryKeys.JUKEBOX_SONG, Identifier.of(MystbornHorizons.MOD_ID, "night_shackles"));

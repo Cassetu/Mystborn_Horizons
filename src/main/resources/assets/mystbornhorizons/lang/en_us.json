@@ -11,6 +11,7 @@
   "item.mystbornhorizons.axe_head": "Axe Head",
   "item.mystbornhorizons.cursed_essence": "Cursed Essence",
   "item.mystbornhorizons.infected_essence": "Infected Essence",
+  "item.mystbornhorizons.nether_key": "Nether Key",
 
 
   "block.mystbornhorizons.froststone_block": "Froststone Block",
@@ -34,11 +35,10 @@
   "block.mystbornhorizons.dungeon_cobble": "Dungeon Cobble",
   "block.mystbornhorizons.basalt_spawner": "Basalt Spawner",
 
-
-  "itemgroup.mystbornhorizons.mystbornhorizons_foods": "§8Mystborn Horizons Foods§r",
-  "itemgroup.mystbornhorizons.mystbornhorizons_items": "§8Mystborn Horizons Items§r",
-  "itemgroup.mystbornhorizons.mystbornhorizons_decor": "§8Mystborn Horizons Blocks§r",
-  "itemgroup.mystbornhorizons.mystbornhorizons_ores": "§8Mystborn Horizons Ores§r",
+  "itemgroup.mystbornhorizons.mystbornhorizons_foods": "§0Mystborn Horizons Foods§r",
+  "itemgroup.mystbornhorizons.mystbornhorizons_items": "§0Mystborn Horizons Items§r",
+  "itemgroup.mystbornhorizons.mystbornhorizons_decor": "§0Mystborn Horizons Blocks§r",
+  "itemgroup.mystbornhorizons.mystbornhorizons_ores": "§0Mystborn Horizons Ores§r",
 
   "tooltip.mystbornhorizons.shard_block.tooltip": "§cWatch out!§r §dThese crystalline shards will hurt you :(§r",
   "tooltip.mystbornhorizons.power_core.tooltip": "§7Fills you with energy, but may hurt you in return§r",
@@ -91,6 +91,7 @@
 
   "effect.mystbornhorizons.slimey": "Slimey",
   "effect.mystbornhorizons.spore_vision_effect": "Spore Vision",
+  "effect.mystbornhorizons.dirt_overlay_effect": "Curse?",
 
   "item.mystbornhorizons.honey_berries": "Honey Berries",
   "block.mystbornhorizons.honey_berry_bush": "Honey Berry Bush",
@@ -113,6 +114,9 @@
   "item.mystbornhorizons.forest_haven_disc_fragment": "Forest Haven Disc Fragment",
   "item.mystbornhorizons.forest_haven_music_disc": "§bMusic Disc§r",
   "item.mystbornhorizons.forest_haven_music_disc.desc": "Cassetu - Forest Haven",
+
+  "item.mystbornhorizons.night_shackles_music_disc": "§bMusic Disc§r",
+  "item.mystbornhorizons.night_shackles_music_disc.desc": "Cassetu - Night Shackles",
 
   "entity.mystbornhorizons.mantis": "Mantis",
   "entity.mystbornhorizons.copperbulb": "Copper Bulb",

@@ -5,7 +5,6 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.WrittenBookContentComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.RawFilteredPair;
@@ -14,13 +13,14 @@ import net.minecraft.util.Formatting;
 import java.util.List;
 import java.util.Optional;
 
-public class FirstSpawnBookHandler {
+public class LoreHandler {
 
     public static void register() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             ServerPlayerEntity player = handler.getPlayer();
 
             if (isFirstTimePlayer(player)) {
+                showChapterTitle(player);
                 giveWelcomeBook(player);
                 markPlayerAsJoined(player);
             }
@@ -32,6 +32,40 @@ public class FirstSpawnBookHandler {
     }
 
     private static void markPlayerAsJoined(ServerPlayerEntity player) {
+    }
+
+    private static void showChapterTitle(ServerPlayerEntity player) {
+        Text title = Text.literal("Chapter 1: ").formatted(Formatting.WHITE)
+                .append(Text.literal("Havenica").formatted(Formatting.DARK_GREEN));
+        Text subtitle = Text.literal("Craft the forest heart and locate the Moss Grove")
+                .formatted(Formatting.GRAY);
+
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.TitleS2CPacket(title)
+        );
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.SubtitleS2CPacket(subtitle)
+        );
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket(40, 260, 40)
+        );
+    }
+
+    public static void showChapter2Title(ServerPlayerEntity player) {
+        Text title = Text.literal("Chapter 2: ").formatted(Formatting.WHITE)
+                .append(Text.literal("Ash Giant").formatted(Formatting.GOLD));
+        Text subtitle = Text.literal("Craft the Basalt Heart and locate the Basalt Forge")
+                .formatted(Formatting.GRAY);
+
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.TitleS2CPacket(title)
+        );
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.SubtitleS2CPacket(subtitle)
+        );
+        player.networkHandler.sendPacket(
+                new net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket(40, 260, 40)
+        );
     }
 
     private static void giveWelcomeBook(ServerPlayerEntity player) {

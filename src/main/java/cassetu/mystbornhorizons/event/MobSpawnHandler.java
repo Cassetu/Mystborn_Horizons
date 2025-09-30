@@ -2,7 +2,7 @@ package cassetu.mystbornhorizons.event;
 
 import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.util.EnhancedMobEquipment;
-import cassetu.mystbornhorizons.world.ForestsCurseState;
+import cassetu.mystbornhorizons.world.CurseState;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -49,7 +49,7 @@ public class MobSpawnHandler {
 
         ServerTickEvents.END_WORLD_TICK.register(world -> {
             if (world instanceof ServerWorld serverWorld) {
-                ForestsCurseState curseState = ForestsCurseState.getOrCreate(serverWorld);
+                CurseState curseState = CurseState.getOrCreate(serverWorld);
 
                 if (curseState.isCurseActive() && serverWorld.getTime() % 40 == 0) {
                     spawnCursedMobs(serverWorld);

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "mystbornhorizons:cursed_essence"
+    },
+    "G": {
+      "item": "minecraft:gold_block"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "S": {
+      "item": "mystbornhorizons:salondite"
+    }
+  },
+  "pattern": [
+    " GC",
+    "SGG",
+    "RS "
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:nether_key"
+  }
+}

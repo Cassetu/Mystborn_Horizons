@@ -73,22 +73,43 @@ public class EnhancedMobEquipment {
         }
 
         if (random.nextFloat() < 0.8f) {
-            ItemStack helmet = createEnhancedHelmet(random, world);
+            ItemStack helmet;
+            if (isCursed) {
+                helmet = createEnhancedHelmet(random, world, true);
+
+            } else {
+                helmet = createEnhancedHelmet(random, world, false);
+            }
             mob.equipStack(EquipmentSlot.HEAD, helmet);
         }
 
         if (random.nextFloat() < 0.9f) {
-            ItemStack chestplate = createEnhancedChestplate(random, world);
+            ItemStack chestplate;
+            if (isCursed) {
+                chestplate = createEnhancedChestplate(random, world, true);
+            } else {
+                chestplate = createEnhancedChestplate(random, world, false);
+            }
             mob.equipStack(EquipmentSlot.CHEST, chestplate);
         }
 
         if (random.nextFloat() < 0.7f) {
-            ItemStack leggings = createEnhancedLeggings(random, world);
+            ItemStack leggings;
+            if (isCursed) {
+                leggings = createEnhancedLeggings(random, world, true);
+            } else {
+                leggings = createEnhancedLeggings(random, world, false);
+            }
             mob.equipStack(EquipmentSlot.LEGS, leggings);
         }
 
         if (random.nextFloat() < 0.8f) {
-            ItemStack boots = createEnhancedBoots(random, world);
+            ItemStack boots;
+            if (isCursed) {
+                boots = createEnhancedBoots(random, world, true);
+            } else {
+                boots = createEnhancedBoots(random, world, false);
+            }
             mob.equipStack(EquipmentSlot.FEET, boots);
         }
 
@@ -112,17 +133,23 @@ public class EnhancedMobEquipment {
         mob.setCustomNameVisible(true);
     }
 
-    private static ItemStack createEnhancedHelmet(Random random, ServerWorld world) {
+    private static ItemStack createEnhancedHelmet(Random random, ServerWorld world, boolean isCursed) {
         ItemStack helmet;
 
         float armorRoll = random.nextFloat();
         if (armorRoll < 0.2f) {
             helmet = new ItemStack(Items.DIAMOND_HELMET);
+        } else if (isCursed) {
+            helmet = new ItemStack(Items.NETHERITE_HELMET);
         } else {
             helmet = new ItemStack(Items.IRON_HELMET);
         }
 
+        if (isCursed) {
+            addRedstoneTrim(helmet, world);
+        } else {
         addEmeraldTrim(helmet, world);
+        }
 
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
@@ -154,7 +181,7 @@ public class EnhancedMobEquipment {
         return helmet;
     }
 
-    private static ItemStack createEnhancedChestplate(Random random, ServerWorld world) {
+    private static ItemStack createEnhancedChestplate(Random random, ServerWorld world, boolean isCursed) {
         ItemStack chestplate;
 
         float armorRoll = random.nextFloat();
@@ -164,8 +191,11 @@ public class EnhancedMobEquipment {
             chestplate = new ItemStack(Items.IRON_CHESTPLATE);
         }
 
-        addEmeraldTrim(chestplate, world);
-
+        if (isCursed) {
+            addRedstoneTrim(chestplate, world);
+        } else {
+            addEmeraldTrim(chestplate, world);
+        }
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
 
@@ -190,7 +220,7 @@ public class EnhancedMobEquipment {
         return chestplate;
     }
 
-    private static ItemStack createEnhancedLeggings(Random random, ServerWorld world) {
+    private static ItemStack createEnhancedLeggings(Random random, ServerWorld world, boolean isCursed) {
         ItemStack leggings;
 
         float armorRoll = random.nextFloat();
@@ -200,8 +230,11 @@ public class EnhancedMobEquipment {
             leggings = new ItemStack(Items.IRON_LEGGINGS);
         }
 
-        addEmeraldTrim(leggings, world);
-
+        if (isCursed) {
+            addRedstoneTrim(leggings, world);
+        } else {
+            addEmeraldTrim(leggings, world);
+        }
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
 
@@ -226,7 +259,7 @@ public class EnhancedMobEquipment {
         return leggings;
     }
 
-    private static ItemStack createEnhancedBoots(Random random, ServerWorld world) {
+    private static ItemStack createEnhancedBoots(Random random, ServerWorld world, boolean isCursed) {
         ItemStack boots;
 
         float armorRoll = random.nextFloat();
@@ -236,7 +269,11 @@ public class EnhancedMobEquipment {
             boots = new ItemStack(Items.IRON_BOOTS);
         }
 
-        addEmeraldTrim(boots, world);
+        if (isCursed) {
+            addRedstoneTrim(boots, world);
+        } else {
+            addEmeraldTrim(boots, world);
+        }
 
         try {
             ItemEnchantmentsComponent.Builder enchantments = new ItemEnchantmentsComponent.Builder(ItemEnchantmentsComponent.DEFAULT);
@@ -284,6 +321,27 @@ public class EnhancedMobEquipment {
             RegistryEntry<net.minecraft.item.trim.ArmorTrimPattern> pattern = world.getRegistryManager()
                     .get(net.minecraft.registry.RegistryKeys.TRIM_PATTERN)
                     .getEntry(net.minecraft.util.Identifier.of("wild"))
+                    .orElse(null);
+
+            if (emerald != null && pattern != null) {
+                net.minecraft.item.trim.ArmorTrim trim = new net.minecraft.item.trim.ArmorTrim(emerald, pattern);
+                armor.set(DataComponentTypes.TRIM, trim);
+            }
+        } catch (Exception e) {
+            System.out.println("Error adding armor trim: " + e.getMessage());
+        }
+    }
+
+    private static void addRedstoneTrim(ItemStack armor, ServerWorld world) {
+        try {
+            RegistryEntry<net.minecraft.item.trim.ArmorTrimMaterial> emerald = world.getRegistryManager()
+                    .get(net.minecraft.registry.RegistryKeys.TRIM_MATERIAL)
+                    .getEntry(net.minecraft.util.Identifier.of("redstone"))
+                    .orElse(null);
+
+            RegistryEntry<net.minecraft.item.trim.ArmorTrimPattern> pattern = world.getRegistryManager()
+                    .get(net.minecraft.registry.RegistryKeys.TRIM_PATTERN)
+                    .getEntry(net.minecraft.util.Identifier.of("silence"))
                     .orElse(null);
 
             if (emerald != null && pattern != null) {
@@ -346,7 +404,7 @@ public class EnhancedMobEquipment {
             if (random.nextFloat() < 0.6f) {
                 ItemStack weapon;
                 if (random.nextFloat() < 0.3f) {
-                    weapon = new ItemStack(Items.SPLASH_POTION);
+                    weapon = new ItemStack(Items.REDSTONE);
                 } else {
                     weapon = new ItemStack(Items.STICK);
                 }

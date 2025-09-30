@@ -2,11 +2,14 @@ package cassetu.mystbornhorizons.command;
 
 import cassetu.mystbornhorizons.util.EnhancedMobEquipment;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
-import cassetu.mystbornhorizons.world.ForestsCurseState;
+import cassetu.mystbornhorizons.world.CurseState;
+import cassetu.mystbornhorizons.world.NetherAccessState;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.HostileEntity;
@@ -23,6 +26,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.WrittenBookContentComponent;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collection;
 
 public class MystbornCommands {
 
@@ -35,6 +39,71 @@ public class MystbornCommands {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess, CommandManager.RegistrationEnvironment environment) {
         dispatcher.register(CommandManager.literal("mystborn")
                 .requires(source -> source.hasPermissionLevel(2))
+                .then(CommandManager.literal("nether")
+                        .then(CommandManager.literal("grant")
+                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                        .executes(context -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                                            NetherAccessState accessState = NetherAccessState.getOrCreate(player.getServer());
+
+                                            if (accessState.hasNetherAccess(player.getUuid())) {
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§e" + player.getName().getString() + " already has Nether access."),
+                                                        false);
+                                            } else {
+                                                accessState.grantNetherAccess(player.getUuid(), player.getServer());
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§aGranted Nether access to " + player.getName().getString() + "."),
+                                                        true);
+                                                player.sendMessage(Text.literal("§6You have been granted access to the Nether!"), false);
+                                            }
+                                            return 1;
+                                        })))
+                        .then(CommandManager.literal("revoke")
+                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                        .executes(context -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                                            NetherAccessState accessState = NetherAccessState.getOrCreate(player.getServer());
+
+                                            if (!accessState.hasNetherAccess(player.getUuid())) {
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§e" + player.getName().getString() + " doesn't have Nether access."),
+                                                        false);
+                                            } else {
+                                                accessState.revokeNetherAccess(player.getUuid(), player.getServer());
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§cRevoked Nether access from " + player.getName().getString() + "."),
+                                                        true);
+                                                player.sendMessage(Text.literal("§cYour Nether access has been revoked!"), false);
+                                            }
+                                            return 1;
+                                        })))
+                        .then(CommandManager.literal("check")
+                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                        .executes(context -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                                            NetherAccessState accessState = NetherAccessState.getOrCreate(player.getServer());
+
+                                            if (accessState.hasNetherAccess(player.getUuid())) {
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§a" + player.getName().getString() + " has Nether access."),
+                                                        false);
+                                            } else {
+                                                context.getSource().sendFeedback(() ->
+                                                                Text.literal("§c" + player.getName().getString() + " does NOT have Nether access."),
+                                                        false);
+                                            }
+                                            return 1;
+                                        })))
+                        .then(CommandManager.literal("reset")
+                                .executes(context -> {
+                                    NetherAccessState accessState = NetherAccessState.getOrCreate(context.getSource().getServer());
+                                    accessState.clearAll(context.getSource().getServer());
+                                    context.getSource().sendFeedback(() ->
+                                                    Text.literal("§aCleared all Nether access permissions."),
+                                            true);
+                                    return 1;
+                                })))
                 .then(CommandManager.literal("havenica")
                         .then(CommandManager.literal("status")
                                 .executes(context -> {
@@ -91,7 +160,7 @@ public class MystbornCommands {
                         .then(CommandManager.literal("status")
                                 .executes(context -> {
                                     ServerWorld world = context.getSource().getWorld();
-                                    ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+                                    CurseState curseState = CurseState.getOrCreate(world);
 
                                     if (curseState.isCurseActive()) {
                                         int mobsKilled = curseState.getMobsKilled();
@@ -108,7 +177,7 @@ public class MystbornCommands {
                         .then(CommandManager.literal("start")
                                 .executes(context -> {
                                     ServerWorld world = context.getSource().getWorld();
-                                    ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+                                    CurseState curseState = CurseState.getOrCreate(world);
 
                                     if (!curseState.isCurseActive()) {
                                         curseState.activateCurse(world);
@@ -125,7 +194,7 @@ public class MystbornCommands {
                         .then(CommandManager.literal("end")
                                 .executes(context -> {
                                     ServerWorld world = context.getSource().getWorld();
-                                    ForestsCurseState curseState = ForestsCurseState.getOrCreate(world);
+                                    CurseState curseState = CurseState.getOrCreate(world);
 
                                     if (curseState.isCurseActive()) {
                                         curseState.endCurse(world);
@@ -285,7 +354,7 @@ public class MystbornCommands {
                 "§8When Havenica falls in battle, its accumulated corruption explodes outward, fundamentally altering the world's nature.";
 
         String page16 = "§0§lCassetu's Voice§r\n\n" +
-                "§8The curse learned to mimic Cassetu, a Verdant Circle member, delivering twisted messages: 'Something ancient stirs beneath our feet...'";
+                "§8The curse spoke through Cassetu, a Verdant Circle member, delivering twisted messages: 'Something ancient stirs beneath our feet...'";
 
         String page17 = "§0§lThe Whispers§r\n\n" +
                 "§8'We've poisoned this place just by being here.' 'The earth itself rejects us now.' 'The world grows darker with each breath...'";

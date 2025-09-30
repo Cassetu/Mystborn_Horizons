@@ -119,6 +119,8 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.FOREST_HAVEN_MUSIC_DISC, Models.GENERATED);
         itemModelGenerator.register(ModItems.CURSED_ESSENCE, Models.GENERATED);
         itemModelGenerator.register(ModItems.INFECTED_ESSENCE, Models.GENERATED);
+        itemModelGenerator.register(ModItems.NIGHT_SHACKLES_MUSIC_DISC, Models.GENERATED);
+        itemModelGenerator.register(ModItems.NETHER_KEY, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.STORMITE, Models.GENERATED);

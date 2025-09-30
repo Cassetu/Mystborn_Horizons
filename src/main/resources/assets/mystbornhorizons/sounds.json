@@ -70,5 +70,14 @@
       }
     ],
     "category": "record"
+  },
+  "night_shackles_bg": {
+    "sounds": [
+      {
+        "name": "mystbornhorizons:night_shackles_bg",
+        "stream": true
+      }
+    ],
+    "category": "record"
   }
 }

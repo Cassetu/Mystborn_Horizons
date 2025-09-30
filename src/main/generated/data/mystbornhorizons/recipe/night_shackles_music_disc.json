@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:blackstone"
+    },
+    "C": {
+      "item": "mystbornhorizons:cursed_essence"
+    },
+    "I": {
+      "item": "mystbornhorizons:infected_essence"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "pattern": [
+    "CBI",
+    "BRB",
+    "IBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "mystbornhorizons:night_shackles_music_disc"
+  }
+}

@@ -163,7 +163,8 @@ public class ModItems {
             });
 
 
-
+    public static final Item NETHER_KEY = registerItem("nether_key",
+            new NetherKeyItem(new Item.Settings().maxCount(1)));
 
     public static final Item FROSTSTONE_PICKAXE = registerItem("froststone_pickaxe",
             new PickaxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()
@@ -208,6 +209,8 @@ public class ModItems {
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.WATER_HORIZONS_KEY).maxCount(1)));
     public static final Item FOREST_HAVEN_MUSIC_DISC = registerItem("forest_haven_music_disc",
             new Item(new Item.Settings().jukeboxPlayable(ModSounds.FOREST_HAVEN_KEY).maxCount(1)));
+    public static final Item NIGHT_SHACKLES_MUSIC_DISC = registerItem("night_shackles_music_disc",
+            new Item(new Item.Settings().jukeboxPlayable(ModSounds.NIGHT_SHACKLES_KEY).maxCount(1)));
 
     public static final Item MANTIS_SPAWN_EGG = registerItem("mantis_spawn_egg",
             new SpawnEggItem(ModEntities.MANTIS, 0x9dc783, 0xbfaf5f, new Item.Settings()));
