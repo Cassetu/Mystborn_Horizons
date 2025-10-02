@@ -26,6 +26,18 @@ public class MobSpawnHandler {
             if (!(world instanceof ServerWorld serverWorld)) return;
 
             if (entity instanceof HostileEntity mob && shouldEnhanceMob(mob)) {
+                CurseState curseState = CurseState.getOrCreate(serverWorld);
+                if (curseState.isCurseActive()) {
+                    return;
+                }
+
+                if (mob.hasCustomName() && mob.getCustomName() != null) {
+                    String name = mob.getCustomName().getString();
+                    if (name.contains("Cursed")) {
+                        return;
+                    }
+                }
+
                 serverWorld.getServer().execute(() -> {
                     EnhancedMobEquipment.equipPostHavenicaMob(mob, serverWorld);
 
@@ -115,7 +127,7 @@ public class MobSpawnHandler {
                 if (isValidSpawnLocation(world, spawnPos)) {
                     EntityType<?>[] mobTypes = {
                             EntityType.ZOMBIE, EntityType.BOGGED,
-                            EntityType.SPIDER, EntityType.ENDERMAN,
+                            EntityType.SPIDER, EntityType.STRAY,
                             EntityType.SKELETON
                     };
 
@@ -157,10 +169,10 @@ public class MobSpawnHandler {
                 mob instanceof SkeletonEntity ||
                 mob instanceof CreeperEntity ||
                 mob instanceof SpiderEntity ||
-                mob instanceof EndermanEntity ||
                 mob instanceof VindicatorEntity ||
                 mob instanceof PillagerEntity ||
                 mob instanceof WitchEntity ||
+                mob instanceof StrayEntity ||
                 mob instanceof BlazeEntity ||
                 mob instanceof BoggedEntity ||
                 mob.getClass().getSimpleName().contains("Entity");

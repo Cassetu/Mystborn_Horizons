@@ -6,7 +6,8 @@
 	"refmap": "mystbornhorizons.refmap.json",
 	"mixins": [
 		"ShardBlockPathfindingMixin",
-		"FireBlockMixin"
+		"FireBlockMixin",
+		"ShaderAccessor"
 	],
 	"client": [],
 	"server": [],

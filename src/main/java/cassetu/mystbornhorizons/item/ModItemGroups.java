@@ -16,13 +16,7 @@ public class ModItemGroups {
             FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.MYSTBORN_DUST))
                     .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_items"))
                     .entries((displayContext, entries) -> {
-                        entries.add(ModItems.DOOMSDAY_MUSIC_DISC);
-                        entries.add(ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC);
-                        entries.add(ModItems.TITAN_SANDS_MUSIC_DISC);
-                        entries.add(ModItems.ENDER_FURY_MUSIC_DISC);
-                        entries.add(ModItems.WATER_HORIZONS_MUSIC_DISC);
-                        entries.add(ModItems.FOREST_HAVEN_MUSIC_DISC);
-                        entries.add(ModItems.NIGHT_SHACKLES_MUSIC_DISC);
+                        entries.add(ModItems.NETHER_KEY);
 
                         entries.add(ModItems.PEACEKEEPER_SWORD);
                         entries.add(ModItems.VANQUISHER_SWORD);
@@ -37,8 +31,6 @@ public class ModItemGroups {
                         entries.add(ModItems.BASALT_HOWLER_SPAWN_EGG);
                         entries.add(ModItems.HAVENICA_SPAWN_EGG);
 
-//                      entries.add(ModItems.K_ARMOR_TRIM_SMITHING_TEMPLATE);
-
                         entries.add(ModItems.FROSTSTONE_PICKAXE);
                         entries.add(ModItems.FROSTSTONE_AXE);
                         entries.add(ModItems.FROSTSTONE_HOE);
@@ -52,7 +44,6 @@ public class ModItemGroups {
                         entries.add(ModItems.FROSTSTONE_LEGGINGS);
                         entries.add(ModItems.FROSTSTONE_BOOTS);
 
-                        entries.add(ModItems.FOREST_HAVEN_DISC_FRAGMENT);
                         entries.add(ModItems.TOMAHAWK);
                         entries.add(ModItems.AXE_HEAD);
                     }).build());
@@ -72,6 +63,22 @@ public class ModItemGroups {
                         entries.add(ModItems.POWER_CORE);
                         entries.add(ModItems.ROOT);
                     }).build());
+
+    public static final ItemGroup MYSTBORN_MUSIC_GROUP = Registry.register(Registries.ITEM_GROUP,
+            Identifier.of(MystbornHorizons.MOD_ID, "mystbornhorizons_music"),
+            FabricItemGroup.builder().icon(() -> new ItemStack(ModItems.ENDER_FURY_MUSIC_DISC))
+                    .displayName(Text.translatable("itemgroup.mystbornhorizons.mystbornhorizons_music"))
+                    .entries((displayContext, entries) -> {
+                        entries.add(ModItems.DOOMSDAY_MUSIC_DISC);
+                        entries.add(ModItems.ECHOES_OF_THE_ABYSS_MUSIC_DISC);
+                        entries.add(ModItems.TITAN_SANDS_MUSIC_DISC);
+                        entries.add(ModItems.ENDER_FURY_MUSIC_DISC);
+                        entries.add(ModItems.WATER_HORIZONS_MUSIC_DISC);
+                        entries.add(ModItems.FOREST_HAVEN_MUSIC_DISC);
+                        entries.add(ModItems.NIGHT_SHACKLES_MUSIC_DISC);
+                        entries.add(ModItems.FOREST_HAVEN_DISC_FRAGMENT);
+                    }).build());
+
     public static final ItemGroup MYSTBORN_DECOR_GROUP = Registry.register(Registries.ITEM_GROUP,
             Identifier.of(MystbornHorizons.MOD_ID, "mystbornhorizons_decor"),
             FabricItemGroup.builder().icon(() -> new ItemStack(ModBlocks.MYST_CRATE))

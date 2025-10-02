@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.command;
 
+import cassetu.mystbornhorizons.network.CurseShaderPacket;
 import cassetu.mystbornhorizons.util.EnhancedMobEquipment;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import cassetu.mystbornhorizons.world.CurseState;
@@ -29,6 +30,11 @@ import java.util.Optional;
 import java.util.Collection;
 
 public class MystbornCommands {
+
+    private static final String[] SHADERS = {
+            "invert", "spider", "creeper", "green", "blur", "blobs",
+            "blobs2", "color_convolve", "fxaa", "ntsc"
+    };
 
     public static void registerCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
@@ -206,6 +212,48 @@ public class MystbornCommands {
                                                         Text.literal("§aThe Forest's Curse is not currently active."),
                                                 false);
                                     }
+                                    return 1;
+                                })))
+                .then(CommandManager.literal("shader")
+                        .then(CommandManager.literal("apply")
+                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                        .then(CommandManager.argument("shader", StringArgumentType.string())
+                                                .suggests((context, builder) -> {
+                                                    for (String shader : SHADERS) {
+                                                        builder.suggest(shader);
+                                                    }
+                                                    return builder.buildFuture();
+                                                })
+                                                .executes(context -> {
+                                                    ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+                                                    String shader = StringArgumentType.getString(context, "shader");
+
+                                                    CurseShaderPacket.sendApplyShader(player, shader);
+
+                                                    context.getSource().sendFeedback(() ->
+                                                                    Text.literal("§dApplied shader '" + shader + "' to " + player.getName().getString()),
+                                                            false);
+
+                                                    return 1;
+                                                }))))
+                        .then(CommandManager.literal("remove")
+                                .then(CommandManager.argument("player", EntityArgumentType.player())
+                                        .executes(context -> {
+                                            ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
+
+                                            CurseShaderPacket.sendRemoveShader(player);
+
+                                            context.getSource().sendFeedback(() ->
+                                                            Text.literal("§aRemoved shader from " + player.getName().getString()),
+                                                    false);
+
+                                            return 1;
+                                        })))
+                        .then(CommandManager.literal("list")
+                                .executes(context -> {
+                                    context.getSource().sendFeedback(() ->
+                                                    Text.literal("§dAvailable shaders: §f" + String.join(", ", SHADERS)),
+                                            false);
                                     return 1;
                                 })))
                 .then(CommandManager.literal("lore")

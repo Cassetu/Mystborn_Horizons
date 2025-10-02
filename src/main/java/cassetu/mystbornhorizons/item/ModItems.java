@@ -5,6 +5,7 @@ import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.item.custom.ForestHeartItem;
 import cassetu.mystbornhorizons.item.custom.ModArmorItem;
+import cassetu.mystbornhorizons.item.custom.NetherKeyItem;
 import cassetu.mystbornhorizons.item.custom.TomahawkItem;
 import cassetu.mystbornhorizons.sound.ModSounds;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;

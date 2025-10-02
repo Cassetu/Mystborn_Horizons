@@ -66,6 +66,14 @@ public class LoreHandler {
         player.networkHandler.sendPacket(
                 new net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket(40, 260, 40)
         );
+
+        player.sendMessage(
+                Text.literal("Thanks for playing Mystborn Horizons!")
+                        .formatted(Formatting.GOLD, Formatting.ITALIC)
+                        .append(Text.literal("The Mod Currently Ends Here...")
+                                .formatted(Formatting.WHITE, Formatting.ITALIC)),
+                false
+        );
     }
 
     private static void giveWelcomeBook(ServerPlayerEntity player) {
@@ -73,7 +81,7 @@ public class LoreHandler {
 
         String page1 = "§0§lMystborn Horizons§r\n\n" +
                 "§8Adds ores, mobs, bosses, weapons, armor, structures, foods, discs, effects, enchants & terrain.\n\n" +
-                "§8Created: 2025-03-16  §4Status: STILL IN DEVELOPMENT";
+                "§8Created: 2025-03-16  §4Status: STILL IN DEVELOPMENT, Mod Ends after Chapter 1";
 
         String page2 = "§0§lFeatures§r\n\n" +
                 "§8- New ores, tools & armor\n" +

@@ -27,6 +27,7 @@ public class ModTags {
 
     public static class Items {
         public static final TagKey<Item> VEGGIES = createTag("veggies");
+        public static final TagKey<Item> ESSENCE = createTag("essence");
 
         private static TagKey<Item> createTag(String name) {
             return TagKey.of(RegistryKeys.ITEM, Identifier.of(MystbornHorizons.MOD_ID));

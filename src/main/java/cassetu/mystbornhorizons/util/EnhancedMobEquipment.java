@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.util;
 
+import cassetu.mystbornhorizons.entity.ai.CursedMobTrackerGoal;
 import cassetu.mystbornhorizons.item.ModItems;
 import cassetu.mystbornhorizons.world.HavenicaDefeatState;
 import net.minecraft.enchantment.Enchantment;
@@ -42,7 +43,20 @@ public class EnhancedMobEquipment {
         equipEnhancedArmor(mob, world, random, true);
         applyCursedBuffs(mob, random);
         preventEquipmentDrops(mob);
+//        addCursedTrackerAI(mob);
     }
+//  Not adding cursed tracking yet
+//    public static void addCursedTrackerAI(MobEntity mob) {
+//        try {
+//            java.lang.reflect.Field goalSelectorField = MobEntity.class.getDeclaredField("goalSelector");
+//            goalSelectorField.setAccessible(true);
+//            net.minecraft.entity.ai.goal.GoalSelector goalSelector =
+//                    (net.minecraft.entity.ai.goal.GoalSelector) goalSelectorField.get(mob);
+//            goalSelector.add(1, new CursedMobTrackerGoal(mob, 1.2, 64.0));
+//        } catch (Exception e) {
+//            System.err.println("Failed to add cursed tracker AI: " + e.getMessage());
+//        }
+//    }
 
     private static void preventEquipmentDrops(MobEntity mob) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
@@ -123,14 +137,14 @@ public class EnhancedMobEquipment {
         String mobTypeName = mob.getType().getName().getString();
         String infectedName = "§2Infected §r" + mobTypeName;
         mob.setCustomName(net.minecraft.text.Text.literal(infectedName));
-        mob.setCustomNameVisible(true);
+        mob.setCustomNameVisible(false);
     }
 
     private static void setCursedName(MobEntity mob) {
         String mobTypeName = mob.getType().getName().getString();
         String cursedName = "§4Cursed §r" + mobTypeName;
         mob.setCustomName(net.minecraft.text.Text.literal(cursedName));
-        mob.setCustomNameVisible(true);
+        mob.setCustomNameVisible(false);
     }
 
     private static ItemStack createEnhancedHelmet(Random random, ServerWorld world, boolean isCursed) {
@@ -148,7 +162,7 @@ public class EnhancedMobEquipment {
         if (isCursed) {
             addRedstoneTrim(helmet, world);
         } else {
-        addEmeraldTrim(helmet, world);
+            addEmeraldTrim(helmet, world);
         }
 
         try {

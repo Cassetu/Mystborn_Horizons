@@ -2,8 +2,10 @@ package cassetu.mystbornhorizons.world;
 
 import cassetu.mystbornhorizons.sound.ModSounds;
 import cassetu.mystbornhorizons.event.LoreHandler;
+import cassetu.mystbornhorizons.network.CurseShaderPacket;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.AreaEffectCloudEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -86,10 +88,19 @@ public class CurseState extends PersistentState {
                 if (curseBossBar != null) {
                     curseBossBar.addPlayer(player);
                 }
+                applyCurseShader(player);
                 player.sendMessage(Text.literal("§4§lThe Curse has begun!"), false);
                 player.sendMessage(Text.literal("§6Kill cursed mobs to lift the curse (" + mobsKilled + "/" + MOBS_NEEDED + ")"), false);
             }
         }
+    }
+
+    private void applyCurseShader(ServerPlayerEntity player) {
+        CurseShaderPacket.sendApplyShader(player, "darkness_amplifier");
+    }
+
+    private void removeCurseShader(ServerPlayerEntity player) {
+        CurseShaderPacket.sendRemoveShader(player);
     }
 
     private void startCurseMusicForAllPlayers(ServerWorld world) {
@@ -163,7 +174,8 @@ public class CurseState extends PersistentState {
                 String creepyMessage = CREEPY_MESSAGES[world.getRandom().nextInt(CREEPY_MESSAGES.length)];
                 for (ServerPlayerEntity player : world.getPlayers()) {
                     player.sendMessage(Text.literal(creepyMessage), false);
-                    //player.addStatusEffect(new StatusEffectInstance(ModEffects.DIRT_OVERLAY_EFFECT, 160, 0, false, false));
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.DARKNESS, 160, 0, false, false));
+                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 160, 0, false, true));
                 }
             }
 
@@ -203,6 +215,7 @@ public class CurseState extends PersistentState {
 
             for (ServerPlayerEntity player : world.getPlayers()) {
                 clearHostileEffects(player);
+                removeCurseShader(player);
 
                 player.sendMessage(Text.literal("§2§lThe Curse has been lifted!"), false);
                 player.sendMessage(Text.literal("§aThe world returns to its natural state."), false);
@@ -234,6 +247,7 @@ public class CurseState extends PersistentState {
 
             ServerWorld world = (ServerWorld) player.getWorld();
             startCurseMusicForPlayer(world, player);
+            applyCurseShader(player);
 
             cursePaused = false;
             this.markDirty();

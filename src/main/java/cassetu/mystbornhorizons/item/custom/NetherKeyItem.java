@@ -1,4 +1,4 @@
-package cassetu.mystbornhorizons.item;
+package cassetu.mystbornhorizons.item.custom;
 
 import cassetu.mystbornhorizons.world.NetherAccessState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,6 +19,12 @@ public class NetherKeyItem extends Item {
 
     public NetherKeyItem(Settings settings) {
         super(settings);
+    }
+
+
+    @Override
+    public boolean hasGlint(ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -57,7 +63,7 @@ public class NetherKeyItem extends Item {
             );
 
             world.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.BLOCK_PORTAL_TRIGGER, SoundCategory.PLAYERS, 1.0f, 0.8f);
+                    SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.PLAYERS, 0.8f, 0.8f);
 
             return TypedActionResult.success(stack);
         }
