@@ -24,6 +24,7 @@ public class ModItemGroups {
                         entries.add(ModItems.FOREST_HEART);
                         entries.add(ModItems.CURSED_ESSENCE);
                         entries.add(ModItems.INFECTED_ESSENCE);
+                        entries.add(ModItems.MOLTEN_ESSENCE);
 
                         entries.add(ModItems.MANTIS_SPAWN_EGG);
                         entries.add(ModItems.COPPER_BULB_SPAWN_EGG);
@@ -98,7 +99,11 @@ public class ModItemGroups {
                         entries.add(ModBlocks.ASTRAL_CRYSTAL);
                         entries.add(ModBlocks.CONSTELLATION_FRAGMENT);
                         entries.add(ModBlocks.BASALT_SPAWNER);
-
+                        entries.add(ModBlocks.STEEL_CONCRETE_BRICK);
+                        entries.add(ModBlocks.DEEPSTONE_ALLOY_TILING);
+                        entries.add(ModBlocks.TOXIC_BARREL);
+                        entries.add(ModBlocks.SLIMY_BARREL);
+                        entries.add(ModBlocks.GILDED_BASALT_TILING);
                     }).build());
 
     public static final ItemGroup MYSTBORN_ORES_GROUP = Registry.register(Registries.ITEM_GROUP,
@@ -125,6 +130,7 @@ public class ModItemGroups {
                         entries.add(ModBlocks.FROSTSTONE_DEEPSLATE_ORE);
                         entries.add(ModItems.RAW_STORMITE);
                         entries.add(ModItems.TECTONITE_GEODE);
+                        entries.add(ModItems.DEEPSTONE_ALLOY);
                     }).build());
     public static void registerItemGroups() {
         MystbornHorizons.LOGGER.info("Registering Item Groups for " + MystbornHorizons.MOD_ID);

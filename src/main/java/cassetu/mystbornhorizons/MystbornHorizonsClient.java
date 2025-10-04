@@ -1,6 +1,8 @@
 package cassetu.mystbornhorizons;
 
 import cassetu.mystbornhorizons.block.ModBlocks;
+import cassetu.mystbornhorizons.block.entity.ModBlockEntities;
+import cassetu.mystbornhorizons.block.entity.renderer.BasaltSpawnerBlockEntityRenderer;
 import cassetu.mystbornhorizons.client.DirtOverlayRenderer;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import cassetu.mystbornhorizons.entity.client.*;
@@ -17,6 +19,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.util.Identifier;
 
 public class MystbornHorizonsClient implements ClientModInitializer {
@@ -26,6 +29,8 @@ public class MystbornHorizonsClient implements ClientModInitializer {
         HudRenderCallback.EVENT.register((context, tickDelta) -> {
             DirtOverlayRenderer.renderOverlay(context);
         });
+        BlockEntityRendererFactories.register(ModBlockEntities.BASALT_SPAWNER, BasaltSpawnerBlockEntityRenderer::new);
+        BlockRenderLayerMap.INSTANCE.putBlock(ModBlocks.BASALT_SPAWNER, RenderLayer.getCutoutMipped());
 
         ClientPlayNetworking.registerGlobalReceiver(
                 CurseShaderPacket.ApplyShaderPayload.ID,

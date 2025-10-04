@@ -2,6 +2,7 @@ package cassetu.mystbornhorizons;
 
 import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.block.entity.ModBlockEntities;
+import cassetu.mystbornhorizons.block.entity.renderer.BasaltSpawnerBlockEntityRenderer;
 import cassetu.mystbornhorizons.command.MystbornCommands;
 import cassetu.mystbornhorizons.effect.ModEffects;
 import cassetu.mystbornhorizons.enchantment.ModEnchantmentEffects;
@@ -20,6 +21,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.registry.CompostingChanceRegistry;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +59,7 @@ public class MystbornHorizons implements ModInitializer {
 		LoreHandler.register();
 		ModBlockEntities.registerBlockEntities();
 		NetherPortalHandler.register();
+
 
 		FabricDefaultAttributeRegistry.register(ModEntities.MANTIS, MantisEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ModEntities.COPPERBULB, CopperBulbEntity.createAttributes());

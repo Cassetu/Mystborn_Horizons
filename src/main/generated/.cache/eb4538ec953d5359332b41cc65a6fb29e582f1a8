@@ -1,6 +1,6 @@
-// 1.21.1	2025-09-29T18:27:08.9085552	Mystborn Horizons/Tags for minecraft:block
+// 1.21.1	2025-10-03T19:47:47.1869989	Mystborn Horizons/Tags for minecraft:block
 32b13946c4cd1f944b029659ccce5fcb2adad4ff data\minecraft\tags\block\mystbornhorizons.json
-4d7b73bb486ce540c8d940460f73322956c69d05 data\minecraft\tags\block\needs_stone_tool.json
-8255f299a4888bfae51e94a65c81b661c7ffd717 data\minecraft\tags\block\mineable\pickaxe.json
-e6989f32536608f710911f6f52cfb0415ddffb7d data\minecraft\tags\block\needs_iron_tool.json
+913e39477e0e075687c7f2f37f7468b95031021b data\minecraft\tags\block\needs_stone_tool.json
+5afefb7ff82021c92b8f4faf014e9074a5962b33 data\minecraft\tags\block\mineable\pickaxe.json
+93e8f221419eaa36e8406800df762e79f39fecde data\minecraft\tags\block\needs_iron_tool.json
 603eb53c503ed674c0ff0291fd1004191af97d82 data\minecraft\tags\block\mineable\axe.json

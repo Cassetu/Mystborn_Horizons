@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.block.entity;
 
+import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.block.custom.BasaltSpawnerBlock;
 import cassetu.mystbornhorizons.entity.ModEntities;
 import net.minecraft.block.BlockState;
@@ -23,6 +24,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.math.BlockPos;
@@ -45,6 +47,7 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
     private long cooldownEndTime = 0;
     private UUID trialStarterId = null;
     private Set<UUID> participatingPlayers = new HashSet<>();
+    private Set<UUID> spawnedMobs = new HashSet<>();
 
     private static final int SPAWN_RADIUS = 10;
     private static final int DETECTION_RADIUS = 15;
@@ -115,6 +118,7 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
         currentWave = 1;
         participatingPlayers.clear();
         participatingPlayers.add(player.getUuid());
+        spawnedMobs.clear();
 
         setupWave(currentWave);
         markDirty();
@@ -140,6 +144,17 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
             mob.refreshPositionAndAngles(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, 0, 0);
             mob.initialize(world, world.getLocalDifficulty(spawnPos), SpawnReason.SPAWNER, null);
 
+            String mobTypeName = mob.getType().getName().getString();
+            mob.setCustomName(Text.literal(mobTypeName + " Spawn"));
+            mob.setCustomNameVisible(false);
+
+            mob.setPersistent();
+
+            NbtCompound nbt = new NbtCompound();
+            mob.writeNbt(nbt);
+            nbt.putBoolean("IsSpawnerMob", true);
+            mob.readNbt(nbt);
+
             if (mob instanceof HostileEntity hostileMob) {
                 PlayerEntity target = findNearestParticipatingPlayer(world, pos);
                 if (target != null) {
@@ -148,6 +163,7 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
             }
 
             world.spawnEntity(mob);
+            spawnedMobs.add(mob.getUuid());
 
             spawnMobParticles(world, spawnPos);
 
@@ -202,9 +218,9 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
     private BlockPos findValidSpawnPos(ServerWorld world, BlockPos center) {
         Random random = world.random;
 
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 30; i++) {
             double angle = random.nextDouble() * 2 * Math.PI;
-            int radius = 5 + random.nextInt(SPAWN_RADIUS - 5);
+            int radius = 3 + random.nextInt(SPAWN_RADIUS - 3);
 
             int x = center.getX() + (int)(Math.cos(angle) * radius);
             int z = center.getZ() + (int)(Math.sin(angle) * radius);
@@ -213,7 +229,9 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
                 BlockPos testPos = new BlockPos(x, y, z);
                 BlockPos groundPos = testPos.down();
 
-                if (world.getBlockState(groundPos).isSolidBlock(world, groundPos) &&
+                BlockState groundState = world.getBlockState(groundPos);
+
+                if (groundState.isOf(ModBlocks.GILDED_BASALT_TILING) &&
                         world.getBlockState(testPos).isAir() &&
                         world.getBlockState(testPos.up()).isAir()) {
                     return testPos;
@@ -224,10 +242,11 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
     }
 
     private boolean areAllMobsDefeated(ServerWorld world, BlockPos pos) {
-        Box searchBox = new Box(pos).expand(SPAWN_RADIUS + 3);
-        List<MobEntity> nearbyMobs = world.getEntitiesByClass(MobEntity.class, searchBox,
-                mob -> mob instanceof HostileEntity);
-        return nearbyMobs.isEmpty();
+        spawnedMobs.removeIf(uuid -> {
+            MobEntity mob = (MobEntity) world.getEntity(uuid);
+            return mob == null || !mob.isAlive();
+        });
+        return spawnedMobs.isEmpty();
     }
 
     private void updateParticipatingPlayers(ServerWorld world, BlockPos pos) {
@@ -286,27 +305,12 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
         trialStarterId = null;
         currentWave = 1;
         mobsToSpawn = 0;
+        spawnedMobs.clear();
 
         markDirty();
     }
 
     private void spawnLootRewards(ServerWorld world, BlockPos pos) {
-        RegistryKey<LootTable> lootTableKey = RegistryKey.of(RegistryKeys.LOOT_TABLE,
-                Identifier.ofVanilla("chests/trial_chambers/reward"));
-
-        LootTable lootTable = world.getServer().getReloadableRegistries()
-                .getLootTable(lootTableKey);
-
-        LootContextParameterSet.Builder contextBuilder = new LootContextParameterSet.Builder(world)
-                .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(pos));
-
-        List<ItemStack> loot = lootTable.generateLoot(contextBuilder.build(LootContextTypes.CHEST));
-
-        for (ItemStack stack : loot) {
-            if (!stack.isEmpty()) {
-                ItemScatterer.spawn(world, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, stack);
-            }
-        }
     }
 
     private void cancelTrial(ServerWorld world, BlockPos pos, BlockState state) {
@@ -318,6 +322,7 @@ public class BasaltSpawnerBlockEntity extends BlockEntity {
         trialStarterId = null;
         currentWave = 1;
         mobsToSpawn = 0;
+        spawnedMobs.clear();
 
         markDirty();
     }

@@ -34,7 +34,7 @@ public class ModItems {
     public static final Item FOREST_HAVEN_DISC_FRAGMENT = registerItem("forest_haven_disc_fragment", new Item(new Item.Settings().maxCount(16)));
     public static final Item CURSED_ESSENCE = registerItem("cursed_essence", new Item(new Item.Settings()));
     public static final Item INFECTED_ESSENCE = registerItem("infected_essence", new Item(new Item.Settings()));
-
+    public static final Item MOLTEN_ESSENCE = registerItem("molten_essence", new Item(new Item.Settings()));
 
     public static final Item MYSTBORN_DUST = registerItem("mystborn_dust", new Item(new Item.Settings()));
 
@@ -166,6 +166,9 @@ public class ModItems {
 
     public static final Item NETHER_KEY = registerItem("nether_key",
             new NetherKeyItem(new Item.Settings().maxCount(1)));
+
+    public static final Item DEEPSTONE_ALLOY = registerItem("deepstone_alloy",
+            new Item(new Item.Settings()));
 
     public static final Item FROSTSTONE_PICKAXE = registerItem("froststone_pickaxe",
             new PickaxeItem(ModToolMaterials.FROSTSTONE, new Item.Settings()

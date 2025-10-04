@@ -10,13 +10,13 @@
       "model": "mystbornhorizons:block/basalt_spawner_inactive"
     },
     "active=true,wave=1": {
-      "model": "mystbornhorizons:block/basalt_spawner_active_wave1"
+      "model": "mystbornhorizons:block/basalt_spawner_active"
     },
     "active=true,wave=2": {
-      "model": "mystbornhorizons:block/basalt_spawner_active_wave2"
+      "model": "mystbornhorizons:block/basalt_spawner_active"
     },
     "active=true,wave=3": {
-      "model": "mystbornhorizons:block/basalt_spawner_active_wave3"
+      "model": "mystbornhorizons:block/basalt_spawner_active"
     }
   }
 }

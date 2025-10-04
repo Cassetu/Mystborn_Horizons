@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "C": {
-      "item": "mystbornhorizons:royal_froststone_sword"
+      "item": "mystbornhorizons:infected_essence"
     },
     "M": {
       "item": "mystbornhorizons:mystborn_dust"
@@ -18,7 +18,7 @@
       "item": "minecraft:stick"
     },
     "T": {
-      "item": "mystbornhorizons:royal_tectonite_sword"
+      "item": "mystbornhorizons:cursed_essence"
     }
   },
   "pattern": [

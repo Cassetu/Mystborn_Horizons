@@ -11,6 +11,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
@@ -22,6 +23,12 @@ import net.minecraft.component.type.ItemEnchantmentsComponent;
 public class EnhancedMobEquipment {
 
     public static void equipPostHavenicaMob(MobEntity mob, ServerWorld world) {
+        NbtCompound nbt = new NbtCompound();
+        mob.writeNbt(nbt);
+        if (nbt.getBoolean("IsSpawnerMob")) {
+            return;
+        }
+
         HavenicaDefeatState state = HavenicaDefeatState.getOrCreate(world);
 
         if (!state.isHavenicaDefeated()) {
@@ -39,6 +46,12 @@ public class EnhancedMobEquipment {
     }
 
     public static void equipCursedMob(MobEntity mob, ServerWorld world) {
+        NbtCompound nbt = new NbtCompound();
+        mob.writeNbt(nbt);
+        if (nbt.getBoolean("IsSpawnerMob")) {
+            return;
+        }
+
         Random random = mob.getRandom();
         equipEnhancedArmor(mob, world, random, true);
         applyCursedBuffs(mob, random);

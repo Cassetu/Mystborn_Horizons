@@ -38,12 +38,25 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addDrop(ModBlocks.MYST_CRATE);
         addDrop(ModBlocks.PACKED_ICE_BRICKS);
         addDrop(ModBlocks.MOLTEN_GOLD_BLACKSTONE);
+        addDrop(ModBlocks.STEEL_CONCRETE_BRICK);
+        addDrop(ModBlocks.DEEPSTONE_ALLOY_TILING);
         addDrop(ModBlocks.MOLTEN_GOLD_BASALT);
+        addDrop(ModBlocks.GILDED_BASALT_TILING);
         addDrop(ModBlocks.DUNGEON_ROOTMASS, LootTable.builder().pool(LootPool.builder().conditionally(
                         BlockStatePropertyLootCondition.builder(ModBlocks.DUNGEON_ROOTMASS).properties(StatePredicate.Builder.create()))
                 .with(ItemEntry.builder(ModItems.ROOT))
                 .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(3.0F, 5.0F)))
                 .apply(ApplyBonusLootFunction.uniformBonusCount(impl.getOrThrow(Enchantments.FORTUNE)))));
+
+        addDrop(ModBlocks.TOXIC_BARREL, LootTable.builder().pool(LootPool.builder().conditionally(
+                        BlockStatePropertyLootCondition.builder(ModBlocks.TOXIC_BARREL).properties(StatePredicate.Builder.create()))
+                .with(ItemEntry.builder(ModItems.POWER_CORE))
+                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2.0F, 3.0F)))));
+
+        addDrop(ModBlocks.SLIMY_BARREL, LootTable.builder().pool(LootPool.builder().conditionally(
+                        BlockStatePropertyLootCondition.builder(ModBlocks.SLIMY_BARREL).properties(StatePredicate.Builder.create()))
+                .with(ItemEntry.builder(ModItems.POWER_CORE))
+                .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2.0F, 3.0F)))));
 
         addDrop(ModBlocks.FROSTSTONE_ORE, oreDrops(ModBlocks.FROSTSTONE_ORE, ModItems.RAW_FROSTSTONE));
         addDrop(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, multipleOreDrops(ModBlocks.FROSTSTONE_DEEPSLATE_ORE, ModItems.RAW_FROSTSTONE, 4, 8));

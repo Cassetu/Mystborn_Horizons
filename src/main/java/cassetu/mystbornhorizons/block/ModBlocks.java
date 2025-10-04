@@ -1,10 +1,7 @@
 package cassetu.mystbornhorizons.block;
 
 import cassetu.mystbornhorizons.MystbornHorizons;
-import cassetu.mystbornhorizons.block.custom.AncientGroveAltarBlock;
-import cassetu.mystbornhorizons.block.custom.BasaltSpawnerBlock;
-import cassetu.mystbornhorizons.block.custom.HoneyBerryBushBlock;
-import cassetu.mystbornhorizons.block.custom.ShardBlock;
+import cassetu.mystbornhorizons.block.custom.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.AbstractBlock;
@@ -26,6 +23,33 @@ public class ModBlocks {
             new Block(AbstractBlock.Settings.copy(Blocks.AMETHYST_BLOCK)
                     .sounds(BlockSoundGroup.AMETHYST_BLOCK)
                     .luminance(state -> 8)));
+
+    public static final Block STEEL_CONCRETE_BRICK = registerBlock("steel_concrete_brick",
+            new Block(AbstractBlock.Settings.create()
+                    .strength(10.0f, 3600000.0f)
+                    .requiresTool()
+                    .sounds(BlockSoundGroup.DEEPSLATE_BRICKS)));
+
+    public static final Block TOXIC_BARREL = registerBlock("toxic_barrel",
+            new Block(AbstractBlock.Settings.create().strength(2.0f).requiresTool()
+                    .sounds(BlockSoundGroup.BONE)));
+
+    public static final Block SLIMY_BARREL = registerBlock("slimy_barrel",
+            new SlimyCrateBlock(AbstractBlock.Settings.create().strength(1.0f).requiresTool()
+                    .sounds(BlockSoundGroup.BONE)
+                    .luminance(state -> 10)));
+
+    public static final Block DEEPSTONE_ALLOY_TILING = registerBlock("deepstone_alloy_tiling",
+            new Block(AbstractBlock.Settings.create()
+                    .strength(10.0f, 3600000.0f)
+                    .requiresTool()
+                    .sounds(BlockSoundGroup.DEEPSLATE_TILES)));
+
+    public static final Block GILDED_BASALT_TILING = registerBlock("gilded_basalt_tiling",
+            new Block(AbstractBlock.Settings.create()
+                    .strength(1.35f, 4.2f)
+                    .requiresTool()
+                    .sounds(BlockSoundGroup.BASALT)));
 
     public static final Block CONSTELLATION_FRAGMENT = registerBlock("constellation_fragment",
             new Block(AbstractBlock.Settings.copy(Blocks.END_STONE)
@@ -76,6 +100,7 @@ public class ModBlocks {
                     .dropsNothing()
                     .allowsSpawning(Blocks::never)
                     .sounds(BlockSoundGroup.BASALT)
+                    .nonOpaque()
                     .luminance(state -> {
                         if (state.get(BasaltSpawnerBlock.ACTIVE)) {
                             int wave = state.get(BasaltSpawnerBlock.WAVE);

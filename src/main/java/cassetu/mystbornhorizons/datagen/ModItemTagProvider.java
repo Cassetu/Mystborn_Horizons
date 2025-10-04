@@ -49,8 +49,27 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(Items.COCOA_BEANS)
                 .add(Items.APPLE)
                 .add(ModItems.ROOT);
-
-
+        getOrCreateTagBuilder(ModTags.Items.ESSENCE)
+                .add(ModItems.INFECTED_ESSENCE)
+                .add(ModItems.MOLTEN_ESSENCE)
+                .add(ModItems.CURSED_ESSENCE);
+        getOrCreateTagBuilder(ModTags.Items.CONCRETE)
+                .add(Items.WHITE_CONCRETE)
+                .add(Items.LIGHT_GRAY_CONCRETE)
+                .add(Items.GRAY_CONCRETE)
+                .add(Items.BLACK_CONCRETE)
+                .add(Items.BROWN_CONCRETE)
+                .add(Items.RED_CONCRETE)
+                .add(Items.ORANGE_CONCRETE)
+                .add(Items.YELLOW_CONCRETE)
+                .add(Items.LIME_CONCRETE)
+                .add(Items.GREEN_CONCRETE)
+                .add(Items.CYAN_CONCRETE)
+                .add(Items.LIGHT_BLUE_CONCRETE)
+                .add(Items.BLUE_CONCRETE)
+                .add(Items.PURPLE_CONCRETE)
+                .add(Items.MAGENTA_CONCRETE)
+                .add(Items.PINK_CONCRETE);
         getOrCreateTagBuilder(ItemTags.SWORDS)
                 .add(ModItems.FROSTSTONE_SWORD)
                 .add(ModItems.ROYAL_FROSTSTONE_SWORD)

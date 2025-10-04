@@ -1,5 +1,6 @@
 package cassetu.mystbornhorizons.block.custom;
 
+import cassetu.mystbornhorizons.block.ModBlocks;
 import cassetu.mystbornhorizons.block.entity.BasaltSpawnerBlockEntity;
 import cassetu.mystbornhorizons.block.entity.ModBlockEntities;
 import com.mojang.serialization.MapCodec;
@@ -51,6 +52,11 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
     }
 
     @Override
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, net.minecraft.util.math.Direction direction) {
+        return false;
+    }
+
+    @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
@@ -68,6 +74,7 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
                     world.setBlockState(pos, state.with(ACTIVE, true).with(WAVE, 1));
                     world.playSound(null, pos, SoundEvents.BLOCK_TRIAL_SPAWNER_SPAWN_MOB,
                             SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    player.sendMessage(Text.literal("§6Wave 1 Started!"), true);
                 }
             }
         }
@@ -123,6 +130,23 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
                                 world.getBlockState(groundPos).isSolidBlock(world, groundPos)) {
 
                             world.setBlockState(chestPos, Blocks.CHEST.getDefaultState());
+
+                            if (world.getBlockEntity(chestPos) instanceof net.minecraft.block.entity.ChestBlockEntity chestEntity) {
+                                chestEntity.setLootTable(net.minecraft.registry.RegistryKey.of(
+                                                net.minecraft.registry.RegistryKeys.LOOT_TABLE,
+                                                net.minecraft.util.Identifier.of("mystbornhorizons", "chests/basalt_spawner_reward")),
+                                        world.getRandom().nextLong());
+                            }
+
+                            net.minecraft.util.math.Box messageBox = new net.minecraft.util.math.Box(pos).expand(10);
+                            java.util.List<net.minecraft.entity.player.PlayerEntity> nearbyPlayers = world.getEntitiesByClass(
+                                    net.minecraft.entity.player.PlayerEntity.class, messageBox, player -> !player.isSpectator());
+
+                            for (net.minecraft.entity.player.PlayerEntity player : nearbyPlayers) {
+                                player.sendMessage(net.minecraft.text.Text.literal(
+                                        "§6Reward Chest spawned at: §e" + chestPos.getX() + ", " + chestPos.getY() + ", " + chestPos.getZ()), true);
+                            }
+
                             return;
                         }
                     }
@@ -131,12 +155,32 @@ public class BasaltSpawnerBlock extends BlockWithEntity {
         }
     }
 
+    public boolean isValidSpawnLocation(World world, BlockPos spawnPos) {
+        BlockPos groundPos = spawnPos.down();
+        BlockState groundState = world.getBlockState(groundPos);
+        return groundState.isOf(ModBlocks.GILDED_BASALT_TILING);
+    }
+
     public void updateWave(World world, BlockPos pos, int newWave) {
         BlockState state = world.getBlockState(pos);
         if (state.getBlock() == this && state.get(ACTIVE)) {
             world.setBlockState(pos, state.with(WAVE, Math.min(3, newWave)));
             world.playSound(null, pos, SoundEvents.BLOCK_TRIAL_SPAWNER_SPAWN_MOB,
                     SoundCategory.BLOCKS, 1.0F, 0.8F + (newWave * 0.1F));
+
+            if (newWave <= 3) {
+                net.minecraft.util.math.Box messageBox = new net.minecraft.util.math.Box(pos).expand(10);
+                java.util.List<net.minecraft.entity.player.PlayerEntity> nearbyPlayers = world.getEntitiesByClass(
+                        net.minecraft.entity.player.PlayerEntity.class, messageBox, player -> !player.isSpectator());
+
+                for (net.minecraft.entity.player.PlayerEntity player : nearbyPlayers) {
+                    if (newWave == 2) {
+                        player.sendMessage(net.minecraft.text.Text.literal("§aWave 1 Complete! §6Wave 2 Started!"), true);
+                    } else if (newWave == 3) {
+                        player.sendMessage(net.minecraft.text.Text.literal("§aWave 2 Complete! §6Wave 3 Started!"), true);
+                    }
+                }
+            }
         }
     }
 }

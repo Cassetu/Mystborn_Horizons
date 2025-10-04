@@ -76,6 +76,37 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .criterion(hasItem(ModItems.FROSTSTONE), conditionsFromItem(ModItems.FROSTSTONE))
                 .offerTo(exporter);
 
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, ModBlocks.STEEL_CONCRETE_BRICK,2)
+                .pattern("   ")
+                .pattern(" CI")
+                .pattern(" IC")
+                .input('I', Items.IRON_INGOT)
+                .input('C', ModTags.Items.CONCRETE)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, ModItems.DEEPSTONE_ALLOY, 2)
+                .pattern(" C ")
+                .pattern("CID")
+                .pattern(" D ")
+                .input('I', Items.IRON_INGOT)
+                .input('C', Items.COBBLESTONE)
+                .input('D', Items.COBBLED_DEEPSLATE)
+                .criterion(hasItem(Items.IRON_INGOT), conditionsFromItem(Items.IRON_INGOT))
+                .criterion(hasItem(Items.COBBLESTONE), conditionsFromItem(Items.COBBLESTONE))
+                .criterion(hasItem(Items.COBBLED_DEEPSLATE), conditionsFromItem(Items.COBBLED_DEEPSLATE))
+                .offerTo(exporter);
+
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, ModBlocks.DEEPSTONE_ALLOY_TILING, 2)
+                .pattern("   ")
+                .pattern("CC ")
+                .pattern("DD ")
+                .input('D', Items.DEEPSLATE_TILES)
+                .input('C', ModItems.DEEPSTONE_ALLOY)
+                .criterion(hasItem(ModItems.DEEPSTONE_ALLOY), conditionsFromItem(ModItems.DEEPSTONE_ALLOY))
+                .criterion(hasItem(Items.DEEPSLATE_TILES), conditionsFromItem(Items.DEEPSLATE_TILES))
+                .offerTo(exporter);
+
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, ModItems.FROSTSTONE_SWORD)
                 .pattern(" R ")
                 .pattern(" R ")
@@ -126,8 +157,8 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 .pattern("CMT")
                 .pattern("NSN")
                 .input('R', ModItems.PEACEKEEPER_SWORD)
-                .input('C', ModItems.ROYAL_FROSTSTONE_SWORD)
-                .input('T', ModItems.ROYAL_TECTONITE_SWORD)
+                .input('C', ModItems.INFECTED_ESSENCE)
+                .input('T', ModItems.CURSED_ESSENCE)
                 .input('M', ModItems.MYSTBORN_DUST)
                 .input('S', Items.STICK)
                 .input('N', Items.NETHERITE_INGOT)

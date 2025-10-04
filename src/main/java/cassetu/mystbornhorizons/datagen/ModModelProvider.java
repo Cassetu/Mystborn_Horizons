@@ -17,9 +17,7 @@ public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
         super(output);
     }
-    /*
-        * Claude.ai was used to generate code for custom side textures for basalt spawner.
-     */
+
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.FROSTSTONE_BLOCK);
@@ -43,8 +41,12 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ANCIENT_GROVE_ALTAR);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.ASTRAL_CRYSTAL);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.CONSTELLATION_FRAGMENT);
-
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.STEEL_CONCRETE_BRICK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.TOXIC_BARREL);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SLIMY_BARREL);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DEEPSTONE_ALLOY_TILING);
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.DUNGEON_COBBLE);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.GILDED_BASALT_TILING);
 
         registerBasaltSpawner(blockStateModelGenerator);
 
@@ -63,46 +65,26 @@ public class ModModelProvider extends FabricModelProvider {
                 .put(TextureKey.WEST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_inactive"))
                 .put(TextureKey.PARTICLE, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_inactive"));
 
-        TextureMap activeWave1Textures = new TextureMap()
-                .put(TextureKey.UP, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_top_active_wave1"))
+        TextureMap activeTextures = new TextureMap()
+                .put(TextureKey.UP, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_top_active"))
                 .put(TextureKey.DOWN, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_bottom"))
-                .put(TextureKey.NORTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave1"))
-                .put(TextureKey.SOUTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave1"))
-                .put(TextureKey.EAST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave1"))
-                .put(TextureKey.WEST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave1"))
-                .put(TextureKey.PARTICLE, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave1"));
-
-        TextureMap activeWave2Textures = new TextureMap()
-                .put(TextureKey.UP, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_top_active_wave2"))
-                .put(TextureKey.DOWN, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_bottom"))
-                .put(TextureKey.NORTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave2"))
-                .put(TextureKey.SOUTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave2"))
-                .put(TextureKey.EAST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave2"))
-                .put(TextureKey.WEST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave2"))
-                .put(TextureKey.PARTICLE, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave2"));
-
-        TextureMap activeWave3Textures = new TextureMap()
-                .put(TextureKey.UP, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_top_active_wave3"))
-                .put(TextureKey.DOWN, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_bottom"))
-                .put(TextureKey.NORTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave3"))
-                .put(TextureKey.SOUTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave3"))
-                .put(TextureKey.EAST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave3"))
-                .put(TextureKey.WEST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave3"))
-                .put(TextureKey.PARTICLE, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active_wave3"));
+                .put(TextureKey.NORTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active"))
+                .put(TextureKey.SOUTH, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active"))
+                .put(TextureKey.EAST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active"))
+                .put(TextureKey.WEST, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active"))
+                .put(TextureKey.PARTICLE, TextureMap.getSubId(ModBlocks.BASALT_SPAWNER, "_side_active"));
 
         Identifier inactiveModelId = Models.CUBE.upload(ModBlocks.BASALT_SPAWNER, "_inactive", inactiveTextures, blockStateModelGenerator.modelCollector);
-        Identifier activeWave1ModelId = Models.CUBE.upload(ModBlocks.BASALT_SPAWNER, "_active_wave1", activeWave1Textures, blockStateModelGenerator.modelCollector);
-        Identifier activeWave2ModelId = Models.CUBE.upload(ModBlocks.BASALT_SPAWNER, "_active_wave2", activeWave2Textures, blockStateModelGenerator.modelCollector);
-        Identifier activeWave3ModelId = Models.CUBE.upload(ModBlocks.BASALT_SPAWNER, "_active_wave3", activeWave3Textures, blockStateModelGenerator.modelCollector);
+        Identifier activeModelId = Models.CUBE.upload(ModBlocks.BASALT_SPAWNER, "_active", activeTextures, blockStateModelGenerator.modelCollector);
 
         blockStateModelGenerator.blockStateCollector.accept(VariantsBlockStateSupplier.create(ModBlocks.BASALT_SPAWNER)
                 .coordinate(BlockStateVariantMap.create(BasaltSpawnerBlock.ACTIVE, BasaltSpawnerBlock.WAVE)
                         .register(false, 1, BlockStateVariant.create().put(VariantSettings.MODEL, inactiveModelId))
                         .register(false, 2, BlockStateVariant.create().put(VariantSettings.MODEL, inactiveModelId))
                         .register(false, 3, BlockStateVariant.create().put(VariantSettings.MODEL, inactiveModelId))
-                        .register(true, 1, BlockStateVariant.create().put(VariantSettings.MODEL, activeWave1ModelId))
-                        .register(true, 2, BlockStateVariant.create().put(VariantSettings.MODEL, activeWave2ModelId))
-                        .register(true, 3, BlockStateVariant.create().put(VariantSettings.MODEL, activeWave3ModelId))));
+                        .register(true, 1, BlockStateVariant.create().put(VariantSettings.MODEL, activeModelId))
+                        .register(true, 2, BlockStateVariant.create().put(VariantSettings.MODEL, activeModelId))
+                        .register(true, 3, BlockStateVariant.create().put(VariantSettings.MODEL, activeModelId))));
 
         blockStateModelGenerator.registerParentedItemModel(ModBlocks.BASALT_SPAWNER, inactiveModelId);
     }
@@ -121,6 +103,8 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.INFECTED_ESSENCE, Models.GENERATED);
         itemModelGenerator.register(ModItems.NIGHT_SHACKLES_MUSIC_DISC, Models.GENERATED);
         itemModelGenerator.register(ModItems.NETHER_KEY, Models.GENERATED);
+        itemModelGenerator.register(ModItems.DEEPSTONE_ALLOY, Models.GENERATED);
+        itemModelGenerator.register(ModItems.MOLTEN_ESSENCE, Models.GENERATED);
 
         itemModelGenerator.register(ModItems.RAW_FROSTSTONE, Models.GENERATED);
         itemModelGenerator.register(ModItems.STORMITE, Models.GENERATED);

@@ -30,6 +30,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.MOONSTONE_DEEPSLATE_ORE)
                 .add(ModBlocks.TECTONITE_DEEPSLATE_ORE)
                 .add(ModBlocks.BASALT_SPAWNER)
+                .add(ModBlocks.STEEL_CONCRETE_BRICK)
+                .add(ModBlocks.TOXIC_BARREL)
+                .add(ModBlocks.SLIMY_BARREL)
+                .add(ModBlocks.DEEPSTONE_ALLOY_TILING)
 
                 .add(ModBlocks.MYSTBORN_DUST_ORE)
                 .add(ModBlocks.MYST_BRICKS)
@@ -46,6 +50,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.CARVED_ICE_BRICKS)
                 .add(ModBlocks.MOLTEN_GOLD_BLACKSTONE)
                 .add(ModBlocks.MOLTEN_GOLD_BASALT)
+                .add(ModBlocks.TOXIC_BARREL)
+                .add(ModBlocks.SLIMY_BARREL)
                 .add(ModBlocks.MYST_BRICKS);
 
         getOrCreateTagBuilder(BlockTags.NEEDS_IRON_TOOL)
@@ -56,9 +62,15 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(ModBlocks.STORMITE_DEEPSLATE_ORE)
                 .add(ModBlocks.MOONSTONE_DEEPSLATE_ORE)
                 .add(ModBlocks.DUNGEON_ROOTMASS)
-                .add(ModBlocks.BASALT_SPAWNER);
+                .add(ModBlocks.BASALT_SPAWNER)
+                .add(ModBlocks.DEEPSTONE_ALLOY_TILING)
+                .add(ModBlocks.STEEL_CONCRETE_BRICK);
 
         getOrCreateTagBuilder(ModTags.Blocks.NEEDS_FROSTSTONE_TOOL)
                 .addTag(BlockTags.NEEDS_IRON_TOOL);
+
+//        getOrCreateTagBuilder(BlockTags.NEEDS_DIAMOND_TOOL)
+//                .add(ModBlocks.eee);
+
     }
 }

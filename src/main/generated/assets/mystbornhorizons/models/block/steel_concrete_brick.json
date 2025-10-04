@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "mystbornhorizons:block/steel_concrete_brick"
+  }
+}
